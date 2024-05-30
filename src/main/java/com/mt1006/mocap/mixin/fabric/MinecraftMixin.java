@@ -2,6 +2,7 @@ package com.mt1006.mocap.mixin.fabric;
 
 import com.mt1006.mocap.events.WorldLoadEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +20,7 @@ public class MinecraftMixin
 	@Shadow @Nullable public ClientLevel level;
 
 	@Inject(method = "setLevel", at = @At(value = "HEAD"))
-	public void atSetLevel(ClientLevel clientLevel, CallbackInfo callbackInfo)
+	public void atSetLevel(ClientLevel clientLevel, ReceivingLevelScreen.Reason reason, CallbackInfo ci)
 	{
 		if (level != null) { WorldLoadEvent.onClientWorldUnload(); }
 	}

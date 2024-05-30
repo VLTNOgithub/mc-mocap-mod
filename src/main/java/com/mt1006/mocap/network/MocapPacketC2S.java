@@ -1,5 +1,6 @@
 package com.mt1006.mocap.network;
 
+import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
 import com.mt1006.mocap.mocap.playing.CustomSkinManager;
@@ -7,12 +8,19 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import org.jetbrains.annotations.NotNull;
 
-public class MocapPacketC2S
+public class MocapPacketC2S implements CustomPacketPayload
 {
+	public static final Type<MocapPacketC2S> TYPE = new Type<>(new ResourceLocation(MocapMod.MOD_ID, "fabric_c2s"));
+	public static final StreamCodec<FriendlyByteBuf, MocapPacketC2S> CODEC = StreamCodec.of((b, p) -> p.encode(b), MocapPacketC2S::new);
+
 	public static final int ACCEPT_SERVER = 0;
 	public static final int REQUEST_CUSTOM_SKIN = 1;
 
@@ -20,9 +28,9 @@ public class MocapPacketC2S
 	private final int op;
 	private final Object object;
 
-	public MocapPacketC2S(int version, int op, Object object)
+	public MocapPacketC2S(int op, Object object)
 	{
-		this.version = version;
+		this.version = MocapPackets.VERSION;
 		this.op = op;
 		this.object = object;
 	}
@@ -43,6 +51,11 @@ public class MocapPacketC2S
 		}
 	}
 
+	@Override public @NotNull Type<? extends CustomPacketPayload> type()
+	{
+		return TYPE;
+	}
+
 	public FriendlyByteBuf encode(FriendlyByteBuf buf)
 	{
 		buf.writeInt(version);
@@ -57,7 +70,7 @@ public class MocapPacketC2S
 
 	public void handle(ServerPlayer player, PacketSender sender)
 	{
-		if (version != MocapPackets.CURRENT_VERSION) { return; }
+		if (version != MocapPackets.VERSION) { return; }
 
 		switch (op)
 		{
@@ -84,14 +97,12 @@ public class MocapPacketC2S
 
 	private static void send(int op, Object object)
 	{
-		MocapPacketC2S packet = new MocapPacketC2S(MocapPackets.CURRENT_VERSION, op, object);
-		ClientPlayNetworking.send(MocapPackets.CHANNEL_NAME, packet.encode(PacketByteBufs.create()));
+		ClientPlayNetworking.send(new MocapPacketC2S(op, object));
 	}
 
 	private static void respond(PacketSender sender, int op, Object object)
 	{
-		MocapPacketC2S packet = new MocapPacketC2S(MocapPackets.CURRENT_VERSION, op, object);
-		sender.sendPacket(MocapPackets.CHANNEL_NAME, packet.encode(PacketByteBufs.create()));
+		sender.sendPacket(new MocapPacketC2S(op, object));
 	}
 
 	public static void receive(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender)
