@@ -5,7 +5,6 @@ import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
 import com.mt1006.mocap.mocap.playing.CustomSkinManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MocapPacketC2S implements CustomPacketPayload
 {
-	public static final Type<MocapPacketC2S> TYPE = new Type<>(new ResourceLocation(MocapMod.MOD_ID, "fabric_c2s"));
+	public static final Type<MocapPacketC2S> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(MocapMod.MOD_ID, "fabric_c2s"));
 	public static final StreamCodec<FriendlyByteBuf, MocapPacketC2S> CODEC = StreamCodec.of((b, p) -> p.encode(b), MocapPacketC2S::new);
 
 	public static final int ACCEPT_SERVER = 0;

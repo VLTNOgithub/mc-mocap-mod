@@ -5,12 +5,8 @@ import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
 import com.mt1006.mocap.mocap.playing.CustomClientSkinManager;
-import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -24,7 +20,7 @@ import java.util.UUID;
 
 public class MocapPacketS2C implements CustomPacketPayload
 {
-	public static final Type<MocapPacketS2C> TYPE = new Type<>(new ResourceLocation(MocapMod.MOD_ID, "fabric_s2c"));
+	public static final Type<MocapPacketS2C> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(MocapMod.MOD_ID, "fabric_s2c"));
 	public static final StreamCodec<FriendlyByteBuf, MocapPacketS2C> CODEC = StreamCodec.of((b, p) -> p.encode(b), MocapPacketS2C::new);
 
 	public static final int ON_LOGIN = 0;

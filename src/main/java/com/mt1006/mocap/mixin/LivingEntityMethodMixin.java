@@ -2,6 +2,7 @@ package com.mt1006.mocap.mixin;
 
 import com.mt1006.mocap.events.EntityEvent;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,7 +30,7 @@ public class LivingEntityMethodMixin
 	// Fabric-only - based on Forge LivingDropsEvent injection
 
 	@Inject(method = "dropAllDeathLoot", at = @At("HEAD"), cancellable = true)
-	private void atDropAllDeathLoot(DamageSource damageSource, CallbackInfo callbackInfo)
+	private void atDropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource, CallbackInfo callbackInfo)
 	{
 		if (EntityEvent.onEntityDrop((LivingEntity)(Object)this)) { callbackInfo.cancel(); }
 	}
