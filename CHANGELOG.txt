@@ -1,3 +1,6 @@
+===Version 1.3.8===
+-Fixed fake players receiving damage only one time during playback.
+
 ===Version 1.3.7===
 -Fixed fake players not being removed from the client level after being outside of render distance during the entirety of playback.
 -Name "Mocap" is now used instead of "MocapMod" in "/mocap info" and "/mocap help" command output.
