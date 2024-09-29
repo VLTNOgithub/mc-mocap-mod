@@ -1,12 +1,10 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.EntityData;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class SetLivingEntityFlags implements ComparableAction
 {
@@ -14,18 +12,7 @@ public class SetLivingEntityFlags implements ComparableAction
 
 	public SetLivingEntityFlags(Entity entity)
 	{
-		if (!(entity instanceof LivingEntity))
-		{
-			livingEntityFlags = 0;
-			return;
-		}
-		LivingEntity livingEntity = (LivingEntity)entity;
-
-		byte livingEntityFlags = 0;
-		if (livingEntity.isUsingItem()) { livingEntityFlags |= 0x01; }
-		if (livingEntity.getUsedItemHand() == InteractionHand.OFF_HAND) { livingEntityFlags |= 0x02; }
-		if (livingEntity.isAutoSpinAttack()) { livingEntityFlags |= 0x04; }
-		this.livingEntityFlags = livingEntityFlags;
+		livingEntityFlags = (entity instanceof LivingEntity) ? EntityData.LIVING_ENTITY_FLAGS.valOrDef(entity, (byte)0) : 0;
 	}
 
 	public SetLivingEntityFlags(RecordingFiles.Reader reader)
@@ -33,19 +20,18 @@ public class SetLivingEntityFlags implements ComparableAction
 		livingEntityFlags = reader.readByte();
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return livingEntityFlags != ((SetLivingEntityFlags)action).livingEntityFlags;
+		return livingEntityFlags != ((SetLivingEntityFlags)previousAction).livingEntityFlags;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SET_LIVING_ENTITY_FLAGS.id);
 		writer.addByte(livingEntityFlags);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
 		EntityData.LIVING_ENTITY_FLAGS.set(ctx.entity, livingEntityFlags);

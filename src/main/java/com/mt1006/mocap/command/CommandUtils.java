@@ -1,11 +1,13 @@
 package com.mt1006.mocap.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
+import com.mt1006.mocap.command.io.CommandInfo;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +20,10 @@ public class CommandUtils
 {
 	public static RequiredArgumentBuilder<CommandSourceStack, String> withPlayerArguments(Command<CommandSourceStack> command)
 	{
-		return Commands.argument("playerName", StringArgumentType.string()).executes(command)
-			.then(Commands.literal("from_player").then(Commands.argument("skinPlayerName", StringArgumentType.greedyString()).executes(command)))
-			.then(Commands.literal("from_file").then(Commands.argument("skinFilename", StringArgumentType.greedyString()).executes(command)))
-			.then(Commands.literal("from_mineskin").then(Commands.argument("mineskinURL", StringArgumentType.greedyString()).executes(command)));
+		return Commands.argument("player_name", StringArgumentType.string()).executes(command)
+			.then(Commands.literal("from_player").then(Commands.argument("skin_player_name", StringArgumentType.greedyString()).executes(command)))
+			.then(Commands.literal("from_file").then(Commands.argument("skin_filename", StringArgumentType.greedyString()).executes(command)))
+			.then(Commands.literal("from_mineskin").then(Commands.argument("mineskin_url", StringArgumentType.greedyString()).executes(command)));
 	}
 
 	public static Command<CommandSourceStack> command(Function<CommandInfo, Boolean> function)
@@ -31,7 +33,7 @@ public class CommandUtils
 
 	public static RequiredArgumentBuilder<CommandSourceStack, String> withStringArgument(BiFunction<CommandInfo, String, Boolean> function, String arg)
 	{
-		return Commands.argument(arg, StringArgumentType.string()).executes((ctx) -> stringCommand(function, ctx, arg));
+		return Commands.argument(arg, StringArgumentType.string()).executes((ctx) -> stringCommand(function, ctx, arg, false));
 	}
 
 	public static RequiredArgumentBuilder<CommandSourceStack, String> withTwoStringArguments(TriFunction<CommandInfo, String, String, Boolean> function, String arg1, String arg2)
@@ -41,17 +43,47 @@ public class CommandUtils
 				.executes((ctx) -> twoStringCommand(function, ctx, arg1, arg2)));
 	}
 
-	private static int stringCommand(BiFunction<CommandInfo, String, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg)
+	public static RequiredArgumentBuilder<CommandSourceStack, String> withStringAndIntArgument(TriFunction<CommandInfo, String, Integer, Boolean> function, String arg1, String arg2)
+	{
+		return Commands.argument(arg1, StringArgumentType.string())
+				.then(Commands.argument(arg2, IntegerArgumentType.integer())
+				.executes((ctx) -> stringAndIntCommand(function, ctx, arg1, arg2)));
+	}
+
+	private static int stringCommand(BiFunction<CommandInfo, String, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg, boolean nullable)
 	{
 		CommandInfo commandInfo = new CommandInfo(ctx);
 		try
 		{
-			String name = StringArgumentType.getString(ctx, arg);
-			return function.apply(commandInfo, name) ? 1 : 0;
+			String str = commandInfo.getString(arg);
+			return function.apply(commandInfo, str) ? 1 : 0;
 		}
-		catch (Exception exception)
+		catch (IllegalArgumentException exception)
 		{
-			commandInfo.sendException(exception, "mocap.error.unable_to_get_argument");
+			if (nullable)
+			{
+				return function.apply(commandInfo, null) ? 1 : 0;
+			}
+			else
+			{
+				commandInfo.sendException(exception, "error.unable_to_get_argument");
+				return 0;
+			}
+		}
+	}
+
+	private static int stringAndIntCommand(TriFunction<CommandInfo, String, Integer, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg1, String arg2)
+	{
+		CommandInfo commandInfo = new CommandInfo(ctx);
+		try
+		{
+			String str = commandInfo.getString(arg1);
+			int intVal = commandInfo.getInteger(arg2);
+			return function.apply(commandInfo, str, intVal) ? 1 : 0;
+		}
+		catch (IllegalArgumentException exception)
+		{
+			commandInfo.sendException(exception, "error.unable_to_get_argument");
 			return 0;
 		}
 	}
@@ -61,13 +93,13 @@ public class CommandUtils
 		CommandInfo commandInfo = new CommandInfo(ctx);
 		try
 		{
-			String name1 = StringArgumentType.getString(ctx, arg1);
-			String name2 = StringArgumentType.getString(ctx, arg2);
-			return function.apply(commandInfo, name1, name2) ? 1 : 0;
+			String str1 = commandInfo.getString(arg1);
+			String str2 = commandInfo.getString(arg2);
+			return function.apply(commandInfo, str1, str2) ? 1 : 0;
 		}
-		catch (Exception exception)
+		catch (IllegalArgumentException exception)
 		{
-			commandInfo.sendException(exception, "mocap.error.unable_to_get_argument");
+			commandInfo.sendException(exception, "error.unable_to_get_argument");
 			return 0;
 		}
 	}

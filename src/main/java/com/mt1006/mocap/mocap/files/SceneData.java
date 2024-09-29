@@ -1,8 +1,8 @@
-package com.mt1006.mocap.mocap.playing;
+package com.mt1006.mocap.mocap.files;
 
-import com.mt1006.mocap.command.CommandInfo;
-import com.mt1006.mocap.mocap.files.Files;
-import com.mt1006.mocap.mocap.files.SceneFiles;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
 import com.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,13 +15,13 @@ public class SceneData
 {
 	public final ArrayList<Subscene> subscenes = new ArrayList<>();
 	public int version = 0;
+	public boolean experimentalVersion = false;
 	public long fileSize = 0;
 
 	public boolean load(CommandInfo commandInfo, String name)
 	{
 		byte[] data = Files.loadFile(Files.getSceneFile(commandInfo, name));
-		if (data == null) { return false; }
-		return load(commandInfo, data);
+		return data != null && load(commandInfo, data);
 	}
 
 	public boolean load(CommandInfo commandInfo, byte[] scene)
@@ -30,11 +30,14 @@ public class SceneData
 
 		try (Scanner scanner = new Scanner(new ByteArrayInputStream(scene)))
 		{
-			version = Integer.parseInt(scanner.next());
-			if (version > SceneFiles.SCENE_VERSION)
+			int versionNumber = Integer.parseInt(scanner.next());
+			version = Math.abs(versionNumber);
+			experimentalVersion = (versionNumber < 0);
+
+			if (version > SceneFiles.VERSION)
 			{
-				commandInfo.sendFailure("mocap.error.failed_to_load_scene");
-				commandInfo.sendFailure("mocap.error.failed_to_load_scene.not_supported");
+				commandInfo.sendFailure("error.failed_to_load_scene");
+				commandInfo.sendFailure("error.failed_to_load_scene.not_supported");
 				scanner.close();
 				return false;
 			}
@@ -49,26 +52,26 @@ public class SceneData
 		}
 		catch (Exception exception)
 		{
-			commandInfo.sendException(exception, "mocap.error.failed_to_load_scene");
+			commandInfo.sendException(exception, "error.failed_to_load_scene");
 			return false;
 		}
 	}
 
 	public static class Subscene
 	{
-		private static final PlayerData EMPTY_PLAYER_DATA = new PlayerData((String)null);
 		public String name;
 		public double startDelay = 0.0;
-		public double[] posOffset = new double[3];
-		public PlayerData playerData = EMPTY_PLAYER_DATA;
+		public double[] offset = new double[3];
+		public PlayerData playerData = PlayerData.EMPTY;
 		public @Nullable String playerAsEntityID = null;
+		public EntityFilter entityFilter = EntityFilter.FOR_PLAYBACK;
 
 		public Subscene(String name)
 		{
 			this.name = name;
-			posOffset[0] = 0.0;
-			posOffset[1] = 0.0;
-			posOffset[2] = 0.0;
+			offset[0] = 0.0;
+			offset[1] = 0.0;
+			offset[2] = 0.0;
 		}
 
 		public Subscene(Scanner scanner)
@@ -77,9 +80,9 @@ public class SceneData
 			try
 			{
 				startDelay = Double.parseDouble(scanner.next());
-				posOffset[0] = Double.parseDouble(scanner.next());
-				posOffset[1] = Double.parseDouble(scanner.next());
-				posOffset[2] = Double.parseDouble(scanner.next());
+				offset[0] = Double.parseDouble(scanner.next());
+				offset[1] = Double.parseDouble(scanner.next());
+				offset[2] = Double.parseDouble(scanner.next());
 				playerData = new PlayerData(scanner);
 				playerAsEntityID = Utils.toNullableStr(scanner.next());
 			}
@@ -94,7 +97,7 @@ public class SceneData
 		public String sceneToStr()
 		{
 			return String.format(Locale.US, "%s %f %f %f %f %s %s", name, startDelay,
-					posOffset[0], posOffset[1], posOffset[2], playerData.dataToStr(),
+					offset[0], offset[1], offset[2], playerData.dataToStr(),
 					Utils.toNotNullStr(playerAsEntityID));
 		}
 	}

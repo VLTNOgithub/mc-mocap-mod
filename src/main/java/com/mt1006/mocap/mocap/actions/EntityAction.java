@@ -1,48 +1,42 @@
 package com.mt1006.mocap.mocap.actions;
 
+import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
-import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Nullable;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 
 public class EntityAction implements Action
 {
 	private final int id;
-	private final ComparableAction action;
+	private final Action action;
 
-	public EntityAction(int id, ComparableAction action)
+	public EntityAction(int id, Action action)
 	{
 		this.id = id;
 		this.action = action;
 	}
 
-	public EntityAction(RecordingFiles.Reader reader)
+	public EntityAction(RecordingFiles.Reader reader, RecordingData data)
 	{
 		id = reader.readInt();
-		Action readAction = Action.readAction(reader);
-		if (readAction instanceof ComparableAction) { action = (ComparableAction)readAction; }
-		else { action = ComparableAction.DUMMY; }
+		action = Action.readAction(reader, data);
 	}
 
-	public void write(RecordingFiles.Writer writer, @Nullable ComparableAction previousAction)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		RecordingFiles.Writer actionWriter = new RecordingFiles.Writer();
-		action.write(actionWriter, previousAction);
-		if (actionWriter.getByteList().size() == 0) { return; }
+		RecordingFiles.Writer actionWriter = new RecordingFiles.Writer(writer.parent);
+		action.write(actionWriter);
+		if (actionWriter.getByteList().isEmpty()) { return; }
 
 		writer.addByte(Type.ENTITY_ACTION.id);
 		writer.addInt(id);
 		writer.addWriter(actionWriter);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-		Entity entity = ctx.entityMap.get(id);
-		if (entity == null) { return Result.IGNORED; }
-
-		ctx.entity = entity;
+		if (!ctx.setContextEntity(id)) { return Result.IGNORED; }
 		Result retVal = action.execute(ctx);
-		ctx.entity = ctx.mainEntity;
+		ctx.setMainContextEntity();
 		return retVal;
 	}
 }

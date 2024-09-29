@@ -1,6 +1,8 @@
 package com.mt1006.mocap.mocap.playing;
 
-import com.mt1006.mocap.command.CommandInfo;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.mocap.files.RecordingData;
+import com.mt1006.mocap.mocap.files.SceneData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -20,8 +22,7 @@ public class DataManager
 		{
 			if (resourceStack.contains(name))
 			{
-				commandInfo.sendFailure("mocap.playing.start.error");
-				commandInfo.sendFailure("mocap.playing.start.error.loop");
+				commandInfo.sendFailure("playing.start.error.loop");
 				resourceStack.push(name);
 				knownError = true;
 				return false;

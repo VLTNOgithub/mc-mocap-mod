@@ -35,27 +35,35 @@ public class Utils
 		exception.printStackTrace();
 	}
 
-	public static void sendSystemMessage(@Nullable Player player, String component, Object... args)
+	public static void sendMessage(@Nullable Player player, String component, Object... args)
 	{
 		if (player == null) { return; }
 		player.sendSystemMessage(getTranslatableComponent(player, component, args));
 	}
 
+	public static void sendComponent(@Nullable Player player, Component component)
+	{
+		if (player == null) { return; }
+		player.sendSystemMessage(component);
+	}
+
 	public static String stringFromComponent(String component, Object... args)
 	{
-		return Component.translatable(component, args).getString();
+		return Component.translatable("mocap." + component, args).getString();
 	}
 
-	public static Component getTranslatableComponent(@Nullable Entity entity, String component, Object... args)
+	public static MutableComponent getTranslatableComponent(@Nullable Entity entity, String component, Object... args)
 	{
-		if (supportsTranslatable(entity)) { return Component.translatable(component, args); }
-		else { return Component.literal(Component.translatable(component, args).getString()); }
+		String key = "mocap." + component;
+		return supportsTranslatable(entity)
+				? Component.translatable(key, args)
+				: Component.literal(Component.translatable(key, args).getString());
 	}
 
-	public static Component getURLComponent(String url, String str, Object... args)
+	public static MutableComponent getEventComponent(ClickEvent.Action event, String eventStr, String visibleStr)
 	{
-		MutableComponent component = Component.literal(String.format(str, args));
-		return component.setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)));
+		MutableComponent component = Component.literal(visibleStr);
+		return component.setStyle(Style.EMPTY.withClickEvent(new ClickEvent(event, eventStr)));
 	}
 
 	public static CompoundTag nbtFromString(String nbtString) throws CommandSyntaxException

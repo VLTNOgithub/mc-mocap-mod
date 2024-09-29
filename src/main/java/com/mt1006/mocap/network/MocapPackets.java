@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class MocapPackets
 {
-	public static final int VERSION = 4;
+	public static final int VERSION = 5;
 
 	public static void register()
 	{

@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -13,34 +13,29 @@ public class Sleep implements ComparableAction
 
 	public Sleep(Entity entity)
 	{
-		if (entity instanceof LivingEntity) { bedPostion = ((LivingEntity)entity).getSleepingPos().orElse(null); }
-		else { bedPostion = null; }
+		bedPostion = (entity instanceof LivingEntity) ? ((LivingEntity)entity).getSleepingPos().orElse(null) : null;
 	}
 
 	public Sleep(RecordingFiles.Reader reader)
 	{
-		if (reader.readBoolean()) { bedPostion = new BlockPos(reader.readInt(), reader.readInt(), reader.readInt()); }
-		else { bedPostion = null; }
+		bedPostion = reader.readBoolean() ? reader.readBlockPos() : null;
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		if (bedPostion == null && ((Sleep)action).bedPostion == null) { return false; }
-		if ((bedPostion == null) != (((Sleep)action).bedPostion == null)) { return true; }
-		return bedPostion != null && !bedPostion.equals(((Sleep)action).bedPostion);
+		if (bedPostion == null && ((Sleep)previousAction).bedPostion == null) { return false; }
+		if ((bedPostion == null) != (((Sleep)previousAction).bedPostion == null)) { return true; }
+		return bedPostion != null && !bedPostion.equals(((Sleep)previousAction).bedPostion);
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SLEEP.id);
 
 		if (bedPostion != null)
 		{
 			writer.addBoolean(true);
-			writer.addInt(bedPostion.getX());
-			writer.addInt(bedPostion.getY());
-			writer.addInt(bedPostion.getZ());
+			writer.addBlockPos(bedPostion);
 		}
 		else
 		{
@@ -48,7 +43,7 @@ public class Sleep implements ComparableAction
 		}
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
 

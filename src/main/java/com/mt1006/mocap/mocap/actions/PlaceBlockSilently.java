@@ -1,7 +1,8 @@
 package com.mt1006.mocap.mocap.actions;
 
+import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
@@ -24,19 +25,23 @@ public class PlaceBlockSilently implements BlockAction
 	{
 		previousBlockState = new BlockStateData(reader);
 		newBlockState = new BlockStateData(reader);
-		blockPos = new BlockPos(reader.readInt(), reader.readInt(), reader.readInt());
+		blockPos = reader.readBlockPos();
 	}
 
-	public void write(RecordingFiles.Writer writer)
+	@Override public void prepareWrite(RecordingData data)
+	{
+		previousBlockState.prepareWrite(data);
+		newBlockState.prepareWrite(data);
+	}
+
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.PLACE_BLOCK_SILENTLY.id);
 
 		previousBlockState.write(writer);
 		newBlockState.write(writer);
 
-		writer.addInt(blockPos.getX());
-		writer.addInt(blockPos.getY());
-		writer.addInt(blockPos.getZ());
+		writer.addBlockPos(blockPos);
 	}
 
 	@Override public void preExecute(Entity entity, Vec3i blockOffset)
@@ -44,9 +49,9 @@ public class PlaceBlockSilently implements BlockAction
 		previousBlockState.placeSilently(entity, blockPos.offset(blockOffset));
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-		newBlockState.placeSilently(ctx.entity, blockPos.offset(ctx.blockOffset));
+		newBlockState.placeSilently(ctx.entity, ctx.shiftBlockPos(blockPos));
 		return Result.OK;
 	}
 }

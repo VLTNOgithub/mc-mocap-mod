@@ -1,9 +1,10 @@
-package com.mt1006.mocap.mocap.playing;
+package com.mt1006.mocap.mocap.playing.modifiers;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
-import com.mt1006.mocap.command.CommandInfo;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.utils.Fields;
 import com.mt1006.mocap.utils.ProfileUtils;
@@ -18,6 +19,7 @@ import java.util.Scanner;
 
 public class PlayerData
 {
+	public static final PlayerData EMPTY = new PlayerData((String)null);
 	private static final String MINESKIN_API_URL = "https://api.mineskin.org/get/uuid/";
 	public final @Nullable String name;
 	public final SkinSource skinSource;
@@ -73,12 +75,12 @@ public class PlayerData
 		switch (skinSource)
 		{
 			case FROM_PLAYER:
-				GameProfile tempProfile = ProfileUtils.getGameProfile(commandInfo.source.getServer(), skinPath);
+				GameProfile tempProfile = ProfileUtils.getGameProfile(commandInfo.server, skinPath);
 				PropertyMap tempPropertyMap = (PropertyMap)Fields.gameProfileProperties.get(tempProfile);
 
 				if (!tempPropertyMap.containsKey("textures"))
 				{
-					commandInfo.sendFailure("mocap.playing.start.warning.skin.profile");
+					commandInfo.sendFailure("playing.start.warning.skin.profile");
 					break;
 				}
 
@@ -87,7 +89,7 @@ public class PlayerData
 				break;
 
 			case FROM_FILE:
-				propertyMap.put(CustomSkinManager.PROPERTY_ID, new Property(CustomSkinManager.PROPERTY_ID, skinPath));
+				propertyMap.put(CustomServerSkinManager.PROPERTY_ID, new Property(CustomServerSkinManager.PROPERTY_ID, skinPath));
 				break;
 
 			case FROM_MINESKIN:
@@ -96,7 +98,7 @@ public class PlayerData
 
 				if (skinProperty == null)
 				{
-					commandInfo.sendFailure("mocap.playing.start.warning.skin.mineskin");
+					commandInfo.sendFailure("playing.start.warning.skin.mineskin");
 					break;
 				}
 
@@ -149,6 +151,7 @@ public class PlayerData
 		FROM_FILE(2),
 		FROM_MINESKIN(3);
 
+		private static final SkinSource[] VALUES = values();
 		public final int id;
 
 		SkinSource(int id)
@@ -158,7 +161,7 @@ public class PlayerData
 
 		public static SkinSource fromID(int id)
 		{
-			for (SkinSource s : values())
+			for (SkinSource s : VALUES)
 			{
 				if (s.id == id) { return s; }
 			}

@@ -1,11 +1,10 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class Swing implements ComparableAction
 {
@@ -37,21 +36,24 @@ public class Swing implements ComparableAction
 		hand = reader.readBoolean() ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return swinging != ((Swing)action).swinging;
+		Swing previousSwing = (Swing)previousAction;
+		return swinging && (previousSwing == null || !previousSwing.swinging || previousSwing.swingingTime > swingingTime);
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public boolean shouldBeInitialized()
 	{
-		if (swinging && (action == null || !((Swing)action).swinging || ((Swing)action).swingingTime > swingingTime))
-		{
-			writer.addByte(Type.SWING.id);
-			writer.addBoolean(hand == InteractionHand.OFF_HAND);
-		}
+		return false;
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public void write(RecordingFiles.Writer writer)
+	{
+		writer.addByte(Type.SWING.id);
+		writer.addBoolean(hand == InteractionHand.OFF_HAND);
+	}
+
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
 		((LivingEntity)ctx.entity).swing(hand);

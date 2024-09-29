@@ -1,10 +1,14 @@
 package com.mt1006.mocap.mocap.files;
 
-import com.mt1006.mocap.command.CommandInfo;
-import com.mt1006.mocap.command.CommandOutput;
+import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
-import com.mt1006.mocap.mocap.playing.RecordingData;
-import net.minecraft.server.MinecraftServer;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.utils.Utils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,44 +17,35 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class RecordingFiles
 {
-	public static final byte RECORDING_VERSION = 4;
+	public static final byte VERSION = MocapMod.RECORDING_FORMAT_VERSION;
+	private static final int ALT_NAME_MAX_I = 128;
 
-	public static boolean save(CommandInfo commandInfo, String name, RecordingFiles.Writer writer)
+	public static boolean save(CommandOutput commandOutput, File recordingFile, String name, RecordingData data)
 	{
-		File recordingFile = Files.getRecordingFile(commandInfo, name);
-		if (recordingFile == null) { return false; }
-
 		try
 		{
+			// double-check to make sure it won't override existing file
 			if (recordingFile.exists())
 			{
-				commandInfo.sendFailure("mocap.recording.save.file_already_exist");
-				commandInfo.sendFailure("mocap.recording.save.file_already_exist.tip");
+				commandOutput.sendFailure("recording.save.already_exists");
 				return false;
 			}
 
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(recordingFile));
-			for (Byte val : writer.getByteList())
-			{
-				bufferedOutputStream.write(new byte[] {val});
-			}
-			bufferedOutputStream.close();
-			writer.clear();
+			BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(recordingFile));
+			data.save(stream);
+			stream.close();
 		}
 		catch (IOException exception)
 		{
-			commandInfo.sendException(exception, "mocap.recording.save.exception");
+			commandOutput.sendException(exception, "recording.save.error");
 			return false;
 		}
 
 		InputArgument.addServerInput(name);
-		commandInfo.sendSuccess("mocap.recording.save.success");
 		return true;
 	}
 
@@ -65,12 +60,12 @@ public class RecordingFiles
 		try { FileUtils.copyFile(srcFile, destFile); }
 		catch (IOException exception)
 		{
-			commandInfo.sendException(exception, "mocap.recordings.copy.failed");
+			commandInfo.sendException(exception, "recordings.copy.failed");
 			return false;
 		}
 
 		InputArgument.addServerInput(destName);
-		commandInfo.sendSuccess("mocap.recordings.copy.success");
+		commandInfo.sendSuccess("recordings.copy.success");
 		return true;
 	}
 
@@ -84,13 +79,13 @@ public class RecordingFiles
 
 		if (!oldFile.renameTo(newFile))
 		{
-			commandInfo.sendFailure("mocap.recordings.rename.failed");
+			commandInfo.sendFailure("recordings.rename.failed");
 			return false;
 		}
 
 		InputArgument.removeServerInput(oldName);
 		InputArgument.addServerInput(newName);
-		commandInfo.sendSuccess("mocap.recordings.rename.success");
+		commandInfo.sendSuccess("recordings.rename.success");
 		return true;
 	}
 
@@ -101,66 +96,49 @@ public class RecordingFiles
 
 		if (!recordingFile.delete())
 		{
-			commandInfo.sendFailure("mocap.recordings.remove.failed");
+			commandInfo.sendFailure("recordings.remove.failed");
 			return false;
 		}
 
 		InputArgument.removeServerInput(name);
-		commandInfo.sendSuccess("mocap.recordings.remove.success");
+		commandInfo.sendSuccess("recordings.remove.success");
 		return true;
 	}
 
 	public static boolean info(CommandInfo commandInfo, String name)
 	{
-		RecordingData recordingData = new RecordingData();
+		RecordingData recording = new RecordingData();
 
-		if (!recordingData.load(commandInfo, name) && recordingData.version <= RECORDING_VERSION)
+		if (!recording.load(commandInfo, name) && recording.version <= VERSION)
 		{
-			commandInfo.sendFailure("mocap.recordings.info.failed");
+			commandInfo.sendFailure("recordings.info.failed");
 			return false;
 		}
 
-		commandInfo.sendSuccess("mocap.recordings.info.info");
-		commandInfo.sendSuccess("mocap.file.info.name", name);
+		commandInfo.sendSuccess("recordings.info.info");
+		commandInfo.sendSuccess("file.info.name", name);
+		if (!Files.printVersionInfo(commandInfo, VERSION, recording.version, recording.experimentalVersion)) { return true; }
 
-		if (recordingData.version <= RECORDING_VERSION)
-		{
-			if (recordingData.version == RECORDING_VERSION)
-			{
-				commandInfo.sendSuccess("mocap.file.info.version.current", recordingData.version);
-			}
-			else if (recordingData.version > 0)
-			{
-				commandInfo.sendSuccess("mocap.file.info.version.old", recordingData.version);
-			}
-			else
-			{
-				commandInfo.sendSuccess("mocap.file.info.version.unknown", recordingData.version);
-			}
+		commandInfo.sendSuccess("recordings.info.length", String.format("%.2f", recording.tickCount / 20.0), recording.tickCount);
 
-			commandInfo.sendSuccess("mocap.recordings.info.length",
-					String.format("%.2f", recordingData.tickCount / 20.0), recordingData.tickCount);
+		commandInfo.sendSuccess("recordings.info.size",
+				String.format("%.2f", recording.fileSize / 1024.0), recording.actions.size() - recording.tickCount);
 
-			commandInfo.sendSuccess("mocap.recordings.info.size",
-					String.format("%.2f", recordingData.fileSize / 1024.0), recordingData.actions.size() - recordingData.tickCount);
+		String xStr = String.format(Locale.US, "%.2f", recording.startPos[0]);
+		String yStr = String.format(Locale.US, "%.2f", recording.startPos[1]);
+		String zStr = String.format(Locale.US, "%.2f", recording.startPos[2]);
+		MutableComponent tpSuggestionComponent = Utils.getEventComponent(ClickEvent.Action.SUGGEST_COMMAND,
+				String.format("/tp @p %s %s %s", xStr, yStr, zStr), String.format("%s %s %s", xStr, yStr, zStr));
+		tpSuggestionComponent.withStyle(Style.EMPTY.withUnderlined(true));
+		commandInfo.sendSuccess("recordings.info.start_pos", tpSuggestionComponent);
 
-			commandInfo.sendSuccess("mocap.recordings.info.start_pos",
-					String.format("%.2f", recordingData.startPos[0]),
-					String.format("%.2f", recordingData.startPos[1]),
-					String.format("%.2f", recordingData.startPos[2]));
-
-			//TODO: add info about rotation and death at the end
-		}
-		else
-		{
-			commandInfo.sendSuccess("mocap.file.info.version.not_supported", recordingData.version);
-		}
+		commandInfo.sendSuccess(recording.endsWithDeath ? "recordings.info.dies.yes" : "recordings.info.dies.no");
 		return true;
 	}
 
-	public static @Nullable ArrayList<String> list(MinecraftServer server, CommandOutput commandOutput)
+	public static @Nullable List<String> list(CommandOutput commandOutput)
 	{
-		if (!Files.initDirectories(server, commandOutput)) { return null; }
+		if (!Files.initDirectories(commandOutput)) { return null; }
 		ArrayList<String> recordings = new ArrayList<>();
 
 		String[] filesList = Files.recordingsDirectory.list();
@@ -173,16 +151,55 @@ public class RecordingFiles
 				recordings.add(filename.substring(0, filename.lastIndexOf('.')));
 			}
 		}
+
+		Collections.sort(recordings);
 		return recordings;
+	}
+
+	public static @Nullable String findAlternativeName(String name)
+	{
+		if (name.isEmpty()) { return null; }
+
+		int firstDigit = name.length();
+		int lastDigit = name.length() - 1;
+		for (int i = lastDigit; i >= 0; i--)
+		{
+			char ch = name.charAt(i);
+			if (ch >= '0' && ch <= '9') { firstDigit = i; }
+			else { break; }
+		}
+
+		if (firstDigit > lastDigit) { return null; }
+		String prefix = name.substring(0, firstDigit);
+		int suffix = Integer.parseInt(name.substring(firstDigit, lastDigit + 1));
+
+		for (int i = suffix + 1; i <= suffix + ALT_NAME_MAX_I ; i++)
+		{
+			String possibleName = String.format("%s%d", prefix, i);
+			if (!InputArgument.serverInputSet.contains(possibleName)) { return possibleName; }
+		}
+		return null;
 	}
 
 	public static class Writer
 	{
 		private final List<Byte> recording = new ArrayList<>();
+		public final RecordingData parent;
+
+		public Writer(RecordingData parent)
+		{
+			this.parent = parent;
+		}
 
 		public void addByte(byte val)
 		{
 			recording.add(val);
+		}
+
+		public void addShort(short val)
+		{
+			recording.add((byte)(val >> 8));
+			recording.add((byte)val);
 		}
 
 		public void addInt(int val)
@@ -217,11 +234,18 @@ public class RecordingFiles
 		public void addString(String val)
 		{
 			byte[] bytes = val.getBytes(StandardCharsets.UTF_8);
-			addInt(bytes.length);
 			for (byte b : bytes)
 			{
 				recording.add(b);
 			}
+			recording.add((byte)0);
+		}
+
+		public void addBlockPos(BlockPos blockPos)
+		{
+			addInt(blockPos.getX());
+			addInt(blockPos.getY());
+			addInt(blockPos.getZ());
 		}
 
 		public void addWriter(RecordingFiles.Writer writer)
@@ -229,26 +253,16 @@ public class RecordingFiles
 			recording.addAll(writer.recording);
 		}
 
-		public int addMutableBoolean(boolean val)
-		{
-			recording.add(val ? (byte)1 : (byte)0);
-			return recording.size() - 1;
-		}
-
-		public void modifyBoolean(int pos, boolean newVal)
-		{
-			if (pos < 0) { return; }
-			recording.set(pos, newVal ? (byte)1 : (byte)0);
-		}
-
-		public void clear()
-		{
-			recording.clear();
-		}
-
 		public List<Byte> getByteList()
 		{
 			return recording;
+		}
+
+		public byte[] toByteArray()
+		{
+			byte[] array = new byte[recording.size()];
+			for (int i = 0; i < recording.size(); i++) { array[i] = recording.get(i); }
+			return array;
 		}
 
 		private static byte[] floatToByteArray(float val)
@@ -267,34 +281,48 @@ public class RecordingFiles
 
 	public interface Reader
 	{
+		Reader DUMMY = new DummyReader();
+
 		byte readByte();
-
+		short readShort();
 		int readInt();
-
 		float readFloat();
-
 		double readDouble();
-
 		boolean readBoolean();
-
 		String readString();
-
 		void shift(int val);
+		@Nullable RecordingData getParent();
+
+		default BlockPos readBlockPos()
+		{
+			return new BlockPos(readInt(), readInt(), readInt());
+		}
 	}
 
 	public static class FileReader implements Reader
 	{
 		private final byte[] recording;
-		private int offset = 0;
+		private final RecordingData parent;
+		private boolean legacyString;
+		public int offset = 0;
 
-		public FileReader(byte[] recording)
+		public FileReader(RecordingData parent, byte[] recording, boolean legacyString)
 		{
 			this.recording = recording;
+			this.parent = parent;
+			this.legacyString = legacyString;
 		}
 
 		@Override public byte readByte()
 		{
 			return recording[offset++];
+		}
+
+		@Override public short readShort()
+		{
+			short retVal = (short)(((recording[offset] & 0xFF) << 8) | (recording[offset + 1] & 0xFF));
+			offset += 2;
+			return retVal;
 		}
 
 		@Override public int readInt()
@@ -326,10 +354,31 @@ public class RecordingFiles
 
 		@Override public String readString()
 		{
-			int length = readInt();
-			String retVal = new String(recording, offset, length, StandardCharsets.UTF_8);
-			offset += length;
-			return retVal;
+			if (legacyString) { return readLegacyString(); }
+
+			int termPos = -1;
+			for (int i = offset; i < recording.length; i++)
+			{
+				if (recording[i] == 0)
+				{
+					termPos = i;
+					break;
+				}
+			}
+
+			//TODO: test unicode chars
+			int len = termPos - offset;
+			String str = new String(recording, offset, len, StandardCharsets.UTF_8);
+			offset += len + 1;
+			return str;
+		}
+
+		private String readLegacyString()
+		{
+			int len = readInt();
+			String str = new String(recording, offset, len, StandardCharsets.UTF_8);
+			offset += len;
+			return str;
 		}
 
 		@Override public void shift(int val)
@@ -337,9 +386,19 @@ public class RecordingFiles
 			offset += val;
 		}
 
+		@Override public RecordingData getParent()
+		{
+			return parent;
+		}
+
+		public void setStringMode(boolean legacyString)
+		{
+			this.legacyString = legacyString;
+		}
+
 		public boolean canRead()
 		{
-			return recording.length != offset;
+			return recording.length > offset;
 		}
 
 		public int getSize()
@@ -363,38 +422,14 @@ public class RecordingFiles
 
 	public static class DummyReader implements Reader
 	{
-		public static final RecordingFiles.Reader READER = new DummyReader();
-
-		@Override public byte readByte()
-		{
-			return 0;
-		}
-
-		@Override public int readInt()
-		{
-			return 0;
-		}
-
-		@Override public float readFloat()
-		{
-			return 0.0f;
-		}
-
-		@Override public double readDouble()
-		{
-			return 0.0;
-		}
-
-		@Override public boolean readBoolean()
-		{
-			return false;
-		}
-
-		@Override public String readString()
-		{
-			return "";
-		}
-
+		@Override public byte readByte() { return 0; }
+		@Override public short readShort() { return 0; }
+		@Override public int readInt() { return 0; }
+		@Override public float readFloat() { return 0.0f; }
+		@Override public double readDouble() { return 0.0; }
+		@Override public boolean readBoolean() { return false; }
+		@Override public String readString() { return ""; }
 		@Override public void shift(int val) {}
+		@Override public @Nullable RecordingData getParent() { return null; }
 	}
 }

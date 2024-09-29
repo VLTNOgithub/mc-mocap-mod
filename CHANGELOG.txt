@@ -1,3 +1,32 @@
+-It's now possible to record multiple recordings at the same time.
+-It's now possible to start playback of currently recorded recordings.
+-Renamed "/mocap playing" to "/mocap playback".
+-Added "/mocap recording discard" and "/mocap recording start_multiple" commands.
+-Added setting "allow_ghosts" which enables usage of ghost players when using a "player as entity" modifier (true by default).
+-Settings are now divided into 3 categories - recording, playback and advanced.
+-Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
+-Replaced command "/mocap recording state" with "/mocap recording list".
+-Replaced settings "trackVehicleEntities", "trackItemEntities" and "trackOtherEntities" with "track_entities".
+-Replaced settings "playVehicleEntities", "playItemEntities" and "playOtherEntities" with "play_entities".
+-Replaced setting "trackPlayedEntities" with "prevent_tracking_played_entities" (true by default) which better represents what this it's actually doing.
+-Renamed settings: "playing_speed" to "playback_speed", "recording_sync" to "recording_synchronization", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
+-Changed settings, command names and command arguments naming convention from lower camel case to snake case.
+-Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
+-Improvements to recording information command output.
+-Improvements to error messages.
+-Improved output of trying to change setting value with "/mocap settings" command, when value remained unchanged.
+-Removed argument value limits that existed for some settings in "/mocap settings" command.
+-Output of "/mocap recordings list" and "/mocap scenes list" is now alphabetically sorted.
+-Changed some "errors" to "failures" and some "failures" to "errors" - it should be now easier to distinguish user errors (failures) from mod errors.
+-Fixed recording being in a glitched state after restarting the integrated server (leaving and rejoining world in a singleplayer mode).
+-Fixed some interactions with blocks (e.g. placing candles) not working on version 1.20.5 and later.
+-Fixed setting values not being applied or using values from previous world when obtained without first starting playback or interacting with "/mocap settings" command.
+-Fixed fake players not being fully removed from the client when playback ended with death.
+-Fixed fake players in "player as entity" mode not being able to interact with blocks (thanks to awesome_nobel46 for reporting).
+-Fixed vehicles not appearing in the playback after disabling "playItemEntities", "playOtherEntities" and "playBlockActions", despite "playVehicleEntities" being enabled.
+-Minor spelling improvements.
+-Minor improvements to error detection.
+
 ===Version 1.3.9===
 -Fixed playback stopping after a non-player entity places a block on version 1.19.2 and older (thanks to awesome_nobel46 for reporting).
 

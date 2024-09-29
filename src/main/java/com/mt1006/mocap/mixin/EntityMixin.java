@@ -20,7 +20,7 @@ public abstract class EntityMixin
 	@Inject(method = "save", at = @At(value = "HEAD"), cancellable = true)
 	private void atSave(CompoundTag compoundTag, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (Playing.playedScenes.size() > 0 && Settings.PREVENT_SAVING_ENTITIES.val && getTags().contains(Playing.MOCAP_ENTITY_TAG))
+		if (!Playing.playbacks.isEmpty() && Settings.PREVENT_SAVING_ENTITIES.val && getTags().contains(Playing.MOCAP_ENTITY_TAG))
 		{
 			cir.setReturnValue(false);
 			cir.cancel();

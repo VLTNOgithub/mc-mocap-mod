@@ -1,7 +1,11 @@
 package com.mt1006.mocap.mocap.playing;
 
-import com.mt1006.mocap.command.CommandInfo;
-import com.mt1006.mocap.command.CommandOutput;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.playback.Playback;
+import com.mt1006.mocap.mocap.recording.Recording;
+import com.mt1006.mocap.mocap.recording.RecordingContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 
 import java.util.ArrayList;
@@ -12,96 +16,112 @@ import java.util.List;
 public class Playing
 {
 	public static final String MOCAP_ENTITY_TAG = "mocap_entity";
-	public static final List<PlayedScene> playedScenes = Collections.synchronizedList(new LinkedList<>());
+	public static final List<Playback.Root> playbacks = Collections.synchronizedList(new LinkedList<>());
 	private static long tickCounter = 0;
 	private static double timer = 0.0;
-	private static double previousPlayingSpeed = 0.0;
+	private static double previousPlaybackSpeed = 0.0;
 
 	public static boolean start(CommandInfo commandInfo, String name, PlayerData playerData)
 	{
-		if (!Settings.loaded) { Settings.load(commandInfo); }
+		if (name.charAt(0) == '#')
+		{
+			List<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
+			if (contexts == null) { return false; }
 
-		PlayedScene scene = new PlayedScene();
-		if (!scene.start(commandInfo, name, playerData, getNextID())) { return false; }
-		playedScenes.add(scene);
+			int successes = 0;
+			for (RecordingContext ctx : contexts)
+			{
+				Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, playerData, getNextId());
+				if (playback == null) { continue; }
+				playbacks.add(playback);
+				successes++;
+			}
 
-		commandInfo.sendSuccess("mocap.playing.start.success");
-		return true;
+			if (successes != 0) { commandInfo.sendSuccess("playing.start.success"); }
+			return successes != 0;
+		}
+		else
+		{
+			Playback.Root playback = Playback.start(commandInfo, name, playerData, getNextId());
+			if (playback == null) { return false; }
+			playbacks.add(playback);
+			commandInfo.sendSuccess("playing.start.success");
+			return true;
+		}
 	}
 
 	public static void stop(CommandInfo commandInfo, int id)
 	{
-		for (PlayedScene scene : playedScenes)
+		for (Playback.Root playback : playbacks)
 		{
-			if (scene.getID() == id)
+			if (playback.id == id)
 			{
-				scene.stop();
-				commandInfo.sendSuccess("mocap.playing.stop.success");
+				playback.instance.stop();
+				commandInfo.sendSuccess("playing.stop.success");
 				return;
 			}
 		}
 
-		commandInfo.sendFailure("mocap.playing.stop.unable_to_find_scene");
-		commandInfo.sendFailure("mocap.playing.stop.unable_to_find_scene.tip");
+		commandInfo.sendFailureWithTip("playing.stop.unable_to_find_scene");
 	}
 
 	public static boolean stopAll(CommandOutput commandOutput)
 	{
-		playedScenes.forEach(PlayedScene::stop);
-		commandOutput.sendSuccess("mocap.playing.stop_all.success");
+		playbacks.forEach((playback) -> playback.instance.stop());
+		commandOutput.sendSuccess("playing.stop_all.success");
 		return true;
 	}
 
 	public static boolean list(CommandInfo commandInfo)
 	{
-		commandInfo.sendSuccess("mocap.playing.list");
+		commandInfo.sendSuccess("playing.list");
 
-		for (PlayedScene scene : playedScenes)
+		for (Playback.Root playback : playbacks)
 		{
-			commandInfo.sendSuccessLiteral("[%d] %s", scene.getID(), scene.getName());
+			commandInfo.sendSuccessLiteral("[%d] %s", playback.id, playback.name);
 		}
 		return true;
 	}
 
 	public static void onTick()
 	{
-		if (!playedScenes.isEmpty())
+		if (!playbacks.isEmpty())
 		{
-			if (previousPlayingSpeed != Settings.PLAYING_SPEED.val)
+			if (previousPlaybackSpeed != Settings.PLAYBACK_SPEED.val)
 			{
 				timer = 0.0;
-				previousPlayingSpeed = Settings.PLAYING_SPEED.val;
+				previousPlaybackSpeed = Settings.PLAYBACK_SPEED.val;
 			}
 
 			if ((long)timer < tickCounter) { timer = tickCounter; }
 
 			while ((long)timer == tickCounter)
 			{
-				ArrayList<PlayedScene> toRemove = new ArrayList<>();
+				ArrayList<Playback.Root> toRemove = new ArrayList<>();
 
-				for (PlayedScene scene : playedScenes)
+				for (Playback.Root playback : playbacks)
 				{
-					if (scene.isFinished()) { toRemove.add(scene); }
-					else { scene.onTick(); }
+					if (playback.instance.isFinished()) { toRemove.add(playback); }
+					else { playback.instance.tick(); }
 				}
 
-				playedScenes.removeAll(toRemove);
-				if (playedScenes.isEmpty()) { break; }
+				playbacks.removeAll(toRemove);
+				if (playbacks.isEmpty()) { break; }
 
-				timer += 1.0 / Settings.PLAYING_SPEED.val;
+				timer += 1.0 / Settings.PLAYBACK_SPEED.val;
 			}
 		}
 		tickCounter++;
 	}
 
-	private static int getNextID()
+	private static int getNextId()
 	{
 		int maxInt = 1;
-		for (PlayedScene scene : playedScenes)
+		for (Playback.Root playback : playbacks)
 		{
-			if (scene.getID() >= maxInt)
+			if (playback.id >= maxInt)
 			{
-				maxInt = scene.getID() + 1;
+				maxInt = playback.id + 1;
 			}
 		}
 		return maxInt;

@@ -13,11 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerLevelMixin
 {
 	@Inject(method = "destroyBlockProgress", at = @At(value = "HEAD"))
-	public void destroyBlockProgress(int id, BlockPos blockPos, int progress, CallbackInfo callbackInfo)
+	public void destroyBlockProgress(int id, BlockPos blockPos, int progress, CallbackInfo ci)
 	{
-		if (Recording.state == Recording.State.RECORDING && Recording.player.getId() == id)
+		if (Recording.isActive())
 		{
-			new BreakBlockProgress(blockPos, progress).write(Recording.writer);
+			Recording.fromRecordedPlayer(id).forEach((ctx) -> ctx.addAction(new BreakBlockProgress(blockPos, progress)));
 		}
 	}
 }

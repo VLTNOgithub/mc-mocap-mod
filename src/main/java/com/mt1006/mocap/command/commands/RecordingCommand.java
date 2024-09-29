@@ -1,9 +1,10 @@
 package com.mt1006.mocap.command.commands;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mt1006.mocap.command.CommandInfo;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.recording.Recording;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -21,16 +22,22 @@ public class RecordingCommand
 
 		commandBuilder.then(Commands.literal("start").executes(CommandUtils.command(RecordingCommand::start)).
 			then(Commands.argument("player", GameProfileArgument.gameProfile()).executes(CommandUtils.command(RecordingCommand::start))));
-		commandBuilder.then(Commands.literal("stop").executes(CommandUtils.command(RecordingCommand::stop)));
-		commandBuilder.then(Commands.literal("save").then(CommandUtils.withStringArgument(Recording::save, "name")));
-		commandBuilder.then(Commands.literal("state").executes(CommandUtils.command(RecordingCommand::state)));
+		//commandBuilder.then(Commands.literal("start_multiple").then(CommandUtils.withStringArgument(Recording::startMultiple, "players")));
+		commandBuilder.then(Commands.literal("stop").executes(CommandUtils.command(RecordingCommand::stop)).
+			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::stop))));
+		commandBuilder.then(Commands.literal("discard").executes(CommandUtils.command(RecordingCommand::discard)).
+			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::discard))));
+		commandBuilder.then(Commands.literal("save").then(CommandUtils.withStringArgument(RecordingCommand::saveAuto, "name").
+			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::saveSpecific)))));
+		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(RecordingCommand::list)).
+			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::list))));
 
 		return commandBuilder;
 	}
 
 	private static boolean start(CommandInfo commandInfo)
 	{
-		ServerPlayer serverPlayer = null;
+		ServerPlayer player = null;
 
 		try
 		{
@@ -39,40 +46,60 @@ public class RecordingCommand
 			if (gameProfiles.size() == 1)
 			{
 				String nickname = gameProfiles.iterator().next().getName();
-				serverPlayer = commandInfo.source.getServer().getPlayerList().getPlayerByName(nickname);
+				player = commandInfo.server.getPlayerList().getPlayerByName(nickname);
 			}
 
-			if (serverPlayer == null)
+			if (player == null)
 			{
-				commandInfo.sendFailure("mocap.recording.start.player_not_found");
+				commandInfo.sendFailure("recording.start.player_not_found");
 				return false;
 			}
 		}
 		catch (Exception exception)
 		{
-			Entity entity = commandInfo.source.getEntity();
+			Entity entity = commandInfo.sourceEntity;
 
 			if (!(entity instanceof ServerPlayer))
 			{
-				commandInfo.sendFailure("mocap.recording.start.player_not_specified");
-				commandInfo.sendFailure("mocap.recording.start.player_not_specified.tip");
+				commandInfo.sendFailureWithTip("recording.start.player_not_specified");
 				return false;
 			}
 
-			serverPlayer = (ServerPlayer)entity;
+			player = (ServerPlayer)entity;
 		}
 
-		return Recording.start(commandInfo, serverPlayer);
+		return Recording.start(commandInfo, player);
 	}
 
-	//TODO: don't replace - extend it
 	private static boolean stop(CommandInfo commandInfo)
 	{
-		return Recording.stop(commandInfo);
+		return Recording.stop(commandInfo, commandInfo.getNullableString("id"));
 	}
 
-	private static boolean state(CommandInfo commandInfo)
+	private static boolean discard(CommandInfo commandInfo)
 	{
-		return Recording.state(commandInfo);
+		return Recording.discard(commandInfo, commandInfo.getNullableString("id"));
+	}
+
+	private static boolean saveAuto(CommandInfo commandInfo, String name)
+	{
+		return Recording.save(commandInfo, null, name);
+	}
+
+	private static boolean saveSpecific(CommandInfo commandInfo)
+	{
+		String name = commandInfo.getNullableString("name");
+		if (name == null)
+		{
+			commandInfo.sendFailure("error.unable_to_get_argument");
+			return false;
+		}
+
+		return Recording.save(commandInfo, commandInfo.getNullableString("id"), name);
+	}
+
+	private static boolean list(CommandInfo commandInfo)
+	{
+		return Recording.list(commandInfo, commandInfo.getNullableString("id"));
 	}
 }

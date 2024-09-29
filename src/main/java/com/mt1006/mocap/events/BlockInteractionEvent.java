@@ -19,34 +19,35 @@ public class BlockInteractionEvent
 {
 	public static boolean onBlockBreak(Level level, Player player, BlockPos pos, BlockState blockState, @Nullable BlockEntity blockEntity)
 	{
-		if (Recording.state == Recording.State.RECORDING && Recording.isRecordedPlayer(player))
+		if (Recording.isActive())
 		{
-			new BreakBlock(blockState, pos).write(Recording.writer);
+			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new BreakBlock(blockState, pos)));
 		}
 		return true;
 	}
 
 	public static void onBlockPlace(Player player, BlockState replacedBlock, BlockState placedBlock, BlockPos blockPos)
 	{
-		if (Recording.isRecordedPlayer(player))
+		if (Recording.isActive())
 		{
-			new PlaceBlock(replacedBlock, placedBlock, blockPos).write(Recording.writer);
+			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlock(replacedBlock, placedBlock, blockPos)));
 		}
 	}
 
 	public static void onSilentBlockPlace(Player player, BlockState replacedBlock, BlockState placedBlock, BlockPos blockPos)
 	{
-		if (Recording.isRecordedPlayer(player))
+		if (Recording.isActive())
 		{
-			new PlaceBlockSilently(replacedBlock, placedBlock, blockPos).write(Recording.writer);
+			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlockSilently(replacedBlock, placedBlock, blockPos)));
 		}
 	}
 
 	public static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult)
 	{
-		if (Recording.state == Recording.State.RECORDING && Recording.isRecordedPlayer(player) && !usedOnShift(player, hitResult.getBlockPos()))
+		if (Recording.isActive() && !usedOnShift(player, hitResult.getBlockPos()))
 		{
-			new RightClickBlock(hitResult, hand == InteractionHand.OFF_HAND).write(Recording.writer);
+			boolean isOffHand = (hand == InteractionHand.OFF_HAND);
+			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new RightClickBlock(hitResult, isOffHand)));
 		}
 		return InteractionResult.PASS;
 	}

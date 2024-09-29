@@ -1,8 +1,8 @@
 package com.mt1006.mocap.mixin;
 
 import com.mojang.authlib.properties.Property;
-import com.mt1006.mocap.mocap.playing.CustomClientSkinManager;
-import com.mt1006.mocap.mocap.playing.CustomSkinManager;
+import com.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
+import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collection;
 
 @Mixin(AbstractClientPlayer.class)
-abstract public class AbstractClientPlayerMixin
+public abstract class AbstractClientPlayerMixin
 {
 	@Shadow protected abstract @Nullable PlayerInfo getPlayerInfo();
 
@@ -27,7 +27,7 @@ abstract public class AbstractClientPlayerMixin
 		PlayerInfo playerInfo = getPlayerInfo();
 		if (playerInfo == null) { return; }
 
-		Collection<Property> properties = playerInfo.getProfile().getProperties().get(CustomSkinManager.PROPERTY_ID);
+		Collection<Property> properties = playerInfo.getProfile().getProperties().get(CustomServerSkinManager.PROPERTY_ID);
 		if (properties.isEmpty()) { return; }
 
 		ResourceLocation res = CustomClientSkinManager.get(properties.iterator().next().value());

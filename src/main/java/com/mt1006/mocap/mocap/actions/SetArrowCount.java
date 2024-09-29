@@ -1,10 +1,9 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class SetArrowCount implements ComparableAction
 {
@@ -31,22 +30,21 @@ public class SetArrowCount implements ComparableAction
 		beeStingerCount = reader.readInt();
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return arrowCount != ((SetArrowCount)action).arrowCount ||
-				beeStingerCount != ((SetArrowCount)action).beeStingerCount;
+		return arrowCount != ((SetArrowCount)previousAction).arrowCount
+				|| beeStingerCount != ((SetArrowCount)previousAction).beeStingerCount;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SET_ARROW_COUNT.id);
 
 		writer.addInt(arrowCount);
 		writer.addInt(beeStingerCount);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
 		((LivingEntity)ctx.entity).setArrowCount(arrowCount);

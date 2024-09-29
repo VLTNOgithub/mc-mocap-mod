@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 
 public class NextTick implements Action
 {
@@ -9,13 +9,14 @@ public class NextTick implements Action
 
 	public NextTick(RecordingFiles.Reader ignored) {}
 
-	public void write(RecordingFiles.Writer writer)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.NEXT_TICK.id);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
+		//MocapMod.LOGGER.warn("SKIP TICK (NT)"); //TODO: remove
 		return Result.NEXT_TICK;
 	}
 }

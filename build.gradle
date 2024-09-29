@@ -1,6 +1,6 @@
 plugins
 {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id "fabric-loom" version "1.7-SNAPSHOT"
 }
 
 version = project.mod_version
@@ -13,14 +13,13 @@ base
 
 repositories
 {
-	maven { url = 'https://maven.parchmentmc.org/' }
+	maven { url = "https://maven.parchmentmc.org/" }
 }
 
 dependencies
 {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered()
-	{
+	mappings loom.layered() {
 		officialMojangMappings()
 		parchment("org.parchmentmc.data:parchment-${project.mappings_version}@zip")
 	}

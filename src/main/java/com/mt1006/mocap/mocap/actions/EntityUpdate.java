@@ -3,68 +3,78 @@ package com.mt1006.mocap.mocap.actions;
 import com.mt1006.mocap.mixin.fabric.EntityIdMixin;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.Playing;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
-import com.mt1006.mocap.mocap.settings.Settings;
+import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Saddleable;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class EntityUpdate implements Action
 {
-	public static final byte ADD = 1;
-	public static final byte REMOVE = 2;
-	public static final byte KILL = 3;
-	public static final byte HURT = 4;
-	public static final byte PLAYER_MOUNT = 5;
-	public static final byte PLAYER_DISMOUNT = 6;
-	private final byte type;
+	private final UpdateType type;
 	private final int id;
 	private final @Nullable String nbtString;
-	private final double[] position = new double[3];
+	private final double @Nullable[] position;
 
-	public EntityUpdate(byte type)
+	public static EntityUpdate addEntity(int id, Entity entity)
 	{
-		this.type = type;
-		this.id = 0;
-		this.nbtString = null;
-	}
-
-	public EntityUpdate(byte type, int id)
-	{
-		this.type = type;
-		this.id = id;
-		this.nbtString = null;
-	}
-
-	public EntityUpdate(byte type, int id, Entity entity)
-	{
-		this.type = type;
-		this.id = id;
-
-		nbtString = serializeEntityNBT(entity).toString();
+		String nbtString = serializeEntityNBT(entity).toString();
 
 		Vec3 entityPos = entity.position();
-		this.position[0] = entityPos.x;
-		this.position[1] = entityPos.y;
-		this.position[2] = entityPos.z;
+		double[] position = new double[3];
+		position[0] = entityPos.x;
+		position[1] = entityPos.y;
+		position[2] = entityPos.z;
+
+		return new EntityUpdate(UpdateType.ADD, id, nbtString, position);
+	}
+
+	public static EntityUpdate removeEntity(int id)
+	{
+		return new EntityUpdate(UpdateType.REMOVE, id, null, null);
+	}
+
+	public static EntityUpdate kill(int id)
+	{
+		return new EntityUpdate(UpdateType.KILL, id, null, null);
+	}
+
+	public static EntityUpdate hurt(int id)
+	{
+		return new EntityUpdate(UpdateType.HURT, id, null, null);
+	}
+
+	public static EntityUpdate playerMount(int id)
+	{
+		return new EntityUpdate(UpdateType.PLAYER_MOUNT, id, null, null);
+	}
+
+	public static EntityUpdate playerDismount()
+	{
+		return new EntityUpdate(UpdateType.PLAYER_DISMOUNT, 0, null, null);
+	}
+
+	private EntityUpdate(UpdateType type, int id, @Nullable String nbtString, double @Nullable[] position)
+	{
+		this.type = type;
+		this.id = id;
+		this.nbtString = nbtString;
+		this.position = position;
 	}
 
 	public EntityUpdate(RecordingFiles.Reader reader)
 	{
-		type = reader.readByte();
+		type = UpdateType.fromId(reader.readByte());
 		id = reader.readInt();
 
-		if (type == ADD)
+		if (type == UpdateType.ADD)
 		{
 			nbtString = reader.readString();
+			position = new double[3];
 			position[0] = reader.readDouble();
 			position[1] = reader.readDouble();
 			position[2] = reader.readDouble();
@@ -72,6 +82,7 @@ public class EntityUpdate implements Action
 		else
 		{
 			nbtString = null;
+			position = null;
 		}
 	}
 
@@ -89,99 +100,123 @@ public class EntityUpdate implements Action
 		return compoundTag;
 	}
 
-	public static boolean isEntityPlayingDisabled()
-	{
-		return !(Settings.PLAY_BLOCK_ACTIONS.val || Settings.PLAY_ITEM_ENTITIES.val || Settings.PLAY_OTHER_ENTITIES.val);
-	}
-
-	public void write(RecordingFiles.Writer writer)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.ENTITY_UPDATE.id);
 
-		writer.addByte(type);
+		writer.addByte(type.id);
 		writer.addInt(id);
 
-		if (type == ADD)
+		if (type == UpdateType.ADD)
 		{
 			writer.addString(nbtString != null ? nbtString : "");
-			writer.addDouble(position[0]);
-			writer.addDouble(position[1]);
-			writer.addDouble(position[2]);
+			if (position != null)
+			{
+				writer.addDouble(position[0]);
+				writer.addDouble(position[1]);
+				writer.addDouble(position[2]);
+			}
 		}
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-		if (type == ADD)
+		switch (type)
 		{
-			if (nbtString == null || ctx.entityMap.containsKey(id) || isEntityPlayingDisabled()) { return Result.IGNORED; }
+			case ADD:
+				return executeAdd(ctx);
 
-			CompoundTag nbt;
- 			try { nbt = Utils.nbtFromString(nbtString); }
-			catch (Exception exception) { return Result.ERROR; }
+			case PLAYER_DISMOUNT:
+				ctx.entity.stopRiding();
+				return Result.OK;
 
-			Entity entity = EntityType.create(nbt, ctx.level).orElse(null);
-			if (entity == null) { return Result.IGNORED; }
-
-			if (entity instanceof Saddleable || entity instanceof Minecart || entity instanceof Boat)
-			{
-				if (!Settings.PLAY_VEHICLE_ENTITIES.val) { return Result.IGNORED; }
-			}
-			else if (entity instanceof ItemEntity)
-			{
-				if (!Settings.PLAY_ITEM_ENTITIES.val) { return Result.IGNORED; }
-			}
-			else if (!Settings.PLAY_OTHER_ENTITIES.val)
-			{
+			case NONE:
 				return Result.IGNORED;
-			}
-
-			entity.setPos(position[0] + ctx.offset.x, position[1] + ctx.offset.y, position[2] + ctx.offset.z);
-			entity.setDeltaMovement(0.0, 0.0, 0.0);
-			entity.setNoGravity(true);
-			entity.setInvulnerable(true);
-			entity.addTag(Playing.MOCAP_ENTITY_TAG);
-			if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
-
-			ctx.level.addFreshEntity(entity);
-			ctx.entityMap.put(id, entity);
-			return Result.OK;
 		}
-		else if (type == PLAYER_DISMOUNT)
-		{
-			ctx.entity.stopRiding();
-			return Result.OK;
-		}
-		else
-		{
-			Entity entity = ctx.entityMap.get(id);
-			if (entity == null) { return Result.IGNORED; }
 
-			if (type == REMOVE)
-			{
+		ActionContext.EntityData entityData = ctx.entityDataMap.get(id);
+		if (entityData == null) { return Result.IGNORED; }
+		Entity entity = entityData.entity;
+
+		switch (type)
+		{
+			case REMOVE:
 				entity.remove(Entity.RemovalReason.KILLED);
 				return Result.OK;
-			}
-			else if (type == KILL)
-			{
+
+			case KILL:
 				entity.invulnerableTime = 0; // for sound effect
 				entity.kill();
 				return Result.OK;
-			}
-			else if (type == HURT)
-			{
+
+			case HURT:
 				Hurt.hurtEntity(entity);
 				return Result.OK;
-			}
-			else if (type == PLAYER_MOUNT)
-			{
+
+			case PLAYER_MOUNT:
 				ctx.entity.startRiding(entity, true);
 				return Result.OK;
-			}
-			else
+		}
+		return Result.IGNORED;
+	}
+
+	private Result executeAdd(ActionContext ctx)
+	{
+		EntityFilter filter = ctx.modifiers.entityFilter;
+		if (nbtString == null || position == null || ctx.entityDataMap.containsKey(id) || filter.isEmpty()) { return Result.IGNORED; }
+
+		CompoundTag nbt;
+		try
+		{
+			nbt = Utils.nbtFromString(nbtString);
+		}
+		catch (Exception exception)
+		{
+			Utils.exception(exception, "Exception occurred when parsing entity NBT data!");
+			return Result.ERROR;
+		}
+
+		Entity entity = EntityType.create(nbt, ctx.level).orElse(null);
+		if (entity == null || !filter.isAllowed(entity)) { return Result.IGNORED; }
+
+		Vec3 offset = ctx.modifiers.offset;
+		entity.setPos(position[0] + offset.x, position[1] + offset.y, position[2] + offset.z);
+		entity.setDeltaMovement(0.0, 0.0, 0.0);
+		entity.setNoGravity(true);
+		entity.setInvulnerable(true);
+		entity.addTag(Playing.MOCAP_ENTITY_TAG);
+		if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
+
+		ctx.level.addFreshEntity(entity);
+		ctx.entityDataMap.put(id, new ActionContext.EntityData(entity));
+		return Result.OK;
+	}
+
+	public enum UpdateType
+	{
+		NONE(0),
+		ADD(1),
+		REMOVE(2),
+		KILL(3),
+		HURT(4),
+		PLAYER_MOUNT(5),
+		PLAYER_DISMOUNT(6);
+
+		private static final UpdateType[] VALUES = values();
+		private final byte id;
+
+		UpdateType(int id)
+		{
+			this.id = (byte)id;
+		}
+
+		private static UpdateType fromId(byte id)
+		{
+			for (UpdateType type : VALUES)
 			{
-				return Result.IGNORED;
+				if (type.id == id) { return type; }
 			}
+			return NONE;
 		}
 	}
 }

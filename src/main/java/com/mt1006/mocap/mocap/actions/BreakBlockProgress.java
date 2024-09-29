@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
@@ -19,25 +19,23 @@ public class BreakBlockProgress implements BlockAction
 
 	public BreakBlockProgress(RecordingFiles.Reader reader)
 	{
-		this.blockPos = new BlockPos(reader.readInt(), reader.readInt(), reader.readInt());
+		this.blockPos = reader.readBlockPos();
 		this.progress = reader.readInt();
 	}
 
-	public void write(RecordingFiles.Writer writer)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.BREAK_BLOCK_PROGRESS.id);
 
-		writer.addInt(blockPos.getX());
-		writer.addInt(blockPos.getY());
-		writer.addInt(blockPos.getZ());
+		writer.addBlockPos(blockPos);
 		writer.addInt(progress);
 	}
 
 	@Override public void preExecute(Entity entity, Vec3i blockOffset) {}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.level.destroyBlockProgress(ctx.entity.getId(), blockPos.offset(ctx.blockOffset), progress);
+		ctx.level.destroyBlockProgress(ctx.entity.getId(), ctx.shiftBlockPos(blockPos), progress);
 		return Result.OK;
 	}
 }

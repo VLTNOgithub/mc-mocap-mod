@@ -5,7 +5,7 @@ import com.mt1006.mocap.mixin.fields.BoatMixin;
 import com.mt1006.mocap.mixin.fields.HorseMixin;
 import com.mt1006.mocap.mixin.fields.PigMixin;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.EntityData;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +20,6 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.Nullable;
 
 public class VehicleData implements ComparableAction
 {
@@ -55,15 +54,15 @@ public class VehicleData implements ComparableAction
 			if (abstractHorse.isStanding()) { flags |= 0x20; }
 			if ((EntityData.ABSTRACT_HORSE_FLAGS.valOrDef(entity, (byte)0) & 0x40) != 0) { flags |= 0x40; }
 
-			if (entity instanceof Camel) { flag1 = ((Camel)entity).isDashing(); }
+			if (entity instanceof Horse) { int1 = ((HorseMixin)entity).callGetTypeVariant(); }
 			else if (entity instanceof AbstractChestedHorse) { flag1 = ((AbstractChestedHorse)entity).hasChest(); }
-			else if (entity instanceof Horse) { int1 = ((HorseMixin)entity).callGetTypeVariant(); }
+			else if (entity instanceof Camel) { flag1 = ((Camel)entity).isDashing(); }
 
 			if (entity instanceof Llama) { int1 = ((Llama)entity).getVariant().getId(); }
 		}
 		else if (entity instanceof Pig)
 		{
-			flag1 = ((Pig) entity).isSaddled();
+			flag1 = ((Pig)entity).isSaddled();
 		}
 		else if (entity instanceof Boat)
 		{
@@ -99,9 +98,9 @@ public class VehicleData implements ComparableAction
 		}
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		VehicleData vehicleData = (VehicleData)action;
+		VehicleData vehicleData = (VehicleData)previousAction;
 
 		if (!used && !vehicleData.used) { return false; }
 		if (used != vehicleData.used) { return true; }
@@ -114,10 +113,8 @@ public class VehicleData implements ComparableAction
 				|| float1 != vehicleData.float1;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
-
 		writer.addByte(Type.VEHICLE_DATA.id);
 		writer.addBoolean(used);
 		if (used)
@@ -132,7 +129,7 @@ public class VehicleData implements ComparableAction
 		}
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!used) { return Result.OK; }
 
@@ -152,9 +149,9 @@ public class VehicleData implements ComparableAction
 			}
 			catch (Exception ignore) {}
 
-			if (ctx.entity instanceof Camel) { ((Camel)ctx.entity).setDashing(flag1); }
+			if (ctx.entity instanceof Horse) { ((HorseMixin)ctx.entity).callSetTypeVariant(int1); }
 			else if (ctx.entity instanceof AbstractChestedHorse) { ((AbstractChestedHorse)ctx.entity).setChest(flag1); }
-			else if (ctx.entity instanceof Horse) { ((HorseMixin)ctx.entity).callSetTypeVariant(int1); }
+			else if (ctx.entity instanceof Camel) { ((Camel)ctx.entity).setDashing(flag1); }
 
 			if (ctx.entity instanceof Llama) { ((Llama)ctx.entity).setVariant(Llama.Variant.byId(int1)); }
 		}

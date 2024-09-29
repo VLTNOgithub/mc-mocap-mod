@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -9,6 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 public class Hurt implements Action
 {
 	public static final byte DUMMY = 0; // for future uses
+
+	public Hurt() {}
 
 	public Hurt(RecordingFiles.Reader reader)
 	{
@@ -28,13 +30,13 @@ public class Hurt implements Action
 		entity.setInvulnerable(true);
 	}
 
-	public static void write(RecordingFiles.Writer writer)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.HURT.id);
 		writer.addByte(DUMMY);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		hurtEntity(ctx.entity);
 		return Result.OK;

@@ -2,9 +2,9 @@ package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.CommandInfo;
+import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.io.CommandInfo;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -16,28 +16,28 @@ public class MocapCommand
 		//TODO: add permission level to config
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("mocap").requires(source -> source.hasPermission(2));
 
+		commandBuilder.then(RecordingCommand.getArgumentBuilder());
+		commandBuilder.then(PlaybackCommand.getArgumentBuilder());
 		commandBuilder.then(RecordingsCommand.getArgumentBuilder());
 		commandBuilder.then(ScenesCommand.getArgumentBuilder(buildContext));
-		commandBuilder.then(RecordingCommand.getArgumentBuilder());
-		commandBuilder.then(PlayingCommand.getArgumentBuilder());
 		commandBuilder.then(SettingsCommand.getArgumentBuilder());
-		commandBuilder.then(Commands.literal("info").executes(MocapCommand::info));
-		commandBuilder.then(Commands.literal("help").executes(MocapCommand::help));
+		commandBuilder.then(MiscCommand.getArgumentBuilder());
+		commandBuilder.then(Commands.literal("info").executes(CommandUtils.command(MocapCommand::info)));
+		commandBuilder.then(Commands.literal("help").executes(CommandUtils.command(MocapCommand::help)));
 
 		dispatcher.register(commandBuilder);
 	}
 
-	private static int info(CommandContext<CommandSourceStack> ctx)
+	private static boolean info(CommandInfo commandInfo)
 	{
-		CommandInfo commandInfo = new CommandInfo(ctx);
 		commandInfo.sendSuccessLiteral(MocapMod.getFullName());
 		commandInfo.sendSuccessLiteral("Author: mt1006");
-		return 1;
+		return true;
 	}
 
-	private static int help(CommandContext<CommandSourceStack> ctx)
+	private static boolean help(CommandInfo commandInfo)
 	{
-		new CommandInfo(ctx).sendSuccess("mocap.help", MocapMod.getName());
-		return 1;
+		commandInfo.sendSuccess("help", MocapMod.getName());
+		return true;
 	}
 }

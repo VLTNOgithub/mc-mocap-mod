@@ -1,13 +1,44 @@
 package com.mt1006.mocap.mocap.actions;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
-import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
 
 public class ChangePose implements ComparableAction
 {
+	private static final BiMap<Integer, Pose> poseMap;
+	private static final BiMap<Pose, Integer> poseIdMap;
+	static
+	{
+		EnumMap<Pose, Integer> enumMap = new EnumMap<>(Pose.class);
+		enumMap.put(Pose.STANDING, 1);
+		enumMap.put(Pose.FALL_FLYING, 2);
+		enumMap.put(Pose.SLEEPING, 3);
+		enumMap.put(Pose.SWIMMING, 4);
+		enumMap.put(Pose.SPIN_ATTACK, 5);
+		enumMap.put(Pose.CROUCHING, 6);
+		enumMap.put(Pose.DYING, 7);
+		enumMap.put(Pose.LONG_JUMPING, 8);
+		enumMap.put(Pose.CROAKING, 9);
+		enumMap.put(Pose.USING_TONGUE, 10);
+		enumMap.put(Pose.SITTING, 11);
+		enumMap.put(Pose.ROARING, 12);
+		enumMap.put(Pose.SNIFFING, 13);
+		enumMap.put(Pose.EMERGING, 14);
+		enumMap.put(Pose.DIGGING, 15);
+		enumMap.put(Pose.SLIDING, 16);
+		enumMap.put(Pose.SHOOTING, 17);
+		enumMap.put(Pose.INHALING, 18);
+
+		poseIdMap = HashBiMap.create(enumMap);
+		poseMap = poseIdMap.inverse();
+	}
+
 	private final Pose pose;
 
 	public ChangePose(Entity entity)
@@ -17,58 +48,21 @@ public class ChangePose implements ComparableAction
 
 	public ChangePose(RecordingFiles.Reader reader)
 	{
-		switch (reader.readInt())
-		{
-			default: pose = Pose.STANDING; break;
-			case 2: pose = Pose.FALL_FLYING; break;
-			case 3: pose = Pose.SLEEPING; break;
-			case 4: pose = Pose.SWIMMING; break;
-			case 5: pose = Pose.SPIN_ATTACK; break;
-			case 6: pose = Pose.CROUCHING; break;
-			case 7: pose = Pose.DYING; break;
-			case 8: pose = Pose.LONG_JUMPING; break;
-			case 9: pose = Pose.CROAKING; break;
-			case 10: pose = Pose.USING_TONGUE; break;
-			case 11: pose = Pose.SITTING; break;
-			case 12: pose = Pose.ROARING; break;
-			case 13: pose = Pose.SNIFFING; break;
-			case 14: pose = Pose.EMERGING; break;
-			case 15: pose = Pose.DIGGING; break;
-		}
+		pose = poseMap.getOrDefault(reader.readInt(), Pose.STANDING);
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return pose != ((ChangePose)action).pose;
+		return pose != ((ChangePose)previousAction).pose;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.CHANGE_POSE.id);
-
-		switch (pose)
-		{
-			case STANDING: writer.addInt(1); break;
-			case FALL_FLYING: writer.addInt(2); break;
-			case SLEEPING: writer.addInt(3); break;
-			case SWIMMING: writer.addInt(4); break;
-			case SPIN_ATTACK: writer.addInt(5); break;
-			case CROUCHING: writer.addInt(6); break;
-			case DYING: writer.addInt(7); break;
-			case LONG_JUMPING: writer.addInt(8); break;
-			case CROAKING: writer.addInt(9); break;
-			case USING_TONGUE: writer.addInt(10); break;
-			case SITTING: writer.addInt(11); break;
-			case ROARING: writer.addInt(12); break;
-			case SNIFFING: writer.addInt(13); break;
-			case EMERGING: writer.addInt(14); break;
-			case DIGGING: writer.addInt(15); break;
-			default: writer.addInt(0);
-		}
+		writer.addInt(poseIdMap.getOrDefault(pose, 0));
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		ctx.entity.setPose(pose);
 		return Result.OK;

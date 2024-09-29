@@ -1,11 +1,9 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.EntityData;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 
 public class SetEntityFlags implements ComparableAction
 {
@@ -13,15 +11,8 @@ public class SetEntityFlags implements ComparableAction
 
 	public SetEntityFlags(Entity entity)
 	{
-		byte entityFlags = 0;
-		if (entity.isOnFire()) { entityFlags |= 0x01; }
-		if (entity.isShiftKeyDown()) { entityFlags |= 0x02; }
-		if (entity.isSprinting()) { entityFlags |= 0x08; }
-		if (entity.isSwimming()) { entityFlags |= 0x10; }
-		if (entity.isInvisible()) { entityFlags |= 0x20; }
-		if (entity.isCurrentlyGlowing()) { entityFlags |= 0x40; }
-		if (entity instanceof LivingEntity && ((LivingEntity)entity).isFallFlying()) { entityFlags |= 0x80; }
-		this.entityFlags = entityFlags;
+		//TODO: test
+		this.entityFlags = EntityData.ENTITY_FLAGS.valOrDef(entity, (byte)0);
 	}
 
 	public SetEntityFlags(RecordingFiles.Reader reader)
@@ -29,19 +20,18 @@ public class SetEntityFlags implements ComparableAction
 		entityFlags = reader.readByte();
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return entityFlags != ((SetEntityFlags)action).entityFlags;
+		return entityFlags != ((SetEntityFlags)previousAction).entityFlags;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SET_ENTITY_FLAGS.id);
 		writer.addByte(entityFlags);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		EntityData.ENTITY_FLAGS.set(ctx.entity, entityFlags);
 		return Result.OK;

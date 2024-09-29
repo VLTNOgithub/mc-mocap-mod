@@ -15,14 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class LivingEntityMethodMixin
 {
 	@Inject(method = "doPush", at = @At("HEAD"), cancellable = true)
-	private void atDoPush(Entity entity, CallbackInfo callbackInfo)
+	private void atDoPush(Entity entity, CallbackInfo ci)
 	{
-		if (PlayerConnectionEvent.nocolPlayers.size() > 0 && (Object)this != entity)
+		if (!PlayerConnectionEvent.nocolPlayers.isEmpty() && (Object)this != entity)
 		{
+			//TODO: test
 			if (PlayerConnectionEvent.nocolPlayers.contains(entity.getUUID())
 					|| PlayerConnectionEvent.nocolPlayers.contains(((Entity)(Object)this).getUUID()))
 			{
-				callbackInfo.cancel();
+				ci.cancel();
 			}
 		}
 	}
@@ -30,8 +31,8 @@ public class LivingEntityMethodMixin
 	// Fabric-only - based on Forge LivingDropsEvent injection
 
 	@Inject(method = "dropAllDeathLoot", at = @At("HEAD"), cancellable = true)
-	private void atDropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource, CallbackInfo callbackInfo)
+	private void atDropAllDeathLoot(ServerLevel serverLevel, DamageSource damageSource, CallbackInfo ci)
 	{
-		if (EntityEvent.onEntityDrop((LivingEntity)(Object)this)) { callbackInfo.cancel(); }
+		if (EntityEvent.onEntityDrop((LivingEntity)(Object)this)) { ci.cancel(); }
 	}
 }

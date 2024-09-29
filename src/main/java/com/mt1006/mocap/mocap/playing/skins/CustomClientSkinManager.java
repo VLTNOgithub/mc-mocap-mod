@@ -1,4 +1,4 @@
-package com.mt1006.mocap.mocap.playing;
+package com.mt1006.mocap.mocap.playing.skins;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
@@ -12,9 +12,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.system.MemoryUtil;
 
-import java.nio.ByteBuffer;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -49,8 +48,8 @@ public class CustomClientSkinManager
 			Player player = Minecraft.getInstance().player;
 			if (player == null) { return; }
 
-			Utils.sendSystemMessage(player, "mocap.warning.custom_skin_cache_limit");
-			Utils.sendSystemMessage(player, "mocap.warning.custom_skin_cache_limit.tip");
+			Utils.sendMessage(player, "warning.custom_skin_cache_limit");
+			Utils.sendMessage(player, "warning.custom_skin_cache_limit.tip");
 			clientWarned = true;
 			return;
 		}
@@ -61,33 +60,26 @@ public class CustomClientSkinManager
 
 	public static void register(Pair<String, byte[]> customSkinData)
 	{
+		//TODO: test!!!
 		String name = customSkinData.getFirst();
 		byte[] array = customSkinData.getSecond();
 
 		Boolean accessible = clientMap.get(name);
 		if (accessible == null || accessible) { return; }
 
-		ByteBuffer byteBuffer = null;
-
 		try
 		{
 			NativeImage nativeImage;
 
-			byteBuffer = MemoryUtil.memAlloc(array.length);
 			try
 			{
-				byteBuffer.put(array);
-				byteBuffer.rewind();
-				nativeImage = NativeImage.read(byteBuffer);
+				nativeImage = NativeImage.read(array);
 			}
-			catch (Exception exception)
+			catch (IOException exception)
 			{
 				Utils.exception(exception, "Failed to load skin texture into buffer!");
-				MemoryUtil.memFree(byteBuffer);
 				return;
 			}
-			MemoryUtil.memFree(byteBuffer);
-			byteBuffer = null;
 
 			if (nativeImage.getWidth() > 4096 || nativeImage.getHeight() > 4096)
 			{
@@ -101,7 +93,6 @@ public class CustomClientSkinManager
 		catch (Exception exception)
 		{
 			Utils.exception(exception, "Failed to read skin texture!");
-			MemoryUtil.memFree(byteBuffer);
 		}
 	}
 

@@ -1,13 +1,12 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 
 public class SetMainHand implements ComparableAction
 {
@@ -23,21 +22,20 @@ public class SetMainHand implements ComparableAction
 		mainHand = reader.readBoolean() ? HumanoidArm.RIGHT : HumanoidArm.LEFT;
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return mainHand != ((SetMainHand)action).mainHand;
+		return mainHand != ((SetMainHand)previousAction).mainHand;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SET_MAIN_HAND.id);
 		writer.addBoolean(mainHand == HumanoidArm.RIGHT);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-
+		//TODO: test how it affects ghost player RightClickBlock
 		if (ctx.entity instanceof Player) { ((Player)ctx.entity).setMainArm(mainHand); }
 		else if (ctx.entity instanceof Mob) { ((Mob)ctx.entity).setLeftHanded(mainHand == HumanoidArm.LEFT); }
 		else { return Result.IGNORED; }

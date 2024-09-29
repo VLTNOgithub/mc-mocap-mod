@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.EntityData;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -9,7 +9,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -50,22 +49,21 @@ public class SetEffectColor implements ComparableAction
 		ambience = reader.readBoolean();
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	@Override public boolean differs(ComparableAction previousAction)
 	{
-		return color != ((SetEffectColor)action).color ||
-				ambience != ((SetEffectColor)action).ambience;
+		return color != ((SetEffectColor)previousAction).color
+				|| ambience != ((SetEffectColor)previousAction).ambience;
 	}
 
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
+	@Override public void write(RecordingFiles.Writer writer)
 	{
-		if (action != null && !differs(action)) { return; }
 		writer.addByte(Type.SET_EFFECT_COLOR.id);
 
 		writer.addInt(color);
 		writer.addBoolean(ambience);
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
 		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
 		EntityData.LIVING_ENTITY_EFFECT_PARTICLES.set(ctx.entity,

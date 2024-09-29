@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
-import com.mt1006.mocap.mocap.playing.CustomClientSkinManager;
+import com.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
@@ -67,7 +67,7 @@ public class MocapPacketS2C implements CustomPacketPayload
 			case CUSTOM_SKIN_DATA:
 				String customSkinName = NetworkUtils.readString(buf);
 				byte[] customSkinArray = NetworkUtils.readByteArray(buf);
-				object = new Pair<>(customSkinName, customSkinArray);
+				object = Pair.of(customSkinName, customSkinArray);
 				break;
 
 			default:
@@ -158,7 +158,7 @@ public class MocapPacketS2C implements CustomPacketPayload
 
 	public static void sendCustomSkinData(ServerPlayer serverPlayer, String name, byte[] byteArray)
 	{
-		send(serverPlayer, CUSTOM_SKIN_DATA, new Pair<>(name, byteArray));
+		send(serverPlayer, CUSTOM_SKIN_DATA, Pair.of(name, byteArray));
 	}
 
 	private static void send(ServerPlayer serverPlayer, int op, Object object)

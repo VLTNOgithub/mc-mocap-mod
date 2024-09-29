@@ -1,7 +1,8 @@
 package com.mt1006.mocap.mocap.actions;
 
+import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -22,18 +23,20 @@ public class BreakBlock implements BlockAction
 	public BreakBlock(RecordingFiles.Reader reader)
 	{
 		previousBlockState = new BlockStateData(reader);
-		blockPos = new BlockPos(reader.readInt(), reader.readInt(), reader.readInt());
+		blockPos = reader.readBlockPos();
 	}
 
-	public void write(RecordingFiles.Writer writer)
+	@Override public void prepareWrite(RecordingData data)
+	{
+		previousBlockState.prepareWrite(data);
+	}
+
+	@Override public void write(RecordingFiles.Writer writer)
 	{
 		writer.addByte(Type.BREAK_BLOCK.id);
 
 		previousBlockState.write(writer);
-
-		writer.addInt(blockPos.getX());
-		writer.addInt(blockPos.getY());
-		writer.addInt(blockPos.getZ());
+		writer.addBlockPos(blockPos);
 	}
 
 	@Override public void preExecute(Entity entity, Vec3i blockOffset)
@@ -41,9 +44,9 @@ public class BreakBlock implements BlockAction
 		previousBlockState.placeSilently(entity, blockPos.offset(blockOffset));
 	}
 
-	@Override public Result execute(PlayingContext ctx)
+	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.level.destroyBlock(blockPos.offset(ctx.blockOffset), Settings.DROP_FROM_BLOCKS.val);
+		ctx.level.destroyBlock(ctx.shiftBlockPos(blockPos), Settings.DROP_FROM_BLOCKS.val);
 		return Result.OK;
 	}
 }

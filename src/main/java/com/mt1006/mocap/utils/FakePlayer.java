@@ -29,11 +29,13 @@ import java.util.Set;
 public class FakePlayer extends ServerPlayer
 {
 	private static final ClientInformation DEFAULT_CLIENT_INFO = ClientInformation.createDefault();
+	public final boolean existsOnClient; //TODO: remove?
 
-	public FakePlayer(ServerLevel level, GameProfile profile)
+	public FakePlayer(ServerLevel level, GameProfile profile, boolean existsOnClient)
 	{
 		super(level.getServer(), level, profile, DEFAULT_CLIENT_INFO);
 		this.connection = new FakePlayerNetHandler(level.getServer(), this, profile);
+		this.existsOnClient = existsOnClient;
 		setInvulnerable(true);
 	}
 
@@ -112,7 +114,7 @@ public class FakePlayer extends ServerPlayer
 
 	private static class DummyConnection extends Connection
 	{
-		//TODO: check
+		//TODO: test
 		public DummyConnection(PacketFlow packetFlow)
 		{
 			super(packetFlow);

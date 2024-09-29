@@ -1,9 +1,11 @@
 package com.mt1006.mocap.mocap.actions;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.mixin.fields.LivingEntityMixin;
+import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
-import com.mt1006.mocap.mocap.playing.PlayingContext;
+import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,6 +37,7 @@ public class ChangeItem implements ComparableAction
 		if (!(entity instanceof LivingEntity))
 		{
 			itemCount = 0;
+			for (int i = 0; i < 7; i++) { items.add(ItemData.EMPTY); }
 			return;
 		}
 		LivingEntity livingEntity = (LivingEntity)entity;
@@ -77,7 +81,6 @@ public class ChangeItem implements ComparableAction
 			for (int i = 0; i < itemCount; i++) { items.add(new ItemData(reader)); }
 			for (int i = itemCount; i < ITEM_COUNT; i++) { items.add(ItemData.EMPTY); }
 		}
-
 	}
 
 	private void addItem(@Nullable ItemStack itemStack, Entity entity)
@@ -85,53 +88,22 @@ public class ChangeItem implements ComparableAction
 		items.add(ItemData.get(itemStack, entity.registryAccess()));
 	}
 
-	@Override public boolean differs(ComparableAction action)
+	private void setEntityItems(LivingEntity entity)
 	{
-		if (items.size() != ((ChangeItem)action).items.size()) { return true; }
-
-		for (int i = 0; i < items.size(); i++)
-		{
-			ItemData item1 = items.get(i);
-			ItemData item2 =  ((ChangeItem)action).items.get(i);
-			if (item1.differs(item2)) { return true; }
-		}
-		return false;
-	}
-
-	@Override public void write(RecordingFiles.Writer writer, @Nullable ComparableAction action)
-	{
-		if (action != null && !differs(action)) { return; }
-		if (itemCount > items.size()) { throw new RuntimeException(); }
-
-		writer.addByte(Type.CHANGE_ITEM.id);
-		writer.addByte(itemCount > 0 ? (byte)(-itemCount) : Byte.MIN_VALUE);
-
-		for (int i = 0; i < itemCount; i++)
-		{
-			items.get(i).write(writer);
-		}
-	}
-
-	@Override public Result execute(PlayingContext ctx)
-	{
-		if (items.size() != ITEM_COUNT) { return Result.ERROR; }
-		if (!(ctx.entity instanceof LivingEntity)) { return Result.IGNORED; }
-		LivingEntity entity = (LivingEntity)ctx.entity;
-
 		for (int i = 0; i < ITEM_COUNT; i++)
 		{
 			ItemData item = items.get(i);
-			ItemStack itemStack = item.getItemStack(ctx.entity.registryAccess());
+			ItemStack itemStack = item.getItemStack(entity.registryAccess());
 
 			switch (i)
 			{
-				case 0: entity.setItemSlot(EquipmentSlot.MAINHAND, itemStack); break;
-				case 1: entity.setItemSlot(EquipmentSlot.OFFHAND, itemStack); break;
-				case 2: entity.setItemSlot(EquipmentSlot.FEET, itemStack); break;
-				case 3: entity.setItemSlot(EquipmentSlot.LEGS, itemStack); break;
-				case 4: entity.setItemSlot(EquipmentSlot.CHEST, itemStack); break;
-				case 5: entity.setItemSlot(EquipmentSlot.HEAD, itemStack); break;
-				case 6: entity.setItemSlot(EquipmentSlot.BODY, itemStack); break;
+				case 0 -> entity.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
+				case 1 -> entity.setItemSlot(EquipmentSlot.OFFHAND, itemStack);
+				case 2 -> entity.setItemSlot(EquipmentSlot.FEET, itemStack);
+				case 3 -> entity.setItemSlot(EquipmentSlot.LEGS, itemStack);
+				case 4 -> entity.setItemSlot(EquipmentSlot.CHEST, itemStack);
+				case 5 -> entity.setItemSlot(EquipmentSlot.HEAD, itemStack);
+				case 6 -> entity.setItemSlot(EquipmentSlot.BODY, itemStack);
 			}
 
 			//TODO: do something with this
@@ -142,8 +114,57 @@ public class ChangeItem implements ComparableAction
 			}*/
 
 			// for non-player living entities it's detected in their "tick" method
-			if (entity instanceof Player) { ((LivingEntityMixin)ctx.entity).callDetectEquipmentUpdates();}
+			if (entity instanceof Player) { ((LivingEntityMixin)entity).callDetectEquipmentUpdates(); }
 		}
+	}
+
+	@Override public boolean differs(ComparableAction previousAction)
+	{
+		if (items.size() != ((ChangeItem)previousAction).items.size()) { return true; }
+
+		for (int i = 0; i < items.size(); i++)
+		{
+			ItemData item1 = items.get(i);
+			ItemData item2 = ((ChangeItem)previousAction).items.get(i);
+			if (item1.differs(item2)) { return true; }
+		}
+		return false;
+	}
+
+	@Override public void prepareWrite(RecordingData data)
+	{
+		if (itemCount > items.size()) { throw new RuntimeException(); }
+
+		for (int i = 0; i < itemCount; i++)
+		{
+			items.get(i).prepareWrite(data);
+		}
+	}
+
+	@Override public void write(RecordingFiles.Writer writer)
+	{
+		writer.addByte(Type.CHANGE_ITEM.id);
+		writer.addByte(itemCount > 0 ? (byte)(-itemCount) : Byte.MIN_VALUE);
+
+		for (int i = 0; i < itemCount; i++)
+		{
+			items.get(i).write(writer);
+		}
+	}
+
+	@Override public Result execute(ActionContext ctx)
+	{
+		if (items.size() != ITEM_COUNT)
+		{
+			MocapMod.LOGGER.error("Item list size doesn't match proper item count!");
+			return Result.ERROR;
+		}
+
+		boolean isLivingEntity = (ctx.entity instanceof LivingEntity);
+		if (!isLivingEntity && ctx.ghostPlayer == null) { return Result.IGNORED; }
+
+		if (isLivingEntity) { setEntityItems((LivingEntity)ctx.entity); }
+		if (ctx.ghostPlayer != null) { setEntityItems(ctx.ghostPlayer); }
 		return Result.OK;
 	}
 
@@ -154,6 +175,7 @@ public class ChangeItem implements ComparableAction
 		ID_AND_NBT(2, true, true),
 		ID_AND_COMPONENTS(3, true, true);
 
+		private static final ItemDataType[] VALUES = values();
 		public final byte id;
 		public final boolean hasId;
 		public final boolean hasData;
@@ -168,7 +190,7 @@ public class ChangeItem implements ComparableAction
 		//TODO: optimize it?
 		public static ItemDataType get(byte id)
 		{
-			for (ItemDataType type : values())
+			for (ItemDataType type : VALUES)
 			{
 				if (type.id == id) { return type; }
 			}
@@ -180,19 +202,20 @@ public class ChangeItem implements ComparableAction
 	{
 		public static final ItemData EMPTY = new ItemData();
 		public final ItemDataType type;
-		public final int itemId;
+		public final Item item;
 		public final String data;
+		private int idToWrite = -1;
 
 		private ItemData()
 		{
 			type = ItemDataType.NO_ITEM;
-			itemId = 0;
+			item = Items.AIR;
 			data = "";
 		}
 
 		private ItemData(ItemStack itemStack, RegistryAccess registryAccess)
 		{
-			itemId = Item.getId(itemStack.getItem());
+			item = itemStack.getItem();
 			Tag tag = itemStack.save(registryAccess);
 
 			if (!(tag instanceof CompoundTag) || !((CompoundTag)tag).contains("components", Tag.TAG_COMPOUND))
@@ -217,8 +240,17 @@ public class ChangeItem implements ComparableAction
 		public ItemData(RecordingFiles.Reader reader)
 		{
 			type = ItemDataType.get(reader.readByte());
-			itemId = type.hasId ? reader.readInt() : 0;
+			int itemId = type.hasId ? reader.readInt() : 0;
 			data = type.hasData ? reader.readString() : "";
+
+			RecordingData recordingData = reader.getParent();
+			if (recordingData == null)
+			{
+				item = Items.AIR;
+				return;
+			}
+
+			item = recordingData.itemIdMap.getObject(itemId);
 		}
 
 		public static ItemData get(@Nullable ItemStack itemStack, RegistryAccess registryAccess)
@@ -228,13 +260,20 @@ public class ChangeItem implements ComparableAction
 
 		public boolean differs(ItemData itemData)
 		{
-			return type != itemData.type || itemId != itemData.itemId || !data.equals(itemData.data);
+			return type != itemData.type || item != itemData.item || !data.equals(itemData.data);
+		}
+
+		public void prepareWrite(RecordingData recordingData)
+		{
+			idToWrite = recordingData.itemIdMap.provideId(item);
 		}
 
 		public void write(RecordingFiles.Writer writer)
 		{
+			if (idToWrite == -1) { throw new RuntimeException("ItemData write wasn't prepared!"); }
+
 			writer.addByte(type.id);
-			if (type.hasId) { writer.addInt(itemId); }
+			if (type.hasId) { writer.addInt(idToWrite); }
 			if (type.hasData) { writer.addString(data); }
 		}
 
@@ -247,7 +286,7 @@ public class ChangeItem implements ComparableAction
 
 				case ID_ONLY:
 				case ID_AND_NBT: //TODO: convert old nbts?
-					return new ItemStack(Item.byId(itemId));
+					return new ItemStack(item);
 
 				case ID_AND_COMPONENTS:
 					CompoundTag tag = tagFromIdAndComponents();
@@ -264,7 +303,7 @@ public class ChangeItem implements ComparableAction
 			try { tag.put("components", Utils.nbtFromString(data)); }
 			catch (CommandSyntaxException exception) { return null; }
 
-			tag.put("id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(Item.byId(itemId)).toString()));
+			tag.put("id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(item).toString()));
 			tag.put("count", IntTag.valueOf(1));
 			return tag;
 		}

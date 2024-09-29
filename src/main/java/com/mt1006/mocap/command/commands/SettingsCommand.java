@@ -2,15 +2,16 @@ package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mt1006.mocap.command.CommandInfo;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.mocap.settings.SettingFields;
+import com.mt1006.mocap.mocap.settings.SettingGroups;
 import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+
+import java.util.Collection;
 
 public class SettingsCommand
 {
@@ -21,27 +22,12 @@ public class SettingsCommand
 	{
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("settings");
 
-		//TODO: auto-adding
-		commandBuilder.then(settingArgument("playingSpeed", DoubleArgumentType.doubleArg(0.0)));
-		commandBuilder.then(settingArgument("recordingSync", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("playBlockActions", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("setBlockStates", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("allowMineskinRequests", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("canPushEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("useCreativeGameMode", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("dropFromBlocks", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("trackVehicleEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("trackItemEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("trackOtherEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("trackPlayedEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("entityTrackingDistance", DoubleArgumentType.doubleArg(-1.0)));
-		commandBuilder.then(settingArgument("playVehicleEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("playItemEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("playOtherEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("entitiesAfterPlayback", IntegerArgumentType.integer()));
-		commandBuilder.then(settingArgument("preventSavingEntities", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("recordPlayerDeath", BoolArgumentType.bool()));
-		commandBuilder.then(settingArgument("fluentMovements", DoubleArgumentType.doubleArg(-1)));
+		for (SettingGroups.Group group : Settings.getGroups())
+		{
+			LiteralArgumentBuilder<CommandSourceStack> groupBuilder = Commands.literal(group.name);
+			addSettingArguments(groupBuilder, group.fields);
+			commandBuilder.then(groupBuilder);
+		}
 
 		return commandBuilder;
 	}
@@ -51,8 +37,13 @@ public class SettingsCommand
 		return Settings.set(commandInfo);
 	}
 
+	private static void addSettingArguments(LiteralArgumentBuilder<CommandSourceStack> builder, Collection<SettingFields.Field<?>> fields)
+	{
+		fields.forEach((f) -> builder.then(settingArgument(f.name, f.getArgumentType())));;
+	}
+
 	private static LiteralArgumentBuilder<CommandSourceStack> settingArgument(String name, ArgumentType<?> argumentType)
 	{
-		return Commands.literal(name).executes(COMMAND_INFO).then(Commands.argument("newValue", argumentType).executes(COMMAND_SET));
+		return Commands.literal(name).executes(COMMAND_INFO).then(Commands.argument("new_value", argumentType).executes(COMMAND_SET));
 	}
 }
