@@ -1,14 +1,14 @@
 -It's now possible to record multiple recordings at the same time.
 -It's now possible to start playback of currently recorded recordings.
 -Renamed "/mocap playing" to "/mocap playback".
--Added "/mocap recording discard" and "/mocap recording start_multiple" commands.
+-Added "/mocap recording discard" command.
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player as entity" modifier (true by default).
 -Settings are now divided into 3 categories - recording, playback and advanced.
 -Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
 -Replaced command "/mocap recording state" with "/mocap recording list".
 -Replaced settings "trackVehicleEntities", "trackItemEntities" and "trackOtherEntities" with "track_entities".
 -Replaced settings "playVehicleEntities", "playItemEntities" and "playOtherEntities" with "play_entities".
--Replaced setting "trackPlayedEntities" with "prevent_tracking_played_entities" (true by default) which better represents what this it's actually doing.
+-Replaced setting "trackPlayedEntities" with "prevent_tracking_played_entities" (true by default) which better represents what it's actually doing.
 -Renamed settings: "playing_speed" to "playback_speed", "recording_sync" to "recording_synchronization", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
