@@ -236,6 +236,9 @@
 
   "mocap.warning.custom_skin_cache_limit": "§lUwaga:§r osiągnięto limit rozmiaru pamięci podręcznej własnych skórek!",
   "mocap.warning.custom_skin_cache_limit.tip": "Dołącz ponownie do świata, aby ją wyczyścić",
+  "mocap.warning.experimental": "§lUWAGA!§r\nUżywasz eksperymentalnej wersji moda Motion Capture!\nMusisz wiedzieć, że:\n -zapewne ma dużo błędów\n -wiele z nowych funkcji jest tylko częściowo zaimplementowana i mogą one ulec zmianie\n -wersja ta nie powinna być używana w publicznych paczkach modów\n -przyszłe wydania MOGĄ NIE BYĆ KOMPATYBILNE z nagraniami i scenami z tej wersji!\nJeśli tworzysz dłuższy projekt, lub jeśli oczekujesz stabilniejszej wersji moda, ",
+  "mocap.warning.experimental.stable_download": "§npobierz stabilne wydanie§r!\n",
+  "mocap.warning.experimental.disable_message": "§n[Wyłącz tę wiadomość]",
 
   "mocap.error.playback_error": "§lBłąd:§r coś poszło nie tak w trakcie odtwarzania!",
   "mocap.error.failed_to_remove_fake_player": "§lBłąd:§r nie udało się usunąć odtwarzanego gracza!",

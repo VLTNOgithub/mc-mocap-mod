@@ -6,7 +6,6 @@ import com.mt1006.mocap.network.MocapPacketS2C;
 import com.mt1006.mocap.utils.Utils;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -55,21 +54,16 @@ public class PlayerConnectionEvent
 	{
 		if (!MocapMod.EXPERIMENTAL || !player.hasPermissions(2) || !Settings.EXPERIMENTAL_RELEASE_WARNING.val) { return; }
 
-		//TODO: use translation keys
-		Utils.sendComponent(player, Component.literal(
-				"§lWARNING!§r\n" +
-				"You're using experimental version of Motion Capture mod!\n" +
-				"You need to know that:\n" +
-				" -it probably has a lot of issues\n" +
-				" -a lot of new features are partially complete and are subject to change\n" +
-				" -it should not be used in public modpacks\n" +
-				" -future releases MAY NOT be compatible with recordings and scenes from this version!\n" +
-				"If you're planning on running a longer project, or if you're expecting stability from this mod, ")
+		Utils.sendComponent(player, Utils.getTranslatableComponent(player, "warning.experimental")
 				.append(Utils.getEventComponent(ClickEvent.Action.OPEN_URL,
-						"https://modrinth.com/mod/motion-capture/versions?c=release", "§ndownload a stable release§r!\n"))
-				.append(Utils.getEventComponent(ClickEvent.Action.OPEN_URL, "https://discord.gg/nzDETZhqur", "§n[Discord]§r "))
-				.append(Utils.getEventComponent(ClickEvent.Action.OPEN_URL, "https://github.com/mt1006/mc-mocap-mod", "§n[GitHub]§r "))
+						"https://modrinth.com/mod/motion-capture/versions?c=release",
+						Utils.getTranslatableComponent(player, "warning.experimental.stable_download")))
+				.append(Utils.getEventComponent(ClickEvent.Action.OPEN_URL,
+						"https://discord.gg/nzDETZhqur", "§n[Discord]§r "))
+				.append(Utils.getEventComponent(ClickEvent.Action.OPEN_URL,
+						"https://github.com/mt1006/mc-mocap-mod", "§n[GitHub]§r "))
 				.append(Utils.getEventComponent(ClickEvent.Action.SUGGEST_COMMAND,
-						"/mocap settings advanced experimental_release_warning false", "§n[Disable this message]")));
+						"/mocap settings advanced experimental_release_warning false",
+						Utils.getTranslatableComponent(player, "warning.experimental.disable_message"))));
 	}
 }

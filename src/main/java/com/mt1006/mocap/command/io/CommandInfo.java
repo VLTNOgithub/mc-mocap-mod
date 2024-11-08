@@ -33,7 +33,6 @@ public class CommandInfo implements CommandOutput
 
 	public CommandInfo(CommandContext<CommandSourceStack> ctx)
 	{
-		//TODO: test if it doesn't crash (command block?)
 		this.ctx = ctx;
 		this.source = ctx.getSource();
 		this.server = source.getServer();

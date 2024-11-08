@@ -60,7 +60,7 @@ public class InputArgument
 			case "scenes/rename":
 			case "scenes/remove":
 			case "scenes/remove_from":
-			case "scenes/list": //TODO: test!
+			case "scenes/list":
 			case "scenes/info":
 				args = List.of(Pair.of(3, SCENES));
 				break;

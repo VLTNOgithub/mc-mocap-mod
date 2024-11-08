@@ -62,7 +62,11 @@ public class Utils
 
 	public static MutableComponent getEventComponent(ClickEvent.Action event, String eventStr, String visibleStr)
 	{
-		MutableComponent component = Component.literal(visibleStr);
+		return getEventComponent(event, eventStr, Component.literal(visibleStr));
+	}
+
+	public static MutableComponent getEventComponent(ClickEvent.Action event, String eventStr, MutableComponent component)
+	{
 		return component.setStyle(Style.EMPTY.withClickEvent(new ClickEvent(event, eventStr)));
 	}
 
