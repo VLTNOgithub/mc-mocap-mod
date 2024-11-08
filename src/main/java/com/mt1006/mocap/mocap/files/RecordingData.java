@@ -163,6 +163,7 @@ public class RecordingData
 				startPos[2] + posOffset.z,
 				startRot[0],
 				startRot[1]);
+		entity.setYHeadRot(startRot[0]);
 	}
 
 	public void preExecute(Entity entity, Vec3i blockOffset)
