@@ -24,7 +24,7 @@ public class Settings
 	public static final SettingFields.BooleanField RECORDING_SYNCHRONIZATION = RECORDING.add(fields.add("recording_synchronization", false));
 
 	public static final SettingFields.DoubleField PLAYBACK_SPEED = PLAYBACK.add(fields.add("playback_speed", 1.0));
-	public static final SettingFields.StringField PLAY_ENTITIES = PLAYBACK.add(fields.add("play_entities", "@vehicles;@projectiles;@items", EntityFilter::onPlaybackEntitiesSet, EntityFilterInstance::test));
+	public static final SettingFields.StringField PLAY_ENTITIES = PLAYBACK.add(fields.add("play_entities", "*", EntityFilter::onPlaybackEntitiesSet, EntityFilterInstance::test));
 	public static final SettingFields.BooleanField CAN_PUSH_ENTITIES = PLAYBACK.add(fields.add("can_push_entities", true));
 	public static final SettingFields.IntegerField ENTITIES_AFTER_PLAYBACK = PLAYBACK.add(fields.add("entities_after_playback", 1));
 	public static final SettingFields.BooleanField BLOCK_ACTIONS_PLAYBACK = PLAYBACK.add(fields.add("block_actions_playback", true));

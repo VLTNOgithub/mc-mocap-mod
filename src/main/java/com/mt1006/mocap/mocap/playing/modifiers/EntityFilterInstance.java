@@ -175,7 +175,7 @@ public class EntityFilterInstance
 		{
 			for (Class<?> parent : parents)
 			{
-				if (entity.getClass().isInstance(parent)) { return true; }
+				if (parent.isInstance(entity)) { return true; }
 			}
 			return false;
 		}
@@ -196,24 +196,6 @@ public class EntityFilterInstance
 			return entity.getTags().contains(tag);
 		}
 	}
-
-	//TODO: remove
-	/*private static class UserDefinedGroupElement extends Element
-	{
-		public final String name;
-
-		public UserDefinedGroupElement(boolean exclude, String name)
-		{
-			super(exclude);
-			this.name = name;
-		}
-
-		@Override protected boolean applies(Entity entity)
-		{
-			//TODO: implement
-			return false;
-		}
-	}*/
 
 	private static class EntitySetElement extends Element
 	{
@@ -264,7 +246,6 @@ public class EntityFilterInstance
 
 	private enum Group
 	{
-		//TODO: fix
 		VEHICLES("vehicles", List.of(Saddleable.class, Minecart.class, Boat.class)),
 		PROJECTILES("projectiles", List.of(Projectile.class)),
 		ITEMS("items", List.of(ItemEntity.class)),

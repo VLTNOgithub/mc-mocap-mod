@@ -153,6 +153,7 @@ public class EntityTracker
 			state.saveTrackedEntityDifference(ctx.data.actions, id, previousState);
 			previousState = state;
 
+			positionTracker.onTick(ctx.data.actions, id);
 			lastTick = ctx.getTick();
 
 			if (entity instanceof LivingEntity && ((LivingEntity)entity).isDeadOrDying() && !dying)
