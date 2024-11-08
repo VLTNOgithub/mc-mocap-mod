@@ -79,6 +79,12 @@ public class Files
 			commandOutput.sendFailure("failure.improper_filename.dot_first");
 			return false;
 		}
+		if (name.charAt(0) == '-')
+		{
+			commandOutput.sendFailure("failure.improper_filename");
+			commandOutput.sendFailure("failure.improper_filename.dash_first");
+			return false;
+		}
 
 		for (char c : name.toCharArray())
 		{

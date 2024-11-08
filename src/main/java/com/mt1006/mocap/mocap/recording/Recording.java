@@ -559,7 +559,7 @@ public class Recording
 
 			if (!id.isProper())
 			{
-				if (idStr.contains("*"))
+				if (idStr.contains("_"))
 				{
 					commandInfo.sendFailureWithTip("recording.resolve.improper_group_structure");
 				}

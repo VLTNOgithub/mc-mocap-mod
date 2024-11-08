@@ -17,7 +17,7 @@ public class PlaybackCommand
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("playback");
 
 		commandBuilder.then(Commands.literal("start").
-			then(Commands.argument("name", StringArgumentType.greedyString()).executes(CommandUtils.command(PlaybackCommand::start)).
+			then(Commands.argument("name", StringArgumentType.string()).executes(CommandUtils.command(PlaybackCommand::start)).
 			then(CommandUtils.withPlayerArguments(CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));

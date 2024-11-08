@@ -44,13 +44,13 @@
   "mocap.recording.list.unknown_state.error": "§lBłąd:§r co najmniej jedno z nagrań z listy ma nieznany stan!",
 
   "mocap.recording.resolve.multiple_recordings": "Więcej niż jedno z twoich nagrań jest aktywne lub czeka na decyzję!",
-  "mocap.recording.resolve.multiple_recordings.tip": "Określ dokładne id nagrania lub użyj \"*\" aby zatrzymać je wszystkie",
+  "mocap.recording.resolve.multiple_recordings.tip": "Określ dokładne id nagrania lub użyj \"_\" aby zatrzymać je wszystkie",
   "mocap.recording.resolve.server_not_recording": "Serwer nic teraz nie nagrywa!",
   "mocap.recording.resolve.player_not_recording": "Nic teraz nie nagrywasz!",
   "mocap.recording.resolve.player_not_recording.tip": "Jeśli chcesz zatrzymać nagranie innego gracza, określ jego id",
   "mocap.recording.resolve.improper_structure": "Niepoprawna struktura id!",
   "mocap.recording.resolve.improper_group_structure": "Niepoprawna struktura grupy id!",
-  "mocap.recording.resolve.improper_group_structure.tip": "Poprawne struktury grup id: \"*\", \"nagrywany_gracz.*\", \"*.*\", \"gracz.nagrywany_gracz.*\", \"gracz.*.*\", \"*.nagrywany_gracz.*\", \"*.*.*\"",
+  "mocap.recording.resolve.improper_group_structure.tip": "Poprawne struktury grup id: \"_\", \"nagrywany_gracz._\", \"_._\", \"gracz.nagrywany_gracz._\", \"gracz._._\", \"_.nagrywany_gracz._\", \"_._._\"",
   "mocap.recording.resolve.not_found": "Nie udało się znaleźć obecnie nagrywanego nagrania o tym id!",
   "mocap.recording.resolve.list_tip": "Użyj \"/mocap recording list\" aby uzyskać listę wszystkich obecnie nagrywanych nagrań",
 
@@ -232,6 +232,7 @@
   "mocap.failure.improper_filename": "Niewłaściwa nazwa nagrania!",
   "mocap.failure.improper_filename.character": "Możesz używać tylko małych liter, liczb, podkreślnika, myślnika, lub kropki",
   "mocap.failure.improper_filename.dot_first": "Nie możesz użyć kropki jako pierwszego znaku",
+  "mocap.failure.improper_filename.dash_first": "Nie możesz użyć myślnika jako pierwszego znaku",
 
   "mocap.warning.custom_skin_cache_limit": "§lUwaga:§r osiągnięto limit rozmiaru pamięci podręcznej własnych skórek!",
   "mocap.warning.custom_skin_cache_limit.tip": "Dołącz ponownie do świata, aby ją wyczyścić",

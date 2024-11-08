@@ -73,7 +73,7 @@ public class InputArgument
 		if (subcommand.equals("scenes/modify"))
 		{
 			String paramToModify = CommandUtils.getNode(ctx, 5);
-			args = (paramToModify != null && !paramToModify.equals("subscene_name"))
+			args = (paramToModify != null && paramToModify.equals("subscene_name"))
 					? List.of(Pair.of(3, SCENES), Pair.of(6, PLAYABLE))
 					: List.of(Pair.of(3, SCENES));
 		}
@@ -113,7 +113,7 @@ public class InputArgument
 			int type = switch (input.charAt(0))
 			{
 				case '.' -> SCENES;
-				case '#' -> CURRENTLY_RECORDED;
+				case '-' -> CURRENTLY_RECORDED;
 				default -> RECORDINGS;
 			};
 			if ((suggestionFlags & type) != 0 && input.startsWith(prefix)) { builder.suggest(input); }

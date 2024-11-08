@@ -9,7 +9,7 @@ import java.util.List;
 
 public class RecordingId
 {
-	public static final RecordingId ALL = new RecordingId("*.*.*", null);
+	public static final RecordingId ALL = new RecordingId("_._._", null);
 	public final @Nullable String str;
 	private final @Nullable String source;
 	private final @Nullable String recorded;
@@ -17,7 +17,7 @@ public class RecordingId
 
 	public RecordingId(String id, @Nullable ServerPlayer sourcePlayer)
 	{
-		if (id.startsWith("#")) { id = id.substring(1); }
+		if (id.startsWith("-")) { id = id.substring(1); }
 
 		String[] parts = id.split("\\.");
 
@@ -35,7 +35,7 @@ public class RecordingId
 			case 1:
 				this.source = getSourceName(sourcePlayer);
 				this.recorded = getNullablePart(parts[0]);
-				this.name = parts[0].equals("*") ? null : "1";
+				this.name = parts[0].equals("_") ? null : "1";
 				break;
 
 			case 2:
@@ -54,7 +54,7 @@ public class RecordingId
 				throw new RuntimeException();
 		}
 
-		this.str = String.format("#%s.%s.%s", getNotNullPart(source), getNotNullPart(recorded), getNotNullPart(name));
+		this.str = String.format("-%s.%s.%s", getNotNullPart(source), getNotNullPart(recorded), getNotNullPart(name));
 	}
 
 	public RecordingId(List<RecordingContext> contexts, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
@@ -84,7 +84,7 @@ public class RecordingId
 		}
 
 		String name = Long.toString(maxId + 1);
-		String finalId = String.format("#%s.%s.%s", source, recorded, name);
+		String finalId = String.format("-%s.%s.%s", source, recorded, name);
 
 		for (RecordingContext ctx : contexts)
 		{
@@ -139,17 +139,17 @@ public class RecordingId
 
 	private static String getNotNullPart(@Nullable String part)
 	{
-		return part != null ? part : "*";
+		return part != null ? part : "_";
 	}
 
 	private static @Nullable String getNullablePart(String part)
 	{
-		return part.equals("*") ? null : part;
+		return part.equals("_") ? null : part;
 	}
 
 	private static String getSourceName(@Nullable ServerPlayer sourcePlayer)
 	{
-		return sourcePlayer != null ? sourcePlayer.getName().getString() : "@mc";
+		return sourcePlayer != null ? sourcePlayer.getName().getString() : "+mc";
 	}
 
 	private static boolean verifyParts(String[] parts)
@@ -161,12 +161,12 @@ public class RecordingId
 			if (!isProperPartName(part)) { return false; }
 		}
 
-		boolean shouldBeGroup = parts[parts.length - 1].equals("*");
+		boolean shouldBeGroup = parts[parts.length - 1].equals("_");
 		if (!shouldBeGroup)
 		{
 			for (String part : parts)
 			{
-				if (part.equals("*")) { return false; }
+				if (part.equals("_")) { return false; }
 			}
 		}
 		return true;
@@ -175,7 +175,7 @@ public class RecordingId
 	private static boolean isProperPartName(String part)
 	{
 		if (part.isEmpty()) { return false; }
-		if (part.equals("*")) { return true; }
+		if (part.equals("_")) { return true; }
 
 		for (char c : part.toCharArray())
 		{
@@ -186,6 +186,6 @@ public class RecordingId
 
 	private static boolean isAllowedPartChar(char c)
 	{
-		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '@';
+		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_' || c == '+';
 	}
 }

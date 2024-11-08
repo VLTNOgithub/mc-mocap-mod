@@ -34,7 +34,7 @@ public class ScenesCommand
 		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withStringArgument(SceneFiles::remove, "name")));
 		commandBuilder.then(Commands.literal("add_to").
 			then(Commands.argument("scene_name", StringArgumentType.string()).
-			then(Commands.argument("to_add", StringArgumentType.greedyString()).executes(COMMAND_ADD_TO).
+			then(Commands.argument("to_add", StringArgumentType.string()).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
 			then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).executes(COMMAND_ADD_TO).
 			then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).executes(COMMAND_ADD_TO).
@@ -45,7 +45,7 @@ public class ScenesCommand
 		commandBuilder.then(Commands.literal("modify").
 			then(Commands.argument("scene_name", StringArgumentType.string()).
 			then(Commands.argument("to_modify", IntegerArgumentType.integer()).
-			then(Commands.literal("subscene_name").then(Commands.argument("new_name", StringArgumentType.greedyString()).executes(COMMAND_MODIFY))).
+			then(Commands.literal("subscene_name").then(Commands.argument("new_name", StringArgumentType.string()).executes(COMMAND_MODIFY))).
 			then(Commands.literal("start_delay").then(Commands.argument("delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_MODIFY))).
 			then(Commands.literal("position_offset").
 				then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).

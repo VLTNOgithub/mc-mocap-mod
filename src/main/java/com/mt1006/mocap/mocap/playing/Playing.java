@@ -23,7 +23,7 @@ public class Playing
 
 	public static boolean start(CommandInfo commandInfo, String name, PlayerData playerData)
 	{
-		if (name.charAt(0) == '#')
+		if (name.charAt(0) == '-')
 		{
 			List<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
 			if (contexts == null) { return false; }

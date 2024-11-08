@@ -264,6 +264,7 @@ public class EntityFilterInstance
 
 	private enum Group
 	{
+		//TODO: fix
 		VEHICLES("vehicles", List.of(Saddleable.class, Minecart.class, Boat.class)),
 		PROJECTILES("projectiles", List.of(Projectile.class)),
 		ITEMS("items", List.of(ItemEntity.class)),

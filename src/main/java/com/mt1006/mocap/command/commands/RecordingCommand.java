@@ -24,13 +24,13 @@ public class RecordingCommand
 			then(Commands.argument("player", GameProfileArgument.gameProfile()).executes(CommandUtils.command(RecordingCommand::start))));
 		//commandBuilder.then(Commands.literal("start_multiple").then(CommandUtils.withStringArgument(Recording::startMultiple, "players")));
 		commandBuilder.then(Commands.literal("stop").executes(CommandUtils.command(RecordingCommand::stop)).
-			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::stop))));
+			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::stop))));
 		commandBuilder.then(Commands.literal("discard").executes(CommandUtils.command(RecordingCommand::discard)).
-			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::discard))));
+			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::discard))));
 		commandBuilder.then(Commands.literal("save").then(CommandUtils.withStringArgument(RecordingCommand::saveAuto, "name").
-			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::saveSpecific)))));
+			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::saveSpecific)))));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(RecordingCommand::list)).
-			then(Commands.argument("id", StringArgumentType.greedyString()).executes(CommandUtils.command(RecordingCommand::list))));
+			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::list))));
 
 		return commandBuilder;
 	}
