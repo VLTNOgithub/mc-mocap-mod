@@ -21,6 +21,11 @@ public class EntityAction implements Action
 		action = Action.readAction(reader, data);
 	}
 
+	@Override public void prepareWrite(RecordingData data)
+	{
+		action.prepareWrite(data);
+	}
+
 	@Override public void write(RecordingFiles.Writer writer)
 	{
 		RecordingFiles.Writer actionWriter = new RecordingFiles.Writer(writer.parent);

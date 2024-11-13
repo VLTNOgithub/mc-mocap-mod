@@ -176,11 +176,6 @@ public class Movement implements Action
 		if (newRotX - oldRot[0] != 0.0f || newRotY - oldRot[1] != 0.0f
 				|| newHeadRot - oldHeadRot != 0.0f || forceNonPosData)
 		{
-			//TODO: remove packRot (debug only)
-			packRot(newRotX);
-			packRot(newRotY);
-			packRot(headRot);
-
 			rotation[0] = newRotX;
 			rotation[1] = newRotY;
 
@@ -234,11 +229,7 @@ public class Movement implements Action
 
 	private static short packRot(float rot)
 	{
-		byte expectedByte = (byte)(rot * 256.0f / 360.0f);
-		short retVal = (short)(((double)rot / 360.0) * (double)0x10000);
-		byte finalByte = (byte)(unpackRot(retVal) * 256.0f / 360.0f);
-		if (expectedByte != finalByte) { MocapMod.LOGGER.warn("aaa"); } //TODO: remove checks
-		return retVal;
+		return (short)(((double)rot / 360.0) * (double)0x10000);
 	}
 
 	private static float unpackRot(short packed)
