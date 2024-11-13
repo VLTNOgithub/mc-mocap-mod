@@ -18,7 +18,7 @@ import java.util.*;
 
 public class EntityFilterInstance
 {
-	public static final String EMPTY_GROUP = "empty";
+	public static final String EMPTY_GROUP = "none";
 	private final List<Element> elements = new ArrayList<>();
 
 	private EntityFilterInstance(String str) throws FilterParserException
@@ -38,7 +38,7 @@ public class EntityFilterInstance
 			if (firstChar == '@')
 			{
 				String groupName = part.substring(exclude ? 2 : 1);
-				if (groupName.equals(EMPTY_GROUP)) { continue; } // "@empty" is just ignored
+				if (groupName.equals(EMPTY_GROUP)) { continue; } // "@none" is just ignored
 				if (!Files.checkIfProperName(CommandOutput.DUMMY, groupName)) { throw new FilterParserException(); }
 
 				GroupElement groupElement = Group.fromString(exclude, groupName);

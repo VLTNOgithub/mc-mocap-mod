@@ -1,6 +1,5 @@
 package com.mt1006.mocap.mocap.actions;
 
-import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.mixin.fields.EntityMixin;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
@@ -258,7 +257,7 @@ public class Movement implements Action
 				case XZ_SHORT -> writer.addShort(packValue(position[i], PACKED_XZ_DIV));
 				case XZ_FLOAT -> writer.addFloat((float)position[i]);
 				case XZ_DOUBLE -> writer.addDouble(position[i]);
-			};
+			}
 		}
 
 		if ((flags & MASK_ROT) != ROT_0)
