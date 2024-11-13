@@ -44,18 +44,6 @@ public class EntityFilterInstance
 				GroupElement groupElement = Group.fromString(exclude, groupName);
 				if (groupElement == null) { throw new FilterParserException(); }
 				elements.add(groupElement);
-
-				//TODO: remove
-				/*String groupName = part.substring(exclude ? 2 : 1);
-				if (!Files.checkIfProperName(CommandOutput.DUMMY, groupName)) { throw new FilterParserException(); }
-
-				PredefinedGroupElement predefinedGroupElement = PredefinedGroup.fromString(exclude, groupName);
-				if (predefinedGroupElement != null)
-				{
-					elements.add(predefinedGroupElement);
-					continue;
-				}
-				*/
 			}
 			else if (firstChar == '$')
 			{
@@ -85,11 +73,10 @@ public class EntityFilterInstance
 				ResourceLocation resLoc = parseToResLoc(name);
 				Element lastElement = elements.isEmpty() ? null : elements.get(elements.size() - 1);
 
-				//TODO: test
-				EntitySetElement entitySetElement = (lastElement instanceof EntitySetElement && lastElement.exclude == exclude)
-						? (EntitySetElement)lastElement
-						: new EntitySetElement(exclude);
+				boolean reuseEntitySet = (lastElement instanceof EntitySetElement && lastElement.exclude == exclude);
+				EntitySetElement entitySetElement = reuseEntitySet ? (EntitySetElement)lastElement : new EntitySetElement(exclude);
 				entitySetElement.add(resLoc);
+				if (!reuseEntitySet) { elements.add(entitySetElement); }
 			}
 		}
 	}
