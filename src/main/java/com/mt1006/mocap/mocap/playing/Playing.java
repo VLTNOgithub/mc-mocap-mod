@@ -37,7 +37,7 @@ public class Playing
 				successes++;
 			}
 
-			if (successes != 0) { commandInfo.sendSuccess("playing.start.success"); }
+			if (successes != 0) { commandInfo.sendSuccess("playback.start.success"); }
 			return successes != 0;
 		}
 		else
@@ -45,7 +45,7 @@ public class Playing
 			Playback.Root playback = Playback.start(commandInfo, name, playerData, getNextId());
 			if (playback == null) { return false; }
 			playbacks.add(playback);
-			commandInfo.sendSuccess("playing.start.success");
+			commandInfo.sendSuccess("playback.start.success");
 			return true;
 		}
 	}
@@ -57,24 +57,24 @@ public class Playing
 			if (playback.id == id)
 			{
 				playback.instance.stop();
-				commandInfo.sendSuccess("playing.stop.success");
+				commandInfo.sendSuccess("playback.stop.success");
 				return;
 			}
 		}
 
-		commandInfo.sendFailureWithTip("playing.stop.unable_to_find_scene");
+		commandInfo.sendFailureWithTip("playback.stop.unable_to_find_scene");
 	}
 
 	public static boolean stopAll(CommandOutput commandOutput)
 	{
 		playbacks.forEach((playback) -> playback.instance.stop());
-		commandOutput.sendSuccess("playing.stop_all.success");
+		commandOutput.sendSuccess("playback.stop_all.success");
 		return true;
 	}
 
 	public static boolean list(CommandInfo commandInfo)
 	{
-		commandInfo.sendSuccess("playing.list");
+		commandInfo.sendSuccess("playback.list");
 
 		for (Playback.Root playback : playbacks)
 		{

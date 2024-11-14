@@ -140,25 +140,25 @@
   "mocap.scenes.error.wrong_element_pos.tip": "使用\"/mocap scenes list <scene>\"来获取元素编号",
 
 
-  "mocap.playing.start.error": "§l错误：§r无法开启场景！",
-  "mocap.playing.start.error.loop": "场景或子场景包含自身！",
-  "mocap.playing.start.error.load": "无法加载所有资源！",
-  "mocap.playing.start.error.load.path": "资源路径：%s",
-  "mocap.playing.start.error.load_header": "§l错误：§r无法加载录像页头！",
-  "mocap.playing.start.error.profile": "§l错误：§r无法加载玩家资料！",
-  "mocap.playing.start.warning.unknown_entity": "Trying to use unknown entity as player",
-  "mocap.playing.start.warning.skin.profile": "Failed to load skin from player profile",
-  "mocap.playing.start.warning.skin.file": "Failed to load skin from file",
-  "mocap.playing.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
-  "mocap.playing.start.success": "播放开始……",
+  "mocap.playback.start.error": "§l错误：§r无法开启场景！",
+  "mocap.playback.start.error.loop": "场景或子场景包含自身！",
+  "mocap.playback.start.error.load": "无法加载所有资源！",
+  "mocap.playback.start.error.load.path": "资源路径：%s",
+  "mocap.playback.start.error.load_header": "§l错误：§r无法加载录像页头！",
+  "mocap.playback.start.error.profile": "§l错误：§r无法加载玩家资料！",
+  "mocap.playback.start.warning.unknown_entity": "Trying to use unknown entity as player",
+  "mocap.playback.start.warning.skin.profile": "Failed to load skin from player profile",
+  "mocap.playback.start.warning.skin.file": "Failed to load skin from file",
+  "mocap.playback.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
+  "mocap.playback.start.success": "播放开始……",
 
-  "mocap.playing.stop.unable_to_find_scene": "§l错误：§r无法找到给定id的场景！",
-  "mocap.playing.stop.unable_to_find_scene.tip": "使用\"/mocap playback list\"来获取所有当前播放中场景的列表",
-  "mocap.playing.stop.success": "播放停止",
+  "mocap.playback.stop.unable_to_find_scene": "§l错误：§r无法找到给定id的场景！",
+  "mocap.playback.stop.unable_to_find_scene.tip": "使用\"/mocap playback list\"来获取所有当前播放中场景的列表",
+  "mocap.playback.stop.success": "播放停止",
 
-  "mocap.playing.stop_all.success": "所有场景播放停止",
+  "mocap.playback.stop_all.success": "所有场景播放停止",
 
-  "mocap.playing.list": "§l当前播放：§r",
+  "mocap.playback.list": "§l当前播放：§r",
 
 
   "mocap.settings.error": "§l错误：§r无法找到设置！",

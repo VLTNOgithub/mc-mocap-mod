@@ -64,8 +64,8 @@ public class RecordingPlayback extends Playback
 		GameProfile profile = getGameProfile(commandInfo);
 		if (profile == null)
 		{
-			commandInfo.sendFailure("playing.start.error");
-			commandInfo.sendFailure("playing.start.error.profile");
+			commandInfo.sendFailure("playback.start.error");
+			commandInfo.sendFailure("playback.start.error.profile");
 			throw new StartException();
 		}
 
@@ -117,7 +117,7 @@ public class RecordingPlayback extends Playback
 			if (entity == null)
 			{
 				//TODO: better message (and fall back to FakePlayer)
-				commandInfo.sendFailure("playing.start.warning.unknown_entity");
+				commandInfo.sendFailure("playback.start.warning.unknown_entity");
 				throw new StartException();
 			}
 

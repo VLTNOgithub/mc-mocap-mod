@@ -92,7 +92,7 @@ public class RecordingData
 
 		if (version > RecordingFiles.VERSION)
 		{
-			commandInfo.sendFailure("playing.start.error.load_header");
+			commandInfo.sendFailure("playback.start.error.load_header");
 			return false;
 		}
 

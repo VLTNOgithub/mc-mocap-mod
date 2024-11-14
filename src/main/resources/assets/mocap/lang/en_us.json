@@ -140,25 +140,25 @@
   "mocap.scenes.error.wrong_element_pos.tip": "Use \"/mocap scenes list <scene>\" to get element numbers",
 
 
-  "mocap.playing.start.error": "§lError:§r failed to start scene!",
-  "mocap.playing.start.error.loop": "Scene or sub-scenes contain themselves!",
-  "mocap.playing.start.error.load": "Failed to load all resources!",
-  "mocap.playing.start.error.load.path": "Resource path: %s",
-  "mocap.playing.start.error.load_header": "§lError:§r failed to load recording header!",
-  "mocap.playing.start.error.profile": "§lError:§r failed to load player profile!",
-  "mocap.playing.start.warning.unknown_entity": "Trying to use unknown entity as player",
-  "mocap.playing.start.warning.skin.profile": "Failed to load skin from player profile",
-  "mocap.playing.start.warning.skin.file": "Failed to load skin from file",
-  "mocap.playing.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
-  "mocap.playing.start.success": "Playback started...",
+  "mocap.playback.start.error": "§lError:§r failed to start scene!",
+  "mocap.playback.start.error.loop": "Scene or sub-scenes contain themselves!",
+  "mocap.playback.start.error.load": "Failed to load all resources!",
+  "mocap.playback.start.error.load.path": "Resource path: %s",
+  "mocap.playback.start.error.load_header": "§lError:§r failed to load recording header!",
+  "mocap.playback.start.error.profile": "§lError:§r failed to load player profile!",
+  "mocap.playback.start.warning.unknown_entity": "Trying to use unknown entity as player",
+  "mocap.playback.start.warning.skin.profile": "Failed to load skin from player profile",
+  "mocap.playback.start.warning.skin.file": "Failed to load skin from file",
+  "mocap.playback.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
+  "mocap.playback.start.success": "Playback started...",
 
-  "mocap.playing.stop.unable_to_find_scene": "§lError:§r unable to find scene with given id!",
-  "mocap.playing.stop.unable_to_find_scene.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
-  "mocap.playing.stop.success": "Playback stopped",
+  "mocap.playback.stop.unable_to_find_scene": "§lError:§r unable to find scene with given id!",
+  "mocap.playback.stop.unable_to_find_scene.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
+  "mocap.playback.stop.success": "Playback stopped",
 
-  "mocap.playing.stop_all.success": "Playback of all scenes stopped",
+  "mocap.playback.stop_all.success": "Playback of all scenes stopped",
 
-  "mocap.playing.list": "§lCurrently playing:§r",
+  "mocap.playback.list": "§lCurrently playing:§r",
 
 
   "mocap.settings.error": "§lError:§r unable to find setting!",

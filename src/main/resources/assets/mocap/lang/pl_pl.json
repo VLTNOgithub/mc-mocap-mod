@@ -140,25 +140,25 @@
   "mocap.scenes.error.wrong_element_pos.tip": "Użyj \"/mocap scenes list <scena>\" aby uzyskać numery poszczególnych elementów",
 
 
-  "mocap.playing.start.error": "§lBłąd:§r nie udało się rozpocząć odtwarzania sceny!",
-  "mocap.playing.start.error.loop": "Scena lub podsceny zawierają siebie nawzajem!",
-  "mocap.playing.start.error.load": "Nie udało się załadować wszystkich zasobów!",
-  "mocap.playing.start.error.load.path": "Ścieżka zasobu: %s",
-  "mocap.playing.start.error.load_header": "§lBłąd:§r nie udało się załadować nagłówka nagrania!",
-  "mocap.playing.start.error.profile": "§lBłąd:§r nie udało się załadować profilu gracza!",
-  "mocap.playing.start.warning.unknown_entity": "Próba użycia nieznanego bytu jako gracza",
-  "mocap.playing.start.warning.skin.profile": "Nie udało się załadować skórki z profilu gracza",
-  "mocap.playing.start.warning.skin.file": "Nie udało się załadować skórki z pliku",
-  "mocap.playing.start.warning.skin.mineskin": "Nie udało się załadować skórki z mineskin.org",
-  "mocap.playing.start.success": "Odtwarzanie rozpoczęte...",
+  "mocap.playback.start.error": "§lBłąd:§r nie udało się rozpocząć odtwarzania sceny!",
+  "mocap.playback.start.error.loop": "Scena lub podsceny zawierają siebie nawzajem!",
+  "mocap.playback.start.error.load": "Nie udało się załadować wszystkich zasobów!",
+  "mocap.playback.start.error.load.path": "Ścieżka zasobu: %s",
+  "mocap.playback.start.error.load_header": "§lBłąd:§r nie udało się załadować nagłówka nagrania!",
+  "mocap.playback.start.error.profile": "§lBłąd:§r nie udało się załadować profilu gracza!",
+  "mocap.playback.start.warning.unknown_entity": "Próba użycia nieznanego bytu jako gracza",
+  "mocap.playback.start.warning.skin.profile": "Nie udało się załadować skórki z profilu gracza",
+  "mocap.playback.start.warning.skin.file": "Nie udało się załadować skórki z pliku",
+  "mocap.playback.start.warning.skin.mineskin": "Nie udało się załadować skórki z mineskin.org",
+  "mocap.playback.start.success": "Odtwarzanie rozpoczęte...",
 
-  "mocap.playing.stop.unable_to_find_scene": "§lBłąd:§r nie udało się znaleźć sceny o podanym numerze!",
-  "mocap.playing.stop.unable_to_find_scene.tip": "Użyj \"/mocap playback list\" aby uzyskać listę wszystkich obecnie odtwarzanych scen",
-  "mocap.playing.stop.success": "Odtwarzanie zatrzymane",
+  "mocap.playback.stop.unable_to_find_scene": "§lBłąd:§r nie udało się znaleźć sceny o podanym numerze!",
+  "mocap.playback.stop.unable_to_find_scene.tip": "Użyj \"/mocap playback list\" aby uzyskać listę wszystkich obecnie odtwarzanych scen",
+  "mocap.playback.stop.success": "Odtwarzanie zatrzymane",
 
-  "mocap.playing.stop_all.success": "Odtwarzanie wszystkich scen zatrzymane",
+  "mocap.playback.stop_all.success": "Odtwarzanie wszystkich scen zatrzymane",
 
-  "mocap.playing.list": "§lObecnie odtwarzane:§r",
+  "mocap.playback.list": "§lObecnie odtwarzane:§r",
 
 
   "mocap.settings.error": "§lBłąd:§r nie udało się znaleźć ustawienia!",

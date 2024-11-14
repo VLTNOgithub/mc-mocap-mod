@@ -80,7 +80,7 @@ public class PlayerData
 
 				if (!tempPropertyMap.containsKey("textures"))
 				{
-					commandInfo.sendFailure("playing.start.warning.skin.profile");
+					commandInfo.sendFailure("playback.start.warning.skin.profile");
 					break;
 				}
 
@@ -98,7 +98,7 @@ public class PlayerData
 
 				if (skinProperty == null)
 				{
-					commandInfo.sendFailure("playing.start.warning.skin.mineskin");
+					commandInfo.sendFailure("playback.start.warning.skin.mineskin");
 					break;
 				}
 

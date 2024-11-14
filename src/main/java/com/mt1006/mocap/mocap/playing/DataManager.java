@@ -22,7 +22,7 @@ public class DataManager
 		{
 			if (resourceStack.contains(name))
 			{
-				commandInfo.sendFailure("playing.start.error.loop");
+				commandInfo.sendFailure("playback.start.error.loop");
 				resourceStack.push(name);
 				knownError = true;
 				return false;

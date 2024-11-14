@@ -45,7 +45,7 @@ public class PlaybackCommand
 		}
 		catch (Exception exception)
 		{
-			commandInfo.sendException(exception, "playing.start.error");
+			commandInfo.sendException(exception, "playback.start.error");
 			return false;
 		}
 	}

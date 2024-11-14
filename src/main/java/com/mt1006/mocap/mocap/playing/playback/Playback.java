@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class Playback
 {
-	//TODO: "playing.start.error.loop" and "playing.start.error.load" as failures, not errors
+	//TODO: "playback.start.error.loop" and "playback.start.error.load" as failures, not errors
 
 	protected final boolean root;
 	protected final ServerLevel level;
@@ -30,8 +30,8 @@ public abstract class Playback
 		DataManager dataManager = new DataManager();
 		if (!dataManager.load(commandInfo, name))
 		{
-			if (!dataManager.knownError) { commandInfo.sendFailure("playing.start.error.load"); }
-			commandInfo.sendFailure("playing.start.error.load.path", dataManager.getResourcePath());
+			if (!dataManager.knownError) { commandInfo.sendFailure("playback.start.error.load"); }
+			commandInfo.sendFailure("playback.start.error.load.path", dataManager.getResourcePath());
 			return null;
 		}
 
