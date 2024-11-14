@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Saddleable;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.Minecart;
 import org.jetbrains.annotations.Nullable;
@@ -236,7 +237,8 @@ public class EntityFilterInstance
 		VEHICLES("vehicles", List.of(Saddleable.class, Minecart.class, Boat.class)),
 		PROJECTILES("projectiles", List.of(Projectile.class)),
 		ITEMS("items", List.of(ItemEntity.class)),
-		MOBS("mobs", List.of(Mob.class));
+		MOBS("mobs", List.of(Mob.class)),
+		MINECARTS("minecarts", List.of(AbstractMinecart.class));
 
 		public static final Group[] VALUES = values();
 		public final String name;

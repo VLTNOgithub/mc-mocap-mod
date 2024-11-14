@@ -24,7 +24,7 @@
   "mocap.recording.save.saved": "Nagranie pomyślnie zapisane",
   "mocap.recording.save.not_stopped": "Nagranie nie zostało zatrzymane, ale próbujesz je zapisać!",
   "mocap.recording.save.already_exists": "Nagranie o tej nazwie już istnieje!",
-  "mocap.recording.save.already_exists.alternative": "Zamiast spróbuj \"%s\"",
+  "mocap.recording.save.already_exists.alternative": "Zamiast tego spróbuj \"%s\"",
   "mocap.recording.save.multiple.saved": "Zapisano %s jako %s",
   "mocap.recording.save.multiple.failed": "Nie udało się zapisać %s jako %s!",
   "mocap.recording.save.multiple.unknown_state": "Próbowano zapisać %s jako %s, ale zakończono z nieznanym stanem (%s)!",
