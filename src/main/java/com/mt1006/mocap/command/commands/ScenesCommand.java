@@ -36,10 +36,7 @@ public class ScenesCommand
 			then(Commands.argument("scene_name", StringArgumentType.string()).
 			then(Commands.argument("to_add", StringArgumentType.string()).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
-			then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).executes(COMMAND_ADD_TO).
-			then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).executes(COMMAND_ADD_TO).
-			then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(COMMAND_ADD_TO).
-			then(CommandUtils.withPlayerArguments(COMMAND_ADD_TO)))))))));
+			then(CommandUtils.withPlayerArguments(COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
 			then(CommandUtils.withStringAndIntArgument(SceneFiles::removeElement, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
@@ -76,9 +73,6 @@ public class ScenesCommand
 			try
 			{
 				subscene.startDelay = commandInfo.getDouble("start_delay");
-				subscene.offset[0] = commandInfo.getDouble("offset_x");
-				subscene.offset[1] = commandInfo.getDouble("offset_y");
-				subscene.offset[2] = commandInfo.getDouble("offset_z");
 				subscene.playerData = commandInfo.getPlayerData();
 
 				if (subscene.playerData.name != null)

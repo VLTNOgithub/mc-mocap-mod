@@ -5,6 +5,7 @@
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player as entity" modifier (true by default).
 -Settings are now divided into 3 categories - recording, playback and advanced.
 -Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
+-Removed position offset arguments from "/mocap scenes add_to".
 -Replaced command "/mocap recording state" with "/mocap recording list".
 -Replaced settings "trackVehicleEntities", "trackItemEntities" and "trackOtherEntities" with "track_entities".
 -Replaced settings "playVehicleEntities", "playItemEntities" and "playOtherEntities" with "play_entities".
