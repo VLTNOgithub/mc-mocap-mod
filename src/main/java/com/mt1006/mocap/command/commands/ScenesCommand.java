@@ -53,10 +53,10 @@ public class ScenesCommand
 				then(Commands.literal("disabled").executes(COMMAND_MODIFY)).
 				then(Commands.literal("enabled").
 					then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).executes(COMMAND_MODIFY)))))));
-		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "name")).
+		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name")).
 			then(CommandUtils.withStringAndIntArgument(SceneFiles::elementInfo, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
-			then(CommandUtils.withStringArgument(SceneFiles::listElements, "name")));
+			then(CommandUtils.withStringArgument(SceneFiles::listElements, "scene_name")));
 
 		return commandBuilder;
 	}
