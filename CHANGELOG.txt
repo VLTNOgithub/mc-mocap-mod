@@ -13,6 +13,8 @@
 -Renamed settings: "playing_speed" to "playback_speed", "recording_sync" to "recording_synchronization", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
+-Scene format is now JSON-based.
+-Improvements to recording format.
 -Improvements to recording information command output.
 -Improvements to error messages.
 -Improved output of trying to change setting value with "/mocap settings" command, when value remained unchanged.
