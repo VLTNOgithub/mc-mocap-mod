@@ -75,7 +75,7 @@ public abstract class Playback
 		{
 			if (rootPlayerData != null || parent == null || info == null) { throw new RuntimeException(); }
 			this.modifiers = PlaybackModifiers.fromParent(parent.modifiers, info.playerData,
-					info.playerAsEntityID, info.offset, info.startDelay, info.entityFilter);
+					info.playerAsEntity, info.offset, info.startDelay, info.entityFilter);
 		}
 	}
 

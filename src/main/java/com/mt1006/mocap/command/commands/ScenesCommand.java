@@ -95,7 +95,7 @@ public class ScenesCommand
 			}
 			catch (Exception ignore) {}
 
-			return SceneFiles.addElement(commandInfo, name, subscene.sceneToStr());
+			return SceneFiles.addElement(commandInfo, name, subscene);
 		}
 		catch (IllegalArgumentException exception)
 		{

@@ -29,7 +29,7 @@ public class MocapMod implements ModInitializer
 	public static final boolean EXPERIMENTAL = true;
 
 	public static final byte RECORDING_FORMAT_VERSION = 5;
-	public static final byte SCENE_FORMAT_VERSION = 3;
+	public static final byte SCENE_FORMAT_VERSION = 4;
 
 	public static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean isDedicatedServer = FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;

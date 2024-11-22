@@ -1,5 +1,8 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
@@ -39,34 +42,36 @@ public class PlayerData
 		this.skinPath = Utils.toNotNullStr(skinPath);
 	}
 
-	public PlayerData(Scanner scanner)
+	public PlayerData(@Nullable JsonObject json)
 	{
-		String name = null;
-		SkinSource skinSource = SkinSource.DEFAULT;
-		String skinPath = Utils.NULL_STR;
-
-		try
+		if (json == null)
 		{
-			String nameStr = scanner.next();
-			name = nameStr.length() <= 16 ? Utils.toNullableStr(nameStr) : null;
-
-			skinPath = scanner.next();
-
-			// Pre-1.3 compatibility
-			if (!skinPath.equals(Utils.NULL_STR)) { skinSource = SkinSource.FROM_MINESKIN; }
-
-			skinSource = SkinSource.fromID(Integer.parseInt(scanner.next()));
+			this.name = null;
+			this.skinSource = SkinSource.DEFAULT;
+			this.skinPath = Utils.NULL_STR;
+			return;
 		}
-		catch (Exception ignore) {}
 
-		this.name = name;
-		this.skinSource = skinSource;
-		this.skinPath = skinPath;
+		JsonElement nameElement = json.get("name");
+		this.name = nameElement != null ? nameElement.getAsString() : null;
+
+		JsonElement skinSourceElement = json.get("skin_source");
+		this.skinSource = skinSourceElement != null ? SkinSource.fromName(skinSourceElement.getAsString()) : SkinSource.DEFAULT;
+
+		JsonElement skinPathElement = json.get("skin_path");
+		this.skinPath = skinPathElement != null ? skinPathElement.getAsString() : Utils.NULL_STR;
 	}
 
-	public String dataToStr()
+	public @Nullable JsonObject toJson()
 	{
-		return String.format("%s %s %d", Utils.toNotNullStr(name), skinPath, skinSource.id);
+		if (name == null && skinSource == SkinSource.DEFAULT) { return null; }
+
+		JsonObject json = new JsonObject();
+		if (name != null) { json.add("name", new JsonPrimitive(name)); }
+		if (skinSource != SkinSource.DEFAULT) { json.add("skin_source", new JsonPrimitive(skinSource.getName())); }
+		if (!skinPath.equals(Utils.NULL_STR)) { json.add("skin_path", new JsonPrimitive(skinPath)); }
+
+		return json;
 	}
 
 	public void addSkinToPropertyMap(CommandInfo commandInfo, PropertyMap propertyMap)
@@ -110,8 +115,9 @@ public class PlayerData
 
 	public PlayerData mergeWithParent(PlayerData parent)
 	{
-		if (skinSource != SkinSource.DEFAULT) { return new PlayerData(name != null ? name : parent.name, skinSource, skinPath); }
-		else  { return new PlayerData(name != null ? name : parent.name, parent.skinSource, parent.skinPath); }
+		return (skinSource != SkinSource.DEFAULT)
+				? new PlayerData(name != null ? name : parent.name, skinSource, skinPath)
+				: new PlayerData(name != null ? name : parent.name, parent.skinSource, parent.skinPath);
 	}
 
 	private @Nullable Property propertyFromMineskinURL(String mineskinURL)
@@ -141,7 +147,7 @@ public class PlayerData
 
 			return new Property("textures", value, signature);
 		}
-		catch (Exception exception) { return null; }
+		catch (Exception e) { return null; }
 	}
 
 	public enum SkinSource
@@ -166,6 +172,20 @@ public class PlayerData
 				if (s.id == id) { return s; }
 			}
 			return DEFAULT;
+		}
+
+		public String getName()
+		{
+			return name().toLowerCase();
+		}
+
+		public static SkinSource fromName(String name)
+		{
+			try
+			{
+				return valueOf(name.toUpperCase());
+			}
+			catch (IllegalArgumentException e) { return DEFAULT; }
 		}
 	}
 }
