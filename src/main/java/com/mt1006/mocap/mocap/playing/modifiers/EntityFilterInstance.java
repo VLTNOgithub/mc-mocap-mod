@@ -234,30 +234,30 @@ public class EntityFilterInstance
 
 	private enum Group
 	{
-		VEHICLES("vehicles", List.of(Saddleable.class, Minecart.class, Boat.class)),
-		PROJECTILES("projectiles", List.of(Projectile.class)),
-		ITEMS("items", List.of(ItemEntity.class)),
-		MOBS("mobs", List.of(Mob.class)),
-		MINECARTS("minecarts", List.of(AbstractMinecart.class));
+		VEHICLES(List.of(Saddleable.class, Minecart.class, Boat.class)),
+		PROJECTILES(List.of(Projectile.class)),
+		ITEMS(List.of(ItemEntity.class)),
+		MOBS(List.of(Mob.class)),
+		MINECARTS(List.of(AbstractMinecart.class));
 
-		public static final Group[] VALUES = values();
 		public final String name;
 		public final GroupElement include, exclude;
 
-		Group(String name, List<Class<?>> parent)
+		Group(List<Class<?>> parent)
 		{
-			this.name = name;
+			this.name = name().toLowerCase();
 			this.include = new GroupElement(false, name, parent);
 			this.exclude = new GroupElement(true, name, parent);
 		}
 
 		public static @Nullable GroupElement fromString(boolean exclude, String str)
 		{
-			for (Group value : VALUES)
+			try
 			{
-				if (str.equals(value.name)) { return exclude ? value.exclude : value.include; }
+				Group group = valueOf(str.toUpperCase());
+				return exclude ? group.exclude : group.include;
 			}
-			return null;
+			catch (IllegalArgumentException exception) { return null; }
 		}
 	}
 }
