@@ -1,6 +1,7 @@
 package com.mt1006.mocap.mocap.playing;
 
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;
 import org.jetbrains.annotations.Nullable;
@@ -16,13 +17,13 @@ public class DataManager
 	private final Stack<String> resourceStack = new Stack<>();
 	public boolean knownError = false;
 
-	public boolean load(CommandInfo commandInfo, String name)
+	public boolean load(CommandOutput commandOutput, String name)
 	{
 		if (name.charAt(0) == '.')
 		{
 			if (resourceStack.contains(name))
 			{
-				commandInfo.sendFailure("playback.start.error.loop");
+				commandOutput.sendFailure("playback.start.error.loop");
 				resourceStack.push(name);
 				knownError = true;
 				return false;
@@ -30,20 +31,20 @@ public class DataManager
 
 			resourceStack.push(name);
 
-			if (!loadResource(commandInfo, name)) { return false; }
+			if (!loadResource(commandOutput, name)) { return false; }
 
 			SceneData scene = getScene(name);
 			if (scene == null) { return false; }
 
 			for (SceneData.Subscene subscene : scene.subscenes)
 			{
-				if (!load(commandInfo, subscene.name)) { return false; }
+				if (!load(commandOutput, subscene.name)) { return false; }
 			}
 		}
 		else
 		{
 			resourceStack.push(name);
-			if (!loadResource(commandInfo, name)) { return false; }
+			if (!loadResource(commandOutput, name)) { return false; }
 		}
 
 		resourceStack.pop();
@@ -71,20 +72,20 @@ public class DataManager
 		return new String(retStr);
 	}
 
-	private boolean loadResource(CommandInfo commandInfo, String name)
+	private boolean loadResource(CommandOutput commandOutput, String name)
 	{
 		if (name.charAt(0) == '.')
 		{
 			if (sceneMap.containsKey(name)) { return true; }
 			SceneData sceneData = new SceneData();
-			if (!sceneData.load(commandInfo, name)) { return false; }
+			if (!sceneData.load(commandOutput, name)) { return false; }
 			sceneMap.put(name, sceneData);
 		}
 		else
 		{
 			if (recordingMap.containsKey(name)) { return true; }
 			RecordingData recording = new RecordingData();
-			if (!recording.load(commandInfo, name)) { return false; }
+			if (!recording.load(commandOutput, name)) { return false; }
 			recordingMap.put(name, recording);
 		}
 		return true;

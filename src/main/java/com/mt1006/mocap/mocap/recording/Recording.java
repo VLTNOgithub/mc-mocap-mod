@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.Files;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import net.minecraft.server.level.ServerPlayer;
@@ -73,7 +74,7 @@ public class Recording
 		return true;
 	}
 
-	private static void handleDoubleStart(CommandInfo commandInfo, RecordingContext ctx)
+	private static void handleDoubleStart(CommandOutput commandOutput, RecordingContext ctx)
 	{
 		boolean addToDoubleStart = false;
 
@@ -84,18 +85,18 @@ public class Recording
 				break;
 
 			case RECORDING:
-				commandInfo.sendFailureWithTip("recording.start.already_recording");
+				commandOutput.sendFailureWithTip("recording.start.already_recording");
 				addToDoubleStart = true;
 				break;
 
 			case WAITING_FOR_DECISION:
-				commandInfo.sendFailureWithTip("recording.start.waiting_for_decision");
+				commandOutput.sendFailureWithTip("recording.start.waiting_for_decision");
 				addToDoubleStart = true;
 				break;
 
 			default:
 				MocapMod.LOGGER.error("Undefined recording context state supplied to double start handler!");
-				commandInfo.sendFailureWithTip("recording.start.error");
+				commandOutput.sendFailureWithTip("recording.start.error");
 				break;
 		}
 
@@ -112,6 +113,7 @@ public class Recording
 
 	public static boolean startMultiple(CommandInfo commandInfo, String str)
 	{
+		//TODO: replace CommandInfo with CommandOutput?
 		//TODO: finish
 		return true;
 	}
@@ -129,17 +131,17 @@ public class Recording
 				: stopMultiple(commandInfo, resolvedContexts.list);
 	}
 
-	private static boolean stopSingle(CommandInfo commandInfo, RecordingContext ctx)
+	private static boolean stopSingle(CommandOutput commandOutput, RecordingContext ctx)
 	{
 		if (ctx.state == RecordingContext.State.WAITING_FOR_DECISION)
 		{
 			if (!quickDiscard.allowsSingle(ctx))
 			{
 				//TODO: proper message when blocked by death
-				commandInfo.sendFailureWithTip("recording.stop.quick_discard.disabled");
+				commandOutput.sendFailureWithTip("recording.stop.quick_discard.disabled");
 				return false;
 			}
-			return discardSingle(commandInfo, ctx);
+			return discardSingle(commandOutput, ctx);
 		}
 
 		ctx.stop();
@@ -147,22 +149,22 @@ public class Recording
 		switch (ctx.state)
 		{
 			case WAITING_FOR_DECISION:
-				commandInfo.sendSuccess("recording.stop.stopped");
-				if (quickDiscard.allowsSingle(ctx)) { commandInfo.sendSuccess("recording.stop.stopped.tip_stop"); }
-				else { commandInfo.sendSuccess("recording.stop.stopped.tip_discard"); }
+				commandOutput.sendSuccess("recording.stop.stopped");
+				if (quickDiscard.allowsSingle(ctx)) { commandOutput.sendSuccess("recording.stop.stopped.tip_stop"); }
+				else { commandOutput.sendSuccess("recording.stop.stopped.tip_discard"); }
 				return true;
 
 			case CANCELED:
-				commandInfo.sendSuccess("recording.stop.canceled");
+				commandOutput.sendSuccess("recording.stop.canceled");
 				return true;
 
 			default:
-				commandInfo.sendFailure("recording.undefined_state", ctx.state.name());
+				commandOutput.sendFailure("recording.undefined_state", ctx.state.name());
 				return false;
 		}
 	}
 
-	private static boolean stopMultiple(CommandInfo commandInfo, List<RecordingContext> contexts)
+	private static boolean stopMultiple(CommandOutput commandOutput, List<RecordingContext> contexts)
 	{
 		int stopped = 0, cancelled = 0, stillWaiting = 0, unknownState = 0;
 
@@ -186,19 +188,19 @@ public class Recording
 
 		if (stopped == 0 && cancelled == 0 && stillWaiting == 0 && unknownState == 0)
 		{
-			commandInfo.sendSuccess("recording.multiple.results.none");
+			commandOutput.sendSuccess("recording.multiple.results.none");
 			return true;
 		}
 
-		commandInfo.sendSuccess("recording.multiple.results");
-		if (stopped != 0) { commandInfo.sendSuccess("recording.multiple.results.stopped", stopped); }
-		if (cancelled != 0) { commandInfo.sendSuccess("recording.multiple.results.cancelled", cancelled); }
-		if (stillWaiting != 0) { commandInfo.sendSuccess("recording.multiple.results.still_waiting", stillWaiting); }
+		commandOutput.sendSuccess("recording.multiple.results");
+		if (stopped != 0) { commandOutput.sendSuccess("recording.multiple.results.stopped", stopped); }
+		if (cancelled != 0) { commandOutput.sendSuccess("recording.multiple.results.cancelled", cancelled); }
+		if (stillWaiting != 0) { commandOutput.sendSuccess("recording.multiple.results.still_waiting", stillWaiting); }
 
 		if (unknownState != 0)
 		{
-			commandInfo.sendSuccess("recording.multiple.results.error", unknownState);
-			commandInfo.sendFailure("recording.multiple.undefined_state");
+			commandOutput.sendSuccess("recording.multiple.results.error", unknownState);
+			commandOutput.sendFailure("recording.multiple.undefined_state");
 			return false;
 		}
 		return true;
@@ -226,11 +228,11 @@ public class Recording
 		}
 	}
 
-	private static boolean discardSingle(CommandInfo commandInfo, RecordingContext ctx)
+	private static boolean discardSingle(CommandOutput commandOutput, RecordingContext ctx)
 	{
 		if (ctx.state == RecordingContext.State.RECORDING)
 		{
-			commandInfo.sendFailure("recording.discard.not_stopped");
+			commandOutput.sendFailure("recording.discard.not_stopped");
 			return false;
 		}
 
@@ -239,20 +241,20 @@ public class Recording
 		switch (ctx.state)
 		{
 			case DISCARDED:
-				commandInfo.sendSuccess("recording.discard.discarded");
+				commandOutput.sendSuccess("recording.discard.discarded");
 				return true;
 
 			case CANCELED:
-				commandInfo.sendSuccess("recording.stop.canceled");
+				commandOutput.sendSuccess("recording.stop.canceled");
 				return true;
 
 			default:
-				commandInfo.sendFailure("recording.undefined_state", ctx.state.name());
+				commandOutput.sendFailure("recording.undefined_state", ctx.state.name());
 				return false;
 		}
 	}
 
-	private static boolean discardMultiple(CommandInfo commandInfo, List<RecordingContext> contexts)
+	private static boolean discardMultiple(CommandOutput commandOutput, List<RecordingContext> contexts)
 	{
 		int discarded = 0, cancelled = 0, stillRecording = 0, unknownState = 0;
 
@@ -276,19 +278,19 @@ public class Recording
 
 		if (discarded == 0 && cancelled == 0 && stillRecording == 0 && unknownState == 0)
 		{
-			commandInfo.sendSuccess("recording.multiple.results.none");
+			commandOutput.sendSuccess("recording.multiple.results.none");
 			return true;
 		}
 
-		commandInfo.sendSuccess("recording.multiple.results");
-		if (discarded != 0) { commandInfo.sendSuccess("recording.multiple.results.discarded", discarded); }
-		if (cancelled != 0) { commandInfo.sendSuccess("recording.multiple.results.cancelled", cancelled); }
-		if (stillRecording != 0) { commandInfo.sendSuccess("recording.multiple.results.still_recording", stillRecording); }
+		commandOutput.sendSuccess("recording.multiple.results");
+		if (discarded != 0) { commandOutput.sendSuccess("recording.multiple.results.discarded", discarded); }
+		if (cancelled != 0) { commandOutput.sendSuccess("recording.multiple.results.cancelled", cancelled); }
+		if (stillRecording != 0) { commandOutput.sendSuccess("recording.multiple.results.still_recording", stillRecording); }
 
 		if (unknownState != 0)
 		{
-			commandInfo.sendSuccess("recording.multiple.results.error", unknownState);
-			commandInfo.sendFailure("recording.multiple.undefined_state");
+			commandOutput.sendSuccess("recording.multiple.results.error", unknownState);
+			commandOutput.sendFailure("recording.multiple.undefined_state");
 			return false;
 		}
 		return true;
@@ -304,25 +306,25 @@ public class Recording
 				: saveMultiple(commandInfo, resolvedContexts.list, name);
 	}
 
-	private static boolean saveSingle(CommandInfo commandInfo, RecordingContext ctx, String name)
+	private static boolean saveSingle(CommandOutput commandOutput, RecordingContext ctx, String name)
 	{
 		if (ctx.state == RecordingContext.State.RECORDING)
 		{
-			commandInfo.sendFailure("recording.save.not_stopped");
+			commandOutput.sendFailure("recording.save.not_stopped");
 			return false;
 		}
 
-		File recordingFile = Files.getRecordingFile(commandInfo, name);
+		File recordingFile = Files.getRecordingFile(commandOutput, name);
 		if (recordingFile == null) { return false; }
 
 		if (recordingFile.exists())
 		{
-			commandInfo.sendFailure("recording.save.already_exists");
+			commandOutput.sendFailure("recording.save.already_exists");
 
 			String alternativeName = RecordingFiles.findAlternativeName(name);
 			if (alternativeName != null)
 			{
-				commandInfo.sendFailure("recording.save.already_exists.alternative", alternativeName);
+				commandOutput.sendFailure("recording.save.already_exists.alternative", alternativeName);
 			}
 			return false;
 		}
@@ -332,20 +334,20 @@ public class Recording
 		switch (ctx.state)
 		{
 			case SAVED:
-				commandInfo.sendSuccess("recording.save.saved");
+				commandOutput.sendSuccess("recording.save.saved");
 				return true;
 
 			case WAITING_FOR_DECISION:
-				commandInfo.sendFailure("recording.save.error");
+				commandOutput.sendFailure("recording.save.error");
 				return false;
 
 			default:
-				commandInfo.sendFailure("recording.undefined_state", ctx.state.name());
+				commandOutput.sendFailure("recording.undefined_state", ctx.state.name());
 				return false;
 		}
 	}
 
-	private static boolean saveMultiple(CommandInfo commandInfo, List<RecordingContext> contexts, String namePrefix)
+	private static boolean saveMultiple(CommandOutput commandOutput, List<RecordingContext> contexts, String namePrefix)
 	{
 		List<RecordingContext> stopped = new ArrayList<>();
 		for (RecordingContext ctx : contexts)
@@ -358,12 +360,12 @@ public class Recording
 		for (int i = 1; i <= stopped.size(); i++)
 		{
 			String filename = String.format("%s%d", namePrefix, i);
-			File recordingFile = Files.getRecordingFile(commandInfo, filename);
+			File recordingFile = Files.getRecordingFile(commandOutput, filename);
 			if (recordingFile == null) { return false; }
 
 			if (recordingFile.exists())
 			{
-				commandInfo.sendFailure("recording.save.multiple.already_exists", filename);
+				commandOutput.sendFailure("recording.save.multiple.already_exists", filename);
 				return false;
 			}
 
@@ -379,14 +381,14 @@ public class Recording
 
 			switch (ctx.state)
 			{
-				case SAVED -> commandInfo.sendSuccess("recording.save.multiple.saved", ctx.id.str, filenames.get(i));
-				case WAITING_FOR_DECISION -> commandInfo.sendFailure("recording.save.multiple.failed", ctx.id.str, filenames.get(i));
-				default -> commandInfo.sendFailure("recording.save.multiple.unknown_state", ctx.id.str, filenames.get(i), ctx.state.name());
+				case SAVED -> commandOutput.sendSuccess("recording.save.multiple.saved", ctx.id.str, filenames.get(i));
+				case WAITING_FOR_DECISION -> commandOutput.sendFailure("recording.save.multiple.failed", ctx.id.str, filenames.get(i));
+				default -> commandOutput.sendFailure("recording.save.multiple.unknown_state", ctx.id.str, filenames.get(i), ctx.state.name());
 			}
 			if (ctx.state != RecordingContext.State.SAVED) { somethingFailed = true; }
 		}
 
-		if (somethingFailed) { commandInfo.sendFailure("recording.save.multiple.error"); }
+		if (somethingFailed) { commandOutput.sendFailure("recording.save.multiple.error"); }
 		return !somethingFailed;
 	}
 

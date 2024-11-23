@@ -49,79 +49,79 @@ public class RecordingFiles
 		return true;
 	}
 
-	public static boolean copy(CommandInfo commandInfo, String srcName, String destName)
+	public static boolean copy(CommandOutput commandOutput, String srcName, String destName)
 	{
-		File srcFile = Files.getRecordingFile(commandInfo, srcName);
+		File srcFile = Files.getRecordingFile(commandOutput, srcName);
 		if (srcFile == null) { return false; }
 
-		File destFile = Files.getRecordingFile(commandInfo, destName);
+		File destFile = Files.getRecordingFile(commandOutput, destName);
 		if (destFile == null) { return false; }
 
 		try { FileUtils.copyFile(srcFile, destFile); }
 		catch (IOException exception)
 		{
-			commandInfo.sendException(exception, "recordings.copy.failed");
+			commandOutput.sendException(exception, "recordings.copy.failed");
 			return false;
 		}
 
 		InputArgument.addServerInput(destName);
-		commandInfo.sendSuccess("recordings.copy.success");
+		commandOutput.sendSuccess("recordings.copy.success");
 		return true;
 	}
 
-	public static boolean rename(CommandInfo commandInfo, String oldName, String newName)
+	public static boolean rename(CommandOutput commandOutput, String oldName, String newName)
 	{
-		File oldFile = Files.getRecordingFile(commandInfo, oldName);
+		File oldFile = Files.getRecordingFile(commandOutput, oldName);
 		if (oldFile == null) { return false; }
 
-		File newFile = Files.getRecordingFile(commandInfo, newName);
+		File newFile = Files.getRecordingFile(commandOutput, newName);
 		if (newFile == null) { return false; }
 
 		if (!oldFile.renameTo(newFile))
 		{
-			commandInfo.sendFailure("recordings.rename.failed");
+			commandOutput.sendFailure("recordings.rename.failed");
 			return false;
 		}
 
 		InputArgument.removeServerInput(oldName);
 		InputArgument.addServerInput(newName);
-		commandInfo.sendSuccess("recordings.rename.success");
+		commandOutput.sendSuccess("recordings.rename.success");
 		return true;
 	}
 
-	public static boolean remove(CommandInfo commandInfo, String name)
+	public static boolean remove(CommandOutput commandOutput, String name)
 	{
-		File recordingFile = Files.getRecordingFile(commandInfo, name);
+		File recordingFile = Files.getRecordingFile(commandOutput, name);
 		if (recordingFile == null) { return false; }
 
 		if (!recordingFile.delete())
 		{
-			commandInfo.sendFailure("recordings.remove.failed");
+			commandOutput.sendFailure("recordings.remove.failed");
 			return false;
 		}
 
 		InputArgument.removeServerInput(name);
-		commandInfo.sendSuccess("recordings.remove.success");
+		commandOutput.sendSuccess("recordings.remove.success");
 		return true;
 	}
 
-	public static boolean info(CommandInfo commandInfo, String name)
+	public static boolean info(CommandOutput commandOutput, String name)
 	{
 		RecordingData recording = new RecordingData();
 
-		if (!recording.load(commandInfo, name) && recording.version <= VERSION)
+		if (!recording.load(commandOutput, name) && recording.version <= VERSION)
 		{
-			commandInfo.sendFailure("recordings.info.failed");
+			commandOutput.sendFailure("recordings.info.failed");
 			return false;
 		}
 
-		commandInfo.sendSuccess("recordings.info.info");
-		commandInfo.sendSuccess("file.info.name", name);
-		if (!Files.printVersionInfo(commandInfo, VERSION, recording.version, recording.experimentalVersion)) { return true; }
+		commandOutput.sendSuccess("recordings.info.info");
+		commandOutput.sendSuccess("file.info.name", name);
+		if (!Files.printVersionInfo(commandOutput, VERSION, recording.version, recording.experimentalVersion)) { return true; }
 
-		commandInfo.sendSuccess("recordings.info.length", String.format("%.2f", recording.tickCount / 20.0), recording.tickCount);
+		commandOutput.sendSuccess("recordings.info.length", String.format("%.2f", recording.tickCount / 20.0), recording.tickCount);
 
-		commandInfo.sendSuccess("recordings.info.size",
+		commandOutput.sendSuccess("recordings.info.size",
 				String.format("%.2f", recording.fileSize / 1024.0), recording.actions.size() - recording.tickCount);
 
 		String xStr = String.format(Locale.US, "%.2f", recording.startPos[0]);
@@ -130,9 +130,9 @@ public class RecordingFiles
 		MutableComponent tpSuggestionComponent = Utils.getEventComponent(ClickEvent.Action.SUGGEST_COMMAND,
 				String.format("/tp @p %s %s %s", xStr, yStr, zStr), String.format("%s %s %s", xStr, yStr, zStr));
 		tpSuggestionComponent.withStyle(Style.EMPTY.withUnderlined(true));
-		commandInfo.sendSuccess("recordings.info.start_pos", tpSuggestionComponent);
+		commandOutput.sendSuccess("recordings.info.start_pos", tpSuggestionComponent);
 
-		commandInfo.sendSuccess(recording.endsWithDeath ? "recordings.info.dies.yes" : "recordings.info.dies.no");
+		commandOutput.sendSuccess(recording.endsWithDeath ? "recordings.info.dies.yes" : "recordings.info.dies.no");
 		return true;
 	}
 

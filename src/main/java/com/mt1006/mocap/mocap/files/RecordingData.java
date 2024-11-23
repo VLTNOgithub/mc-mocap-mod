@@ -2,6 +2,7 @@ package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.actions.BlockAction;
 import com.mt1006.mocap.mocap.actions.NextTick;
@@ -76,13 +77,13 @@ public class RecordingData
 		stream.write(writer.toByteArray());
 	}
 
-	public boolean load(CommandInfo commandInfo, String name)
+	public boolean load(CommandOutput commandOutput, String name)
 	{
-		byte[] data = Files.loadFile(Files.getRecordingFile(commandInfo, name));
-		return data != null && load(commandInfo, new RecordingFiles.FileReader(this, data, true));
+		byte[] data = Files.loadFile(Files.getRecordingFile(commandOutput, name));
+		return data != null && load(commandOutput, new RecordingFiles.FileReader(this, data, true));
 	}
 
-	private boolean load(CommandInfo commandInfo, RecordingFiles.FileReader reader)
+	private boolean load(CommandOutput commandOutput, RecordingFiles.FileReader reader)
 	{
 		fileSize = reader.getSize();
 
@@ -92,7 +93,7 @@ public class RecordingData
 
 		if (version > RecordingFiles.VERSION)
 		{
-			commandInfo.sendFailure("playback.start.error.load_header");
+			commandOutput.sendFailure("playback.start.error.load_header");
 			return false;
 		}
 

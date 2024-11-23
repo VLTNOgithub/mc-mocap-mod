@@ -50,19 +50,19 @@ public class Playing
 		}
 	}
 
-	public static void stop(CommandInfo commandInfo, int id)
+	public static void stop(CommandOutput commandOutput, int id)
 	{
 		for (Playback.Root playback : playbacks)
 		{
 			if (playback.id == id)
 			{
 				playback.instance.stop();
-				commandInfo.sendSuccess("playback.stop.success");
+				commandOutput.sendSuccess("playback.stop.success");
 				return;
 			}
 		}
 
-		commandInfo.sendFailureWithTip("playback.stop.unable_to_find_scene");
+		commandOutput.sendFailureWithTip("playback.stop.unable_to_find_scene");
 	}
 
 	public static boolean stopAll(CommandOutput commandOutput)
@@ -72,13 +72,13 @@ public class Playing
 		return true;
 	}
 
-	public static boolean list(CommandInfo commandInfo)
+	public static boolean list(CommandOutput commandOutput)
 	{
-		commandInfo.sendSuccess("playback.list");
+		commandOutput.sendSuccess("playback.list");
 
 		for (Playback.Root playback : playbacks)
 		{
-			commandInfo.sendSuccessLiteral("[%d] %s", playback.id, playback.name);
+			commandOutput.sendSuccessLiteral("[%d] %s", playback.id, playback.name);
 		}
 		return true;
 	}
