@@ -1,11 +1,16 @@
 package com.mt1006.mocap.mocap.files;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import com.mt1006.mocap.utils.Utils;
+import net.minecraft.commands.arguments.NbtTagArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
@@ -212,7 +217,14 @@ public class SceneFiles
 
 					if (playerAsEntityStr.equals("enabled"))
 					{
-						subscene.playerAsEntity = ResourceArgument.getEntityType(commandInfo.ctx, "entity").key().location().toString();
+						String playerAsEntityId = ResourceArgument.getEntityType(commandInfo.ctx, "entity").key().location().toString();
+
+						Tag tag;
+						try { tag = NbtTagArgument.getNbtTag(commandInfo.ctx, "nbt"); }
+						catch (Exception exception) { tag = null; }
+						CompoundTag nbt = (tag instanceof CompoundTag) ? (CompoundTag)tag : null;
+
+						subscene.playerAsEntity = new PlayerAsEntity(playerAsEntityId, nbt != null ? nbt.toString() : null);
 						return subscene;
 					}
 					else if (playerAsEntityStr.equals("disabled"))

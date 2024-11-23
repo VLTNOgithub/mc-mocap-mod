@@ -84,7 +84,7 @@ public class RecordingPlayback extends Playback
 		Entity entity;
 		FakePlayer ghost = null;
 
-		if (modifiers.playerAsEntityId == null)
+		if (!modifiers.playerAsEntity.isEnabled())
 		{
 			FakePlayer fakePlayer = new FakePlayer(level, newProfile, true);
 			entity = fakePlayer;
@@ -110,9 +110,7 @@ public class RecordingPlayback extends Playback
 		}
 		else
 		{
-			ResourceLocation entityRes = ResourceLocation.parse(modifiers.playerAsEntityId);
-			EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(entityRes);
-			entity = BuiltInRegistries.ENTITY_TYPE.containsKey(entityRes) ? entityType.create(level) : null;
+			entity = modifiers.playerAsEntity.createEntity(level);
 
 			if (entity == null)
 			{

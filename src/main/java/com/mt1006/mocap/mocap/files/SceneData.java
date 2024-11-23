@@ -4,9 +4,8 @@ import com.google.gson.*;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
-import com.mt1006.mocap.utils.Utils;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -116,7 +115,7 @@ public class SceneData
 		public double startDelay = 0.0;
 		public double[] offset = new double[3];
 		public PlayerData playerData = PlayerData.EMPTY;
-		public @Nullable String playerAsEntity = null;
+		public PlayerAsEntity playerAsEntity = null;
 		public EntityFilter entityFilter = EntityFilter.FOR_PLAYBACK; //TODO: implement
 
 		public Subscene(String name)
@@ -139,7 +138,7 @@ public class SceneData
 			playerData = new PlayerData(playerDataElement != null ? playerDataElement.getAsJsonObject() : null);
 			
 			JsonElement playerAsEntityElement = json.get("player_as_entity");
-			playerAsEntity = playerAsEntityElement != null ? Utils.toNullableStr(playerAsEntityElement.getAsString()) : null;
+			playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
 		}
 
 		public JsonObject toJson()
@@ -154,7 +153,9 @@ public class SceneData
 
 			JsonObject playerDataJson = playerData.toJson();
 			if (playerDataJson != null) { json.add("player_data", playerDataJson); }
-			if (playerAsEntity != null) { json.add("player_as_entity", new JsonPrimitive(playerAsEntity)); }
+
+			JsonObject playerAsEntityJson = playerAsEntity.toJson();
+			if (playerAsEntityJson != null) { json.add("player_as_entity", playerAsEntityJson); }
 			return json;
 		}
 

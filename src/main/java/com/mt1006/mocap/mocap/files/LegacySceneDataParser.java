@@ -1,6 +1,7 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
 import com.mt1006.mocap.utils.Utils;
 
@@ -61,7 +62,7 @@ public class LegacySceneDataParser
 			subscene.offset[1] = Double.parseDouble(scanner.next());
 			subscene.offset[2] = Double.parseDouble(scanner.next());
 			subscene.playerData = parsePlayerData(scanner);
-			subscene.playerAsEntity = Utils.toNullableStr(scanner.next());
+			subscene.playerAsEntity = new PlayerAsEntity(Utils.toNullableStr(scanner.next()), null);
 		}
 		catch (Exception ignore) {}
 		return subscene;
