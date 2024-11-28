@@ -1,7 +1,7 @@
 {
   "mocap.recording.start.already_recording": "Już nagrywasz tego gracza!",
   "mocap.recording.start.already_recording.tip": "Wprowadź to polecenie ponownie aby rozpocząć mimo to lub użyj \"/mocap recording stop\" aby zatrzymać nagrywanie",
-  "mocap.recording.start.waiting_for_decision": "Twoje nagranie tego gracza czekają na decyzję!",
+  "mocap.recording.start.waiting_for_decision": "Twoje nagranie tego gracza czeka na decyzję!",
   "mocap.recording.start.waiting_for_decision.tip": "Wprowadź to polecenie ponownie aby rozpocząć mimo to",
   "mocap.recording.start.player_not_found": "§lBłąd:§r nie znaleziono gracza!",
   "mocap.recording.start.player_not_specified": "§lBłąd:§r nie określono gracza!",
