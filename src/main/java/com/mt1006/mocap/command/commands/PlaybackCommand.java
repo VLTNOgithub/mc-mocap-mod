@@ -43,9 +43,9 @@ public class PlaybackCommand
 		{
 			return Playing.start(commandInfo, name, playerData);
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
-			commandInfo.sendException(exception, "playback.start.error");
+			commandInfo.sendException(e, "playback.start.error");
 			return false;
 		}
 	}
@@ -57,9 +57,9 @@ public class PlaybackCommand
 			int id = commandInfo.getInteger("id");
 			Playing.stop(commandInfo, id);
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return false;
 		}
 		return true;

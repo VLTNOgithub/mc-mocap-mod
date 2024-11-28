@@ -84,9 +84,9 @@ public class Settings
 		{
 			settingName = commandInfo.ctx.getNodes().get(commandInfo.ctx.getNodes().size() - 1).getNode().getName();
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return false;
 		}
 

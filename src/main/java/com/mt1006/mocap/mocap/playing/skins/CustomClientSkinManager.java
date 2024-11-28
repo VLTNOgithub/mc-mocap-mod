@@ -75,9 +75,9 @@ public class CustomClientSkinManager
 			{
 				nativeImage = NativeImage.read(array);
 			}
-			catch (IOException exception)
+			catch (IOException e)
 			{
-				Utils.exception(exception, "Failed to load skin texture into buffer!");
+				Utils.exception(e, "Failed to load skin texture into buffer!");
 				return;
 			}
 
@@ -90,10 +90,7 @@ public class CustomClientSkinManager
 			Minecraft.getInstance().getTextureManager().register(resFromName(name), new DynamicTexture(nativeImage));
 			clientMap.put(name, true);
 		}
-		catch (Exception exception)
-		{
-			Utils.exception(exception, "Failed to read skin texture!");
-		}
+		catch (Exception e) { Utils.exception(e, "Failed to read skin texture!"); }
 	}
 
 	public static void clearCache()

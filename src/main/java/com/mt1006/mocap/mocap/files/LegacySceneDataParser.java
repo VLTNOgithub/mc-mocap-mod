@@ -36,10 +36,7 @@ public class LegacySceneDataParser
 			}
 			parsed = true;
 		}
-		catch (Exception e)
-		{
-			commandOutput.sendException(e, "error.failed_to_load_scene");
-		}
+		catch (Exception e) { commandOutput.sendException(e, "error.failed_to_load_scene"); }
 	}
 
 	public boolean isLegacy()

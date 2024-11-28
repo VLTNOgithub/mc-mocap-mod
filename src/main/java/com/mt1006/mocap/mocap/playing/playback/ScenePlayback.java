@@ -16,13 +16,13 @@ public class ScenePlayback extends Playback
 	protected static @Nullable ScenePlayback startRoot(CommandInfo commandInfo, DataManager dataManager, String name, PlayerData playerData)
 	{
 		try { return new ScenePlayback(commandInfo, dataManager, name, playerData, null, null); }
-		catch (StartException exception) { return null; }
+		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable ScenePlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
 	{
 		try { return new ScenePlayback(commandInfo, dataManager, info.name, null, parent, info); }
-		catch (StartException exception) { return null; }
+		catch (StartException e) { return null; }
 	}
 
 	private ScenePlayback(CommandInfo commandInfo, DataManager dataManager, String name, @Nullable PlayerData rootPlayerData,

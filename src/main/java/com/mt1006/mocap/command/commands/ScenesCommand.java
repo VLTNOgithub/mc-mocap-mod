@@ -99,9 +99,9 @@ public class ScenesCommand
 
 			return SceneFiles.addElement(commandInfo, name, subscene);
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return false;
 		}
 	}
@@ -115,9 +115,9 @@ public class ScenesCommand
 
 			return SceneFiles.modify(commandInfo, name, pos);
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return false;
 		}
 	}

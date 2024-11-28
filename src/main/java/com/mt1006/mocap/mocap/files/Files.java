@@ -109,10 +109,7 @@ public class Files
 			data = new byte[fileSize];
 			if (stream.read(data) != fileSize) { return null; }
 		}
-		catch (Exception exception)
-		{
-			return null;
-		}
+		catch (Exception e) { return null; }
 
 		return data;
 	}

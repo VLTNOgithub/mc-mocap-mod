@@ -38,19 +38,19 @@ public class RecordingPlayback extends Playback
 	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, DataManager dataManager, String name, PlayerData playerData)
 	{
 		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(name), playerData, null, null); }
-		catch (StartException exception) { return null; }
+		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording, PlayerData playerData)
 	{
 		try { return new RecordingPlayback(commandInfo, recording, playerData, null, null); }
-		catch (StartException exception) { return null; }
+		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable RecordingPlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
 	{
 		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), null, parent, info); }
-		catch (StartException exception) { return null; }
+		catch (StartException e) { return null; }
 	}
 
 	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording, @Nullable PlayerData rootPlayerData,

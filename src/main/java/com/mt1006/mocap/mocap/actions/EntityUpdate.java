@@ -170,9 +170,9 @@ public class EntityUpdate implements Action
 		{
 			nbt = Utils.nbtFromString(nbtString);
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
-			Utils.exception(exception, "Exception occurred when parsing entity NBT data!");
+			Utils.exception(e, "Exception occurred when parsing entity NBT data!");
 			return Result.ERROR;
 		}
 

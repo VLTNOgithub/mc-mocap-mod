@@ -55,7 +55,7 @@ public class RecordingCommand
 				return false;
 			}
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
 			Entity entity = commandInfo.sourceEntity;
 

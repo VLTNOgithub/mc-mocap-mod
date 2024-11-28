@@ -51,9 +51,9 @@ public class SceneFiles
 		if (destFile == null) { return false; }
 
 		try { FileUtils.copyFile(srcFile, destFile); }
-		catch (IOException exception)
+		catch (IOException e)
 		{
-			commandOutput.sendException(exception, "scenes.copy.failed");
+			commandOutput.sendException(e, "scenes.copy.failed");
 			return false;
 		}
 
@@ -221,7 +221,7 @@ public class SceneFiles
 
 						Tag tag;
 						try { tag = NbtTagArgument.getNbtTag(commandInfo.ctx, "nbt"); }
-						catch (Exception exception) { tag = null; }
+						catch (Exception e) { tag = null; }
 						CompoundTag nbt = (tag instanceof CompoundTag) ? (CompoundTag)tag : null;
 
 						subscene.playerAsEntity = new PlayerAsEntity(playerAsEntityId, nbt != null ? nbt.toString() : null);
@@ -238,9 +238,9 @@ public class SceneFiles
 			rootCommandInfo.sendFailure("error.unable_to_get_argument");
 			return null;
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
-			rootCommandInfo.sendException(exception, "error.unable_to_get_argument");
+			rootCommandInfo.sendException(e, "error.unable_to_get_argument");
 			return null;
 		}
 	}

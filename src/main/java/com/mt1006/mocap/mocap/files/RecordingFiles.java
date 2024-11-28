@@ -39,9 +39,9 @@ public class RecordingFiles
 			data.save(stream);
 			stream.close();
 		}
-		catch (IOException exception)
+		catch (IOException e)
 		{
-			commandOutput.sendException(exception, "recording.save.error");
+			commandOutput.sendException(e, "recording.save.error");
 			return false;
 		}
 
@@ -58,9 +58,9 @@ public class RecordingFiles
 		if (destFile == null) { return false; }
 
 		try { FileUtils.copyFile(srcFile, destFile); }
-		catch (IOException exception)
+		catch (IOException e)
 		{
-			commandOutput.sendException(exception, "recordings.copy.failed");
+			commandOutput.sendException(e, "recordings.copy.failed");
 			return false;
 		}
 

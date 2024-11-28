@@ -130,7 +130,7 @@ public class CommandInfo implements CommandOutput
 	public @Nullable String getNullableString(String name)
 	{
 		try { return StringArgumentType.getString(ctx, name); }
-		catch (Exception exception) { return null; }
+		catch (Exception e) { return null; }
 	}
 
 	public PlayerData getPlayerData()

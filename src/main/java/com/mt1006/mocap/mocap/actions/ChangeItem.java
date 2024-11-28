@@ -301,7 +301,7 @@ public class ChangeItem implements ComparableAction
 			CompoundTag tag = new CompoundTag();
 
 			try { tag.put("components", Utils.nbtFromString(data)); }
-			catch (CommandSyntaxException exception) { return null; }
+			catch (CommandSyntaxException e) { return null; }
 
 			tag.put("id", StringTag.valueOf(BuiltInRegistries.ITEM.getKey(item).toString()));
 			tag.put("count", IntTag.valueOf(1));

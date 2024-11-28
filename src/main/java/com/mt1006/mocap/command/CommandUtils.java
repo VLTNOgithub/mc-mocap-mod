@@ -58,7 +58,7 @@ public class CommandUtils
 			String str = commandInfo.getString(arg);
 			return function.apply(commandInfo, str) ? 1 : 0;
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
 			if (nullable)
 			{
@@ -66,7 +66,7 @@ public class CommandUtils
 			}
 			else
 			{
-				commandInfo.sendException(exception, "error.unable_to_get_argument");
+				commandInfo.sendException(e, "error.unable_to_get_argument");
 				return 0;
 			}
 		}
@@ -81,9 +81,9 @@ public class CommandUtils
 			int intVal = commandInfo.getInteger(arg2);
 			return function.apply(commandInfo, str, intVal) ? 1 : 0;
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return 0;
 		}
 	}
@@ -97,9 +97,9 @@ public class CommandUtils
 			String str2 = commandInfo.getString(arg2);
 			return function.apply(commandInfo, str1, str2) ? 1 : 0;
 		}
-		catch (IllegalArgumentException exception)
+		catch (IllegalArgumentException e)
 		{
-			commandInfo.sendException(exception, "error.unable_to_get_argument");
+			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return 0;
 		}
 	}

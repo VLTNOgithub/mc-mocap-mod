@@ -171,9 +171,9 @@ public class SettingFields
 			{
 				set(parseFromString(str));
 			}
-			catch (Exception exception)
+			catch (Exception e)
 			{
-				Utils.exception(exception, "Failed to load settings from string");
+				Utils.exception(e, "Failed to load settings from string");
 				reset();
 			}
 		}
@@ -192,9 +192,9 @@ public class SettingFields
 				set(newVal);
 				return true;
 			}
-			catch (Exception exception)
+			catch (Exception e)
 			{
-				commandInfo.sendException(exception, "settings.set.error");
+				commandInfo.sendException(e, "settings.set.error");
 				reset();
 				return false;
 			}

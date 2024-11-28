@@ -85,7 +85,7 @@ public class EntityFilterInstance
 	public static @Nullable EntityFilterInstance create(String str)
 	{
 		try { return new EntityFilterInstance(str); }
-		catch (FilterParserException exception) { return null; }
+		catch (FilterParserException e) { return null; }
 	}
 
 	public static boolean test(String str)
@@ -95,10 +95,7 @@ public class EntityFilterInstance
 			new EntityFilterInstance(str);
 			return true;
 		}
-		catch (FilterParserException exception)
-		{
-			return false;
-		}
+		catch (FilterParserException e) { return false; }
 	}
 
 	public boolean isAllowed(Entity entity)
@@ -257,7 +254,7 @@ public class EntityFilterInstance
 				Group group = valueOf(str.toUpperCase());
 				return exclude ? group.exclude : group.include;
 			}
-			catch (IllegalArgumentException exception) { return null; }
+			catch (IllegalArgumentException e) { return null; }
 		}
 	}
 }

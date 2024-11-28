@@ -19,10 +19,7 @@ public class Fields
 			gameProfileProperties = getField(GameProfile.class, PropertyMap.class);
 			if (gameProfileProperties == null) { MocapMod.LOGGER.error("\"gameProfileProperties\" is null!"); }
 		}
-		catch (Exception exception)
-		{
-			Utils.exception(exception, "Fields.init() thrown exception!");
-		}
+		catch (Exception e) { Utils.exception(e, "Fields.init() thrown exception!"); }
 	}
 
 	private static @Nullable Field getField(Class<?> declaringClass, Class<?> fieldType)

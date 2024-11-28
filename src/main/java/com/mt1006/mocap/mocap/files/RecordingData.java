@@ -190,9 +190,9 @@ public class RecordingData
 
 			return nextAction.execute(ctx);
 		}
-		catch (Exception exception)
+		catch (Exception e)
 		{
-			Utils.exception(exception, "Exception occurred while executing action!");
+			Utils.exception(e, "Exception occurred while executing action!");
 			return Action.Result.ERROR;
 		}
 	}
