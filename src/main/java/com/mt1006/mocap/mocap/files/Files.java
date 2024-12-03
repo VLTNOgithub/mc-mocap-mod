@@ -142,15 +142,15 @@ public class Files
 		return new File(slimModel ? slimSkinDirectory : skinDirectory, name + SKIN_EXTENSION);
 	}
 
-	public static boolean isRecordingFile(String name)
+	public static boolean isRecordingFile(File directory, String name)
 	{
-		File file = new File(name);
+		File file = new File(directory, name);
 		return !file.isDirectory() && name.endsWith(RECORDING_EXTENSION) && checkIfProperName(CommandOutput.DUMMY, name);
 	}
 
-	public static boolean isSceneFile(String name)
+	public static boolean isSceneFile(File directory, String name)
 	{
-		File file = new File(name);
+		File file = new File(directory, name);
 		return !file.isDirectory() && name.endsWith(SCENE_EXTENSION) && checkIfProperName(CommandOutput.DUMMY, name);
 	}
 

@@ -29,6 +29,7 @@
 -Fixed fake players not being fully removed from the client when playback ended with death.
 -Fixed fake players in "player as entity" mode not being able to interact with blocks (thanks to awesome_nobel46 for reporting).
 -Fixed vehicles not appearing in the playback after disabling "playItemEntities", "playOtherEntities" and "playBlockActions", despite "playVehicleEntities" being enabled.
+-Fixed directories with a proper name showing up on a list of recordings or scenes.
 -Minor spelling improvements.
 -Minor improvements to error detection.
 

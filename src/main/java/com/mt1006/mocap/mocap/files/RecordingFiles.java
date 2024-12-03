@@ -139,17 +139,14 @@ public class RecordingFiles
 	public static @Nullable List<String> list()
 	{
 		if (!Files.initialized) { return null; }
-		ArrayList<String> recordings = new ArrayList<>();
 
-		String[] filesList = Files.recordingsDirectory.list();
-		if (filesList == null) { return null; }
+		String[] fileList = Files.recordingsDirectory.list(Files::isRecordingFile);
+		if (fileList == null) { return null; }
 
-		for (String filename : filesList)
+		ArrayList<String> recordings = new ArrayList<>(fileList.length);
+		for (String filename : fileList)
 		{
-			if (Files.isRecordingFile(filename))
-			{
-				recordings.add(filename.substring(0, filename.lastIndexOf('.')));
-			}
+			recordings.add(filename.substring(0, filename.lastIndexOf('.')));
 		}
 
 		Collections.sort(recordings);

@@ -344,18 +344,15 @@ public class SceneFiles
 
 	public static @Nullable List<String> list()
 	{
-		ArrayList<String> scenes = new ArrayList<>();
-
 		if (!Files.initialized) { return null; }
-		String[] fileList = Files.sceneDirectory.list();
+
+		String[] fileList = Files.sceneDirectory.list(Files::isSceneFile);
 		if (fileList == null) { return null; }
 
+		ArrayList<String> scenes = new ArrayList<>();
 		for (String filename : fileList)
 		{
-			if (Files.isSceneFile(filename))
-			{
-				scenes.add("." + filename.substring(0, filename.lastIndexOf('.')));
-			}
+			scenes.add("." + filename.substring(0, filename.lastIndexOf('.')));
 		}
 
 		Collections.sort(scenes);
