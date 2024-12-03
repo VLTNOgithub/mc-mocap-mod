@@ -229,7 +229,7 @@ public class SceneFiles
 					}
 					else if (playerAsEntityStr.equals("disabled"))
 					{
-						subscene.playerAsEntity = null;
+						subscene.playerAsEntity = PlayerAsEntity.DISABLED;
 						return subscene;
 					}
 					break;
@@ -301,8 +301,8 @@ public class SceneFiles
 		commandOutput.sendSuccess("scenes.element_info.start_delay", subscene.startDelay, (int)Math.round(subscene.startDelay * 20.0));
 		commandOutput.sendSuccess("scenes.element_info.offset", subscene.offset[0], subscene.offset[1], subscene.offset[2]);
 
-		if (subscene.playerAsEntity == null) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
-		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", subscene.playerAsEntity); }
+		if (!subscene.playerAsEntity.isEnabled()) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
+		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", subscene.playerAsEntity.entityId); }
 		return true;
 	}
 

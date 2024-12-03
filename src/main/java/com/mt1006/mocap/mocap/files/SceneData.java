@@ -115,7 +115,7 @@ public class SceneData
 		public double startDelay = 0.0;
 		public double[] offset = new double[3];
 		public PlayerData playerData = PlayerData.EMPTY;
-		public PlayerAsEntity playerAsEntity = null;
+		public PlayerAsEntity playerAsEntity = PlayerAsEntity.DISABLED;
 		public EntityFilter entityFilter = EntityFilter.FOR_PLAYBACK; //TODO: implement
 
 		public Subscene(String name)
