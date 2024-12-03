@@ -22,28 +22,19 @@ public class Files
 	private static final String SKIN_EXTENSION = ".png";
 	public static final String SLIM_SKIN_PREFIX = "slim/";
 
-	private static boolean directoriesInitialized = false;
+	public static boolean initialized = false;
 	public static File mocapDirectory = null;
 	public static File recordingsDirectory = null;
 	public static File sceneDirectory = null;
 	public static File skinDirectory = null;
 	public static File slimSkinDirectory = null;
 
-	//TODO: remove? it's always initialized when server starts
-	public static boolean initAndCheck(CommandOutput commandOutput, String name)
+	public static void init()
 	{
-		return initDirectories(commandOutput) && checkIfProperName(commandOutput, name);
-	}
-
-	public static boolean initDirectories(CommandOutput commandOutput)
-	{
-		long a = System.nanoTime();
-		if (directoriesInitialized) { return true; }
-
+		if (initialized) { return; }
 		if (MocapMod.server == null)
 		{
-			commandOutput.sendFailure("error.failed_to_init_directories");
-			return false;
+			throw new RuntimeException("Failed to init directories - server is null!");
 		}
 
 		mocapDirectory = createDirectory(MocapMod.server.getWorldPath(LevelResource.ROOT).toFile(), MOCAP_DIR_NAME);
@@ -55,18 +46,26 @@ public class Files
 		if (!mocapDirectory.isDirectory() || !recordingsDirectory.isDirectory() || !sceneDirectory.isDirectory()
 				|| !skinDirectory.isDirectory() || !slimSkinDirectory.isDirectory())
 		{
-			commandOutput.sendFailure("error.failed_to_init_directories");
-			return false;
+			return;
 		}
 
-		directoriesInitialized = true;
-		MocapMod.LOGGER.warn("Files: {}", System.nanoTime() - a); //TODO: remove
-		return true;
+		initialized = true;
 	}
 
-	public static void deinitDirectories()
+	public static void deinit()
 	{
-		directoriesInitialized = false;
+		initialized = false;
+	}
+
+	public static boolean check(CommandOutput commandOutput,  String name)
+	{
+		return checkIfInitialized(commandOutput) && checkIfProperName(commandOutput, name);
+	}
+
+	public static boolean checkIfInitialized(CommandOutput commandOutput)
+	{
+		if (!initialized) { commandOutput.sendFailure("error.failed_to_init_directories"); }
+		return initialized;
 	}
 
 	public static boolean checkIfProperName(CommandOutput commandOutput, String name)
@@ -114,23 +113,20 @@ public class Files
 		return data;
 	}
 
-	public static @Nullable File getSettingsFile(CommandOutput commandOutput)
+	public static @Nullable File getSettingsFile()
 	{
-		if (!initDirectories(commandOutput)) { return null; }
-		return new File(mocapDirectory, CONFIG_FILE_NAME);
+		return initialized ? new File(mocapDirectory, CONFIG_FILE_NAME) : null;
 	}
 
 	public static @Nullable File getRecordingFile(CommandOutput commandOutput, String name)
 	{
-		if (!initAndCheck(commandOutput, name)) { return null; }
-		return new File(recordingsDirectory, name + RECORDING_EXTENSION);
+		return check(commandOutput, name) ? new File(recordingsDirectory, name + RECORDING_EXTENSION) : null;
 	}
 
 	public static @Nullable File getSceneFile(CommandOutput commandOutput, String name)
 	{
 		if (name.charAt(0) == '.') { name = name.substring(1); }
-		if (!initAndCheck(commandOutput, name)) { return null; }
-		return new File(sceneDirectory, name + SCENE_EXTENSION);
+		return check(commandOutput, name) ? new File(sceneDirectory, name + SCENE_EXTENSION) : null;
 	}
 
 	public static @Nullable File getSkinFile(String name)
@@ -142,7 +138,7 @@ public class Files
 			slimModel = true;
 		}
 
-		if (!initAndCheck(CommandOutput.DUMMY, name)) { return null; } //TODO: replace dummy with logs?
+		if (!check(CommandOutput.DUMMY, name)) { return null; } //TODO: replace dummy with logs?
 		return new File(slimModel ? slimSkinDirectory : skinDirectory, name + SKIN_EXTENSION);
 	}
 

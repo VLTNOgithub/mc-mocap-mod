@@ -136,9 +136,9 @@ public class RecordingFiles
 		return true;
 	}
 
-	public static @Nullable List<String> list(CommandOutput commandOutput)
+	public static @Nullable List<String> list()
 	{
-		if (!Files.initDirectories(commandOutput)) { return null; }
+		if (!Files.initialized) { return null; }
 		ArrayList<String> recordings = new ArrayList<>();
 
 		String[] filesList = Files.recordingsDirectory.list();

@@ -125,10 +125,10 @@ public class InputArgument
 	{
 		serverInputSet.clear();
 
-		List<String> recordingList = RecordingFiles.list(CommandOutput.DUMMY);
+		List<String> recordingList = RecordingFiles.list();
 		if (recordingList != null) { serverInputSet.addAll(recordingList); }
 
-		List<String> sceneList = SceneFiles.list(CommandOutput.DUMMY);
+		List<String> sceneList = SceneFiles.list();
 		if (sceneList != null) { serverInputSet.addAll(sceneList); }
 	}
 

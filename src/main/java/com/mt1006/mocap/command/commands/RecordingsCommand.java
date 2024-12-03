@@ -28,7 +28,7 @@ public class RecordingsCommand
 	public static boolean list(CommandOutput commandOutput)
 	{
 		StringBuilder recordingsListStr = new StringBuilder();
-		List<String> recordingsList = RecordingFiles.list(commandOutput);
+		List<String> recordingsList = RecordingFiles.list();
 
 		if (recordingsList == null)
 		{

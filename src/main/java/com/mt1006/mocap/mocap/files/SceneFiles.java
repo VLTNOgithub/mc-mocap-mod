@@ -342,11 +342,11 @@ public class SceneFiles
 		return true;
 	}
 
-	public static @Nullable List<String> list(CommandOutput commandOutput)
+	public static @Nullable List<String> list()
 	{
-		if (!Files.initDirectories(commandOutput)) { return null; }
 		ArrayList<String> scenes = new ArrayList<>();
 
+		if (!Files.initialized) { return null; }
 		String[] fileList = Files.sceneDirectory.list();
 		if (fileList == null) { return null; }
 

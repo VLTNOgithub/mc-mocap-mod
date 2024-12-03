@@ -2,7 +2,6 @@ package com.mt1006.mocap.mocap.settings;
 
 import com.mojang.brigadier.arguments.*;
 import com.mt1006.mocap.command.io.CommandInfo;
-import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.Files;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilterInstance;
 import com.mt1006.mocap.utils.Utils;
@@ -64,13 +63,12 @@ public class SettingFields
 		if (fieldMap.put(name, field) != null) { throw new RuntimeException("Duplicate field names!"); };
 	}
 
-	public void save(CommandOutput commandOutput)
+	public void save()
 	{
 		try
 		{
-			File settingsFile = Files.getSettingsFile(commandOutput);
+			File settingsFile = Files.getSettingsFile();
 			if (settingsFile == null) { return; }
-
 			PrintWriter printWriter = new PrintWriter(settingsFile);
 
 			for (Field<?> setting : fieldMap.values())
@@ -89,7 +87,7 @@ public class SettingFields
 		//TODO: improve loading settings?
 		try
 		{
-			File settingsFile = Files.getSettingsFile(CommandOutput.LOGS);
+			File settingsFile = Files.getSettingsFile();
 			if (settingsFile == null) { return; }
 
 			Scanner fileScanner = new Scanner(settingsFile);

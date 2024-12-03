@@ -14,25 +14,23 @@ public class WorldLoadEvent
 {
 	public static void onServerWorldLoad(MinecraftServer server)
 	{
-		MocapMod.LOGGER.warn("SERVER LOAD!"); //TODO: remove
 		MocapMod.server = server;
+		Files.init();
 		Settings.load();
 		InputArgument.initServerInputSet();
 	}
 
 	public static void onServerWorldUnload(MinecraftServer server)
 	{
-		MocapMod.LOGGER.warn("SERVER UNLOAD!"); //TODO: remove
 		Playing.stopAll(CommandOutput.DUMMY);
 		Settings.unload();
-		Files.deinitDirectories();
+		Files.deinit();
 		Recording.onServerStop();
 		MocapMod.server = null;
 	}
 
 	public static void onClientWorldUnload()
 	{
-		MocapMod.LOGGER.warn("CLIENT UNLOAD!"); //TODO: remove
 		InputArgument.clientInputSet.clear();
 		PlayerConnectionEvent.players.clear();
 		PlayerConnectionEvent.nocolPlayers.clear();

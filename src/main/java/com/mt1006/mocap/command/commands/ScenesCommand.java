@@ -125,7 +125,7 @@ public class ScenesCommand
 	public static boolean list(CommandOutput commandOutput)
 	{
 		StringBuilder scenesListStr = new StringBuilder();
-		List<String> scenesList = SceneFiles.list(commandOutput);
+		List<String> scenesList = SceneFiles.list();
 
 		if (scenesList == null)
 		{

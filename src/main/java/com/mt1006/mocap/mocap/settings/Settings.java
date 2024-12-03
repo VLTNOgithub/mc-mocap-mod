@@ -1,7 +1,6 @@
 package com.mt1006.mocap.mocap.settings;
 
 import com.mt1006.mocap.command.io.CommandInfo;
-import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilterInstance;
 
@@ -42,9 +41,9 @@ public class Settings
 	public static final SettingFields.BooleanField EXPERIMENTAL_RELEASE_WARNING = ADVANCED.add(fields.add("experimental_release_warning", true));
 	//public static final SettingFields.IntegerField SERVER_PERFORMANCE_WARNING = ADVANCED.add(fields.add("server_performance_warning", 45)); //TODO: implement
 
-	public static void save(CommandOutput commandOutput)
+	public static void save()
 	{
-		fields.save(commandOutput);
+		fields.save();
 	}
 
 	public static void load()
@@ -129,7 +128,7 @@ public class Settings
 		//TODO: test
 		if (oldValue.equals(newValue)) { commandInfo.sendSuccess("settings.set.success.not_changed", newValue); }
 		else { commandInfo.sendSuccess("settings.set.success.changed", oldValue, newValue); }
-		save(commandInfo);
+		save();
 		return true;
 	}
 }
