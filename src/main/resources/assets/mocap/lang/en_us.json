@@ -201,6 +201,7 @@
   "mocap.settings.info.about.use_creative_game_mode": "Sets fake players game mode to creative (monsters will ignore them)",
   "mocap.settings.info.about.allow_ghosts": "Allows usage of ghosts (invisible, server-side only players) when using \"player_as_entity\" modifier. They're created in order to perform actions that can't be done by a non-player entity.",
   "mocap.settings.info.about.experimental_release_warning": "Warns players when a server is using experimental (alpha or beta) release of Motion Capture mod.",
+  "mocap.settings.info.about.pretty_scene_files": "Makes scene JSON files look pretty, at cost of slightly bigger file size (scene files are very small anyway, so it shouldn't be a problem unless you're using punch cards for storing them).",
 
   "mocap.settings.info.current_value": "§lCurrent value:§r %s",
   "mocap.settings.info.default_value": "§lDefault value:§r %s",

@@ -6,6 +6,7 @@ import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.settings.Settings;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -40,8 +41,8 @@ public class SceneData
 		try
 		{
 			FileWriter writer = new FileWriter(file);
-			//TODO: add "pretty_scene_files" setting
-			new GsonBuilder().setPrettyPrinting().create().toJson(json, writer);
+			GsonBuilder gsonBuilder = Settings.PRETTY_SCENE_FILES.val ? new GsonBuilder().setPrettyPrinting() : new GsonBuilder();
+			gsonBuilder.create().toJson(json, writer);
 			writer.close();
 
 			commandOutput.sendSuccess(onSuccess);

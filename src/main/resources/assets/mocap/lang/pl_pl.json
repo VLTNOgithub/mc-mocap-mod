@@ -201,6 +201,7 @@
   "mocap.settings.info.about.use_creative_game_mode": "Ustawia tryb gry odtwarzaynych graczy na kreatywny (potwory będą ich ignorować)",
   "mocap.settings.info.about.allow_ghosts": "Zezwala na użycie duchów (niewidzialny graczy, istniejących tylko po stronie serwer) gdy został użyty modyfikator \"player_as_entity\". Są one tworzone w celu wykonywania akcji niemożliwych do wykonania przez byty nie będące graczami.",
   "mocap.settings.info.about.experimental_release_warning": "Ostrzega graczy, gdy serwer używa eksperymentalnego (alfa lub beta) wydania Motion Capture.",
+  "mocap.settings.info.about.pretty_scene_files": "Sprawia, że pliki JSON scen wyglądają ładnie, kosztem lekko większych plików (pliki scen są i tak bardzo małe, więc nie powinno to stanowić problemu, chyba że używasz kart perforowanych do ich przechowywania).",
 
   "mocap.settings.info.current_value": "§lObecna wartość:§r %s",
   "mocap.settings.info.default_value": "§lDomyślna wartość:§r %s",
