@@ -144,6 +144,8 @@
   "mocap.playback.start.error.loop": "Scene or sub-scenes contain themselves!",
   "mocap.playback.start.error.load": "Failed to load all resources!",
   "mocap.playback.start.error.load.path": "Resource path: %s",
+  "mocap.playback.start.error.empty_scene": "Root scene is empty!",
+  "mocap.playback.start.error.empty_scene.tip": "Use \"/mocap scenes add_to\" to add elements to the scene",
   "mocap.playback.start.error.load_header": "§lError:§r failed to load recording header!",
   "mocap.playback.start.error.profile": "§lError:§r failed to load player profile!",
   "mocap.playback.start.warning.unknown_entity": "Trying to use unknown entity as player",

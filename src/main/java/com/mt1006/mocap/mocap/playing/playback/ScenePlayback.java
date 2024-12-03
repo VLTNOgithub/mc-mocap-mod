@@ -33,6 +33,12 @@ public class ScenePlayback extends Playback
 		SceneData sceneData = dataManager.getScene(name);
 		if (sceneData == null) { return; }
 
+		if (sceneData.subscenes.isEmpty() && root)
+		{
+			commandInfo.sendFailureWithTip("playback.start.error.empty_scene");
+			throw new StartException();
+		}
+
 		for (SceneData.Subscene subscene : sceneData.subscenes)
 		{
 			Playback playback = Playback.start(commandInfo, dataManager, this, subscene);

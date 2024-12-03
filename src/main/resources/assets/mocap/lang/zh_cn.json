@@ -144,6 +144,8 @@
   "mocap.playback.start.error.loop": "场景或子场景包含自身！",
   "mocap.playback.start.error.load": "无法加载所有资源！",
   "mocap.playback.start.error.load.path": "资源路径：%s",
+  "mocap.playback.start.error.empty_scene": "Root scene is empty!",
+  "mocap.playback.start.error.empty_scene.tip": "Use \"/mocap scenes add_to\" to add elements to the scene",
   "mocap.playback.start.error.load_header": "§l错误：§r无法加载录像页头！",
   "mocap.playback.start.error.profile": "§l错误：§r无法加载玩家资料！",
   "mocap.playback.start.warning.unknown_entity": "Trying to use unknown entity as player",

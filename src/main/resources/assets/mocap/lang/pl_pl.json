@@ -144,6 +144,8 @@
   "mocap.playback.start.error.loop": "Scena lub podsceny zawierają siebie nawzajem!",
   "mocap.playback.start.error.load": "Nie udało się załadować wszystkich zasobów!",
   "mocap.playback.start.error.load.path": "Ścieżka zasobu: %s",
+  "mocap.playback.start.error.empty_scene": "Korzeń sceny jest pusty!",
+  "mocap.playback.start.error.empty_scene.tip": "Użyj \"/mocap scenes add_to\" aby dodać elementy do sceny",
   "mocap.playback.start.error.load_header": "§lBłąd:§r nie udało się załadować nagłówka nagrania!",
   "mocap.playback.start.error.profile": "§lBłąd:§r nie udało się załadować profilu gracza!",
   "mocap.playback.start.warning.unknown_entity": "Próba użycia nieznanego bytu jako gracza",
