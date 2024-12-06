@@ -148,7 +148,7 @@
   "mocap.playback.start.error.empty_scene.tip": "Użyj \"/mocap scenes add_to\" aby dodać elementy do sceny",
   "mocap.playback.start.error.load_header": "§lBłąd:§r nie udało się załadować nagłówka nagrania!",
   "mocap.playback.start.error.profile": "§lBłąd:§r nie udało się załadować profilu gracza!",
-  "mocap.playback.start.warning.unknown_entity": "Próba użycia nieznanego bytu jako gracza",
+  "mocap.playback.start.warning.unknown_entity": "Próba użycia nieznanego bytu jako gracza - %s",
   "mocap.playback.start.warning.skin.profile": "Nie udało się załadować skórki z profilu gracza",
   "mocap.playback.start.warning.skin.file": "Nie udało się załadować skórki z pliku",
   "mocap.playback.start.warning.skin.mineskin": "Nie udało się załadować skórki z mineskin.org",

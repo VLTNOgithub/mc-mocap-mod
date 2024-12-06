@@ -13,13 +13,10 @@ import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.network.MocapPacketS2C;
 import com.mt1006.mocap.utils.*;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.GameType;
@@ -86,7 +83,7 @@ public class RecordingPlayback extends Playback
 
 		if (!modifiers.playerAsEntity.isEnabled())
 		{
-			FakePlayer fakePlayer = new FakePlayer(level, newProfile, true);
+			FakePlayer fakePlayer = new FakePlayer(level, newProfile);
 			entity = fakePlayer;
 
 			EntityData.PLAYER_SKIN_PARTS.set(fakePlayer, (byte)0b01111111);
@@ -114,8 +111,7 @@ public class RecordingPlayback extends Playback
 
 			if (entity == null)
 			{
-				//TODO: better message (and fall back to FakePlayer)
-				commandInfo.sendFailure("playback.start.warning.unknown_entity");
+				commandInfo.sendFailure("playback.start.warning.unknown_entity", modifiers.playerAsEntity.entityId);
 				throw new StartException();
 			}
 
@@ -128,12 +124,12 @@ public class RecordingPlayback extends Playback
 			level.addFreshEntity(entity);
 			recording.preExecute(entity, modifiers.blockOffset);
 
-			if (Settings.ALLOW_GHOSTS.val) //TODO: test setting
+			if (Settings.ALLOW_GHOSTS.val)
 			{
-				ghost = new FakePlayer(level, newProfile, false);
+				ghost = new FakePlayer(level, newProfile);
 				ghost.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
 				recording.initEntityPosition(ghost, modifiers.offset);
-				level.addNewPlayer(ghost); //TODO: test
+				level.addNewPlayer(ghost);
 			}
 		}
 

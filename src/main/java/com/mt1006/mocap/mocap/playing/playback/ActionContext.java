@@ -140,7 +140,7 @@ public class ActionContext
 				PlayerConnectionEvent.removeNocolPlayer(uuid);
 			}
 		}
-		if (playerToRemove.existsOnClient) { broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid))); }
+		if (playerToRemove != ghostPlayer) { broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid))); }
 		playerToRemove.remove(Entity.RemovalReason.KILLED);
 	}
 

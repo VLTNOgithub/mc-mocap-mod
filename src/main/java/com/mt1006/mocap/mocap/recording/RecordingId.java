@@ -1,6 +1,5 @@
 package com.mt1006.mocap.mocap.recording;
 
-import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.MocapMod;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -126,15 +125,6 @@ public class RecordingId
 		return (id.source == null || id.source.equals(source))
 				&& (id.recorded == null || id.recorded.equals(recorded))
 				&& (id.name == null || id.name.equals(name));
-	}
-
-	//TODO: find use for modifiers or remove them
-	//TODO: allow multiple flags (Pair<String, String[]>)
-	public static Pair<String, String> separateFlags(@Nullable String input)
-	{
-		if (input == null) { return Pair.of("", ""); }
-		int flagsPos = input.indexOf("!");
-		return flagsPos != -1 ? Pair.of(input.substring(0, flagsPos), input.substring(flagsPos)) : Pair.of(input, "");
 	}
 
 	private static String getNotNullPart(@Nullable String part)

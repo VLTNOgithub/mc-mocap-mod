@@ -2,7 +2,6 @@ package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
-import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.core.BlockPos;
@@ -363,7 +362,6 @@ public class RecordingFiles
 				}
 			}
 
-			//TODO: test unicode chars
 			int len = termPos - offset;
 			String str = new String(recording, offset, len, StandardCharsets.UTF_8);
 			offset += len + 1;

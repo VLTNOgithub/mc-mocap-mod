@@ -1,6 +1,5 @@
 package com.mt1006.mocap.mocap.playing;
 
-import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;

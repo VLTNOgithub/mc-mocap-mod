@@ -106,13 +106,6 @@ public class ChangeItem implements ComparableAction
 				case 6 -> entity.setItemSlot(EquipmentSlot.BODY, itemStack);
 			}
 
-			//TODO: do something with this
-			/*if (i == 4 && entity instanceof AbstractHorse)
-			{
-				try { ((AbstractHorseMixin)entity).getInventory().setItem(1, itemStack); }
-				catch (Exception ignore) {}
-			}*/
-
 			// for non-player living entities it's detected in their "tick" method
 			if (entity instanceof Player) { ((LivingEntityMixin)entity).callDetectEquipmentUpdates(); }
 		}
@@ -187,14 +180,13 @@ public class ChangeItem implements ComparableAction
 			this.hasData = hasData;
 		}
 
-		//TODO: optimize it?
 		public static ItemDataType get(byte id)
 		{
-			for (ItemDataType type : VALUES)
-			{
-				if (type.id == id) { return type; }
-			}
-			return NO_ITEM;
+			if (id < 0 || id >= VALUES.length) { return NO_ITEM; }
+
+			ItemDataType type = VALUES[id];
+			if (type.id != id) { throw new RuntimeException("ChangeItem.ItemDataType VALUES out of order!"); }
+			return type;
 		}
 	}
 
@@ -285,7 +277,7 @@ public class ChangeItem implements ComparableAction
 					return ItemStack.EMPTY;
 
 				case ID_ONLY:
-				case ID_AND_NBT: //TODO: convert old nbts?
+				case ID_AND_NBT:
 					return new ItemStack(item);
 
 				case ID_AND_COMPONENTS:

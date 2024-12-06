@@ -35,7 +35,6 @@ public class EntityFilterInstance
 
 			char firstChar = part.charAt(exclude ? 1 : 0);
 
-			//TODO: make it switch-case?
 			if (firstChar == '@')
 			{
 				String groupName = part.substring(exclude ? 2 : 1);

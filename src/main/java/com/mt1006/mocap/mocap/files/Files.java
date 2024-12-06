@@ -138,7 +138,7 @@ public class Files
 			slimModel = true;
 		}
 
-		if (!check(CommandOutput.DUMMY, name)) { return null; } //TODO: replace dummy with logs?
+		if (!check(CommandOutput.DUMMY, name)) { return null; }
 		return new File(slimModel ? slimSkinDirectory : skinDirectory, name + SKIN_EXTENSION);
 	}
 

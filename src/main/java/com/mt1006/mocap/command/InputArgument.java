@@ -5,7 +5,6 @@ import com.mojang.brigadier.context.StringRange;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.datafixers.util.Pair;
-import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.files.SceneFiles;

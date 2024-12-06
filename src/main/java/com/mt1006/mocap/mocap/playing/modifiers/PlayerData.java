@@ -7,6 +7,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.utils.Fields;
@@ -118,6 +119,26 @@ public class PlayerData
 		return (skinSource != SkinSource.DEFAULT)
 				? new PlayerData(name != null ? name : parent.name, skinSource, skinPath)
 				: new PlayerData(name != null ? name : parent.name, parent.skinSource, parent.skinPath);
+	}
+
+	public boolean checkIfProperName(CommandOutput commandOutput)
+	{
+		if (name == null) { return true; }
+
+		if (name.length() > 16)
+		{
+			commandOutput.sendFailure("scenes.add_to.failed");
+			commandOutput.sendFailure("scenes.add_to.failed.too_long_name");
+			return false;
+		}
+
+		if (name.contains(" "))
+		{
+			commandOutput.sendFailure("scenes.add_to.failed");
+			commandOutput.sendFailure("scenes.add_to.failed.contain_spaces");
+			return false;
+		}
+		return true;
 	}
 
 	private @Nullable Property propertyFromMineskinURL(String mineskinURL)

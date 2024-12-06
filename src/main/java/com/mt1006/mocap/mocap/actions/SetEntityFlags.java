@@ -11,7 +11,7 @@ public class SetEntityFlags implements ComparableAction
 
 	public SetEntityFlags(Entity entity)
 	{
-		//TODO: test
+		//TODO: test fire
 		this.entityFlags = EntityData.ENTITY_FLAGS.valOrDef(entity, (byte)0);
 	}
 

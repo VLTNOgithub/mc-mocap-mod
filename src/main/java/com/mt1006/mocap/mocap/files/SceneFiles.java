@@ -1,6 +1,5 @@
 package com.mt1006.mocap.mocap.files;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;

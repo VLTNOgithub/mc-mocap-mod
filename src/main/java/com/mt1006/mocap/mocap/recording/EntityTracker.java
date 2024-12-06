@@ -130,14 +130,13 @@ public class EntityTracker
 
 	public static class TrackedEntity
 	{
-		//TODO: change to private
-		public final RecordingContext ctx;
-		public final int id;
+		private final RecordingContext ctx;
+		private final int id;
 		private final Entity entity;
 		private final PositionTracker positionTracker;
 		private @Nullable RecordedEntityState previousState = null;
-		public boolean dying;
-		public int lastTick;
+		private boolean dying;
+		private int lastTick;
 
 		public TrackedEntity(RecordingContext ctx, int id, Entity entity)
 		{
@@ -161,6 +160,11 @@ public class EntityTracker
 				ctx.addAction(EntityUpdate.kill(id));
 				dying = true;
 			}
+		}
+
+		public void onHurt()
+		{
+			ctx.addAction(EntityUpdate.hurt(id));
 		}
 	}
 }

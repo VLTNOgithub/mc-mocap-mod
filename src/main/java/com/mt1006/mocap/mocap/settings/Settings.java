@@ -8,7 +8,6 @@ import java.util.Collection;
 
 public class Settings
 {
-	//TODO: add common entity tracker
 	private static final SettingFields fields = new SettingFields();
 	private static final SettingGroups groups = new SettingGroups();
 
@@ -126,7 +125,6 @@ public class Settings
 		oldValue = oldValue.isEmpty() ? "[empty]" : oldValue;
 		newValue = newValue.isEmpty() ? "[empty]" : newValue;
 
-		//TODO: test
 		if (oldValue.equals(newValue)) { commandInfo.sendSuccess("settings.set.success.not_changed", newValue); }
 		else { commandInfo.sendSuccess("settings.set.success.changed", oldValue, newValue); }
 		save();

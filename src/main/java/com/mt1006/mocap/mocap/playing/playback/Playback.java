@@ -22,7 +22,7 @@ public abstract class Playback
 	protected final @Nullable ServerPlayer owner;
 	protected boolean finished = false;
 
-	protected PlaybackModifiers modifiers; //TODO: make it "protected final"
+	protected final PlaybackModifiers modifiers;
 	protected int tickCounter = 0; //TODO: StartContext?
 
 	public static @Nullable Root start(CommandInfo commandInfo, String name, PlayerData playerData, int id)

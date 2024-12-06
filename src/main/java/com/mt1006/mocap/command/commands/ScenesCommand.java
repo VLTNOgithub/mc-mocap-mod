@@ -77,23 +77,7 @@ public class ScenesCommand
 				subscene.startDelay = commandInfo.getDouble("start_delay");
 				subscene.playerData = commandInfo.getPlayerData();
 
-				if (subscene.playerData.name != null)
-				{
-					//TODO: move
-					if (subscene.playerData.name.length() > 16)
-					{
-						commandInfo.sendFailure("scenes.add_to.failed");
-						commandInfo.sendFailure("scenes.add_to.failed.too_long_name");
-						return false;
-					}
-
-					if (subscene.playerData.name.contains(" "))
-					{
-						commandInfo.sendFailure("scenes.add_to.failed");
-						commandInfo.sendFailure("scenes.add_to.failed.contain_spaces");
-						return false;
-					}
-				}
+				if (!subscene.playerData.checkIfProperName(commandInfo)) { return false; }
 			}
 			catch (Exception ignore) {}
 

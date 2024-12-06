@@ -183,7 +183,7 @@ public class Movement implements Action
 				flags |= ROT_HEAD_0;
 				headRot = 0.0f;
 			}
-			else if (newHeadRot == newRotY) //TODO: check if [0] or [1]
+			else if (newHeadRot == newRotY)
 			{
 				flags |= ROT_HEAD_EQ;
 				headRot = newRotY;
@@ -297,7 +297,7 @@ public class Movement implements Action
 		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
 
 		ctx.changePosition(position[0], position[1], position[2], rotY, rotX, isXzRelative(), isYRelative());
-		if (updateRot) { ctx.entity.setYHeadRot(headRot); } //TODO: test
+		if (updateRot) { ctx.entity.setYHeadRot(headRot); }
 		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
 		((EntityMixin)ctx.entity).callCheckInsideBlocks();
 

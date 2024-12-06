@@ -75,7 +75,7 @@ public class MocapPacketC2S implements CustomPacketPayload
 		{
 			case ACCEPT_SERVER:
 				PlayerConnectionEvent.addPlayer(player);
-				PlayerConnectionEvent.experimentalReleaseWarning(player); //TODO: move?
+				PlayerConnectionEvent.experimentalReleaseWarning(player);
 				if (sender != null) { MocapPacketS2C.sendInputSuggestionsAddOnLogin(sender, InputArgument.serverInputSet); }
 				break;
 

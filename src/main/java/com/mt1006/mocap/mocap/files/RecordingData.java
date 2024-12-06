@@ -1,7 +1,6 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.actions.BlockAction;

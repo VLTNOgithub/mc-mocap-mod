@@ -319,7 +319,7 @@ public class SettingFields
 					commandInfo.getTranslatableComponent("settings.info.copy_button_info"));
 
 			return commandInfo.getTranslatableComponent("settings.info.copy_button")
-					.setStyle(Style.EMPTY.withClickEvent(clickEvent).withHoverEvent(hoverEvent)); //TODO: test it on a dedicated server
+					.setStyle(Style.EMPTY.withClickEvent(clickEvent).withHoverEvent(hoverEvent));
 		}
 	}
 }
