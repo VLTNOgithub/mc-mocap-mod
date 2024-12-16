@@ -8,7 +8,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mt1006.mocap.command.CommandUtils;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.arguments.GameProfileArgument;
@@ -133,20 +133,22 @@ public class CommandInfo implements CommandOutput
 		catch (Exception e) { return null; }
 	}
 
-	public PlayerData getPlayerData()
+	public @Nullable String getPlayerName()
 	{
-		String playerName = getNullableString("player_name");
-		if (playerName == null) { return new PlayerData((String)null); }
+		return getNullableString("player_name");
+	}
 
+	public PlayerSkin getPlayerSkin()
+	{
 		String fromPlayer = getNullableString("skin_player_name");
-		if (fromPlayer != null) { return new PlayerData(playerName, PlayerData.SkinSource.FROM_PLAYER, fromPlayer); }
+		if (fromPlayer != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_PLAYER, fromPlayer); }
 
 		String fromFile = getNullableString("skin_filename");
-		if (fromFile != null) { return new PlayerData(playerName, PlayerData.SkinSource.FROM_FILE, fromFile); }
+		if (fromFile != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_FILE, fromFile); }
 
 		String fromMineskin = getNullableString("mineskin_url");
-		if (fromMineskin != null) { return new PlayerData(playerName, PlayerData.SkinSource.FROM_MINESKIN, fromMineskin); }
+		if (fromMineskin != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_MINESKIN, fromMineskin); }
 
-		return new PlayerData(playerName);
+		return PlayerSkin.DEFAULT;
 	}
 }

@@ -5,8 +5,9 @@ import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.mocap.settings.Settings;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -115,7 +116,8 @@ public class SceneData
 		public String name;
 		public double startDelay = 0.0;
 		public double[] offset = new double[3];
-		public PlayerData playerData = PlayerData.EMPTY;
+		public @Nullable String playerName = null;
+		public PlayerSkin playerSkin = PlayerSkin.DEFAULT;
 		public PlayerAsEntity playerAsEntity = PlayerAsEntity.DISABLED;
 		public EntityFilter entityFilter = EntityFilter.FOR_PLAYBACK; //TODO: implement
 
@@ -135,8 +137,11 @@ public class SceneData
 			offset[1] = getJsonDouble(json, "offset_y");
 			offset[2] = getJsonDouble(json, "offset_z");
 
-			JsonElement playerDataElement = json.get("player_data");
-			playerData = new PlayerData(playerDataElement != null ? playerDataElement.getAsJsonObject() : null);
+			JsonElement playerNameElement = json.get("player_name");
+			playerName = playerNameElement != null ? playerNameElement.getAsString() : null;
+
+			JsonElement playerSkinElement = json.get("player_skin");
+			playerSkin = new PlayerSkin(playerSkinElement != null ? playerSkinElement.getAsJsonObject() : null);
 			
 			JsonElement playerAsEntityElement = json.get("player_as_entity");
 			playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
@@ -152,8 +157,10 @@ public class SceneData
 			addJsonDouble(json, "offset_y", offset[1]);
 			addJsonDouble(json, "offset_z", offset[2]);
 
-			JsonObject playerDataJson = playerData.toJson();
-			if (playerDataJson != null) { json.add("player_data", playerDataJson); }
+			if (playerName != null) { json.add("player_name", new JsonPrimitive(playerName)); }
+
+			JsonObject playerDataJson = playerSkin.toJson();
+			if (playerDataJson != null) { json.add("player_skin", playerDataJson); }
 
 			JsonObject playerAsEntityJson = playerAsEntity.toJson();
 			if (playerAsEntityJson != null) { json.add("player_as_entity", playerAsEntityJson); }

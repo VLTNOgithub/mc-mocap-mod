@@ -1,15 +1,22 @@
 package com.mt1006.mocap.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mt1006.mocap.command.io.CommandInfo;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.NbtTagArgument;
+import net.minecraft.commands.arguments.ResourceArgument;
+import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -18,12 +25,48 @@ import java.util.function.Function;
 
 public class CommandUtils
 {
-	public static RequiredArgumentBuilder<CommandSourceStack, String> withPlayerArguments(Command<CommandSourceStack> command)
+	public static ArgumentBuilder<CommandSourceStack, ?> playerNameArgument(Command<CommandSourceStack> command)
 	{
-		return Commands.argument("player_name", StringArgumentType.string()).executes(command)
-			.then(Commands.literal("from_player").then(Commands.argument("skin_player_name", StringArgumentType.greedyString()).executes(command)))
-			.then(Commands.literal("from_file").then(Commands.argument("skin_filename", StringArgumentType.greedyString()).executes(command)))
-			.then(Commands.literal("from_mineskin").then(Commands.argument("mineskin_url", StringArgumentType.greedyString()).executes(command)));
+		return Commands.argument("player_name", StringArgumentType.string()).executes(command);
+	}
+
+	public static ArgumentBuilder<CommandSourceStack, ?> playerArguments(Command<CommandSourceStack> command)
+	{
+		return withSkinArguments(playerNameArgument(command), command);
+	}
+
+	public static ArgumentBuilder<CommandSourceStack, ?> withSkinArguments(ArgumentBuilder<CommandSourceStack, ?> builder,
+																		   Command<CommandSourceStack> command)
+	{
+		builder.then(Commands.literal("from_player").then(Commands.argument("skin_player_name", StringArgumentType.greedyString()).executes(command)));
+		builder.then(Commands.literal("from_file").then(Commands.argument("skin_filename", StringArgumentType.greedyString()).executes(command)));
+		builder.then(Commands.literal("from_mineskin").then(Commands.argument("mineskin_url", StringArgumentType.greedyString()).executes(command)));
+		return builder;
+	}
+
+
+	public static ArgumentBuilder<CommandSourceStack, ?> withModifiers(CommandBuildContext buildContext,
+																	   ArgumentBuilder<CommandSourceStack, ?> builder,
+																	   Command<CommandSourceStack> command, boolean isScene)
+	{
+		builder.then(Commands.literal("start_delay").then(Commands.argument("delay", DoubleArgumentType.doubleArg(0.0)).executes(command)));
+		builder.then(Commands.literal("position_offset").
+			then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).
+			then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
+			then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(command)))));
+		builder.then(Commands.literal("player_name").then(playerNameArgument(command)));
+		builder.then(withSkinArguments(Commands.literal("player_skin"), command));
+		builder.then(Commands.literal("player_as_entity").
+			then(Commands.literal("disabled").executes(command)).
+			then(Commands.literal("enabled").
+				then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).executes(command).
+				then(Commands.argument("nbt", NbtTagArgument.nbtTag()).executes(command)))));
+
+		if (isScene)
+		{
+			builder.then(Commands.literal("subscene_name").then(Commands.argument("new_name", StringArgumentType.string()).executes(command)));
+		}
+		return builder;
 	}
 
 	public static Command<CommandSourceStack> command(Function<CommandInfo, Boolean> function)

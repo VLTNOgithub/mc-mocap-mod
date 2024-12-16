@@ -9,7 +9,7 @@ import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.playing.DataManager;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.network.MocapPacketS2C;
 import com.mt1006.mocap.utils.*;
@@ -32,28 +32,30 @@ public class RecordingPlayback extends Playback
 	private int pos = 0;
 	private int dyingTicks = 0;
 
-	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, DataManager dataManager, String name, PlayerData playerData)
+	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, DataManager dataManager,
+														   String name, @Nullable String playerName, PlayerSkin playerSkin)
 	{
-		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(name), playerData, null, null); }
+		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(name), playerName, playerSkin, null, null); }
 		catch (StartException e) { return null; }
 	}
 
-	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording, PlayerData playerData)
+	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording,
+														   @Nullable String playerName, PlayerSkin playerSkin)
 	{
-		try { return new RecordingPlayback(commandInfo, recording, playerData, null, null); }
+		try { return new RecordingPlayback(commandInfo, recording, playerName, playerSkin, null, null); }
 		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable RecordingPlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
 	{
-		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), null, parent, info); }
+		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), null, null, parent, info); }
 		catch (StartException e) { return null; }
 	}
 
-	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording, @Nullable PlayerData rootPlayerData,
-							  @Nullable Playback parent, @Nullable SceneData.Subscene info) throws StartException
+	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording, @Nullable String rootPlayerName,
+							  @Nullable PlayerSkin rootPlayerSkin, @Nullable Playback parent, @Nullable SceneData.Subscene info) throws StartException
 	{
-		super(parent == null, commandInfo.level, commandInfo.sourcePlayer, rootPlayerData, parent, info);
+		super(parent == null, commandInfo.level, commandInfo.sourcePlayer, rootPlayerName, rootPlayerSkin, parent, info);
 
 		if (recording == null) { throw new StartException(); } //TODO: test if gives error message (especially as subscene)
 		this.recording = recording;
@@ -73,7 +75,7 @@ public class RecordingPlayback extends Playback
 			PropertyMap newPropertyMap = (PropertyMap)Fields.gameProfileProperties.get(newProfile);
 
 			newPropertyMap.putAll(oldPropertyMap);
-			modifiers.playerData.addSkinToPropertyMap(commandInfo, newPropertyMap);
+			modifiers.playerSkin.addSkinToPropertyMap(commandInfo, newPropertyMap);
 		}
 		catch (Exception ignore) {}
 
@@ -196,7 +198,7 @@ public class RecordingPlayback extends Playback
 
 	private @Nullable GameProfile getGameProfile(CommandInfo commandInfo)
 	{
-		String profileName = modifiers.playerData.name;
+		String profileName = modifiers.playerName;
 		Entity entity = commandInfo.sourceEntity;
 		Level level = commandInfo.level;
 

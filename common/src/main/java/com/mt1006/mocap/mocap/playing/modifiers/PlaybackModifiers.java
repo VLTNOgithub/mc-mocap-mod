@@ -1,20 +1,26 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
+import com.mt1006.mocap.command.io.CommandOutput;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 public class PlaybackModifiers
 {
-	public final PlayerData playerData;
+	public static final PlaybackModifiers EMPTY = forRoot(null, PlayerSkin.DEFAULT);
+	public final @Nullable String playerName;
+	public final PlayerSkin playerSkin;
 	public final PlayerAsEntity playerAsEntity;
 	public final Vec3 offset;
 	public final Vec3i blockOffset;
 	public final int startDelay;
-	public EntityFilter entityFilter;
+	public final EntityFilter entityFilter;
 
-	private PlaybackModifiers(PlayerData playerData, PlayerAsEntity playerAsEntity, Vec3 offset, int startDelay, EntityFilter entityFilter)
+	private PlaybackModifiers(@Nullable String playerName, PlayerSkin playerSkin, PlayerAsEntity playerAsEntity,
+							  Vec3 offset, int startDelay, EntityFilter entityFilter)
 	{
-		this.playerData = playerData;
+		this.playerName = playerName;
+		this.playerSkin = playerSkin;
 		this.playerAsEntity = playerAsEntity;
 		this.offset = offset;
 		this.blockOffset = calculateBlockOffset(offset);
@@ -22,20 +28,41 @@ public class PlaybackModifiers
 		this.entityFilter = entityFilter;
 	}
 
-	public static PlaybackModifiers forRoot(PlayerData playerData)
+	public static PlaybackModifiers forRoot(@Nullable String playerName, PlayerSkin playerSkin)
 	{
-		return new PlaybackModifiers(playerData, PlayerAsEntity.DISABLED, Vec3.ZERO, 0, EntityFilter.FOR_PLAYBACK);
+		return new PlaybackModifiers(playerName, playerSkin, PlayerAsEntity.DISABLED, Vec3.ZERO, 0, EntityFilter.FOR_PLAYBACK);
 	}
 
-	public static PlaybackModifiers fromParent(PlaybackModifiers parent, PlayerData playerData, PlayerAsEntity playerAsEntity,
-											   double[] offset, double startDelay, EntityFilter entityFilter)
+	public static PlaybackModifiers fromParent(PlaybackModifiers parent, @Nullable String playerName, PlayerSkin playerSkin,
+											   PlayerAsEntity playerAsEntity, double[] offset, double startDelay, EntityFilter entityFilter)
 	{
 		return new PlaybackModifiers(
-				playerData.mergeWithParent(parent.playerData),
+				playerName != null ? playerName : parent.playerName,
+				playerSkin.mergeWithParent(parent.playerSkin),
 				playerAsEntity.isEnabled() ? playerAsEntity : parent.playerAsEntity,
 				parent.offset.add(offset[0], offset[1], offset[2]),
 				(int)Math.round(startDelay * 20.0),
 				entityFilter);
+	}
+
+	public static boolean checkIfProperName(CommandOutput commandOutput, @Nullable String name)
+	{
+		if (name == null) { return true; }
+
+		if (name.length() > 16)
+		{
+			commandOutput.sendFailure("scenes.add_to.failed");
+			commandOutput.sendFailure("scenes.add_to.failed.too_long_name");
+			return false;
+		}
+
+		if (name.contains(" "))
+		{
+			commandOutput.sendFailure("scenes.add_to.failed");
+			commandOutput.sendFailure("scenes.add_to.failed.contain_spaces");
+			return false;
+		}
+		return true;
 	}
 
 	private static Vec3i calculateBlockOffset(Vec3 offset)

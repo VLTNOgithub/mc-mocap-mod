@@ -6,9 +6,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.playing.Playing;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import org.jetbrains.annotations.Nullable;
 
 public class PlaybackCommand
 {
@@ -18,7 +19,7 @@ public class PlaybackCommand
 
 		commandBuilder.then(Commands.literal("start").
 			then(Commands.argument("name", StringArgumentType.string()).executes(CommandUtils.command(PlaybackCommand::start)).
-			then(CommandUtils.withPlayerArguments(CommandUtils.command(PlaybackCommand::start)))));
+			then(CommandUtils.playerArguments(CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
 		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(Playing::stopAll)));
@@ -31,7 +32,8 @@ public class PlaybackCommand
 	private static boolean start(CommandInfo commandInfo)
 	{
 		String name = commandInfo.getNullableString("name");
-		PlayerData playerData = commandInfo.getPlayerData();
+		@Nullable String playerName = commandInfo.getPlayerName();
+		PlayerSkin playerSkin = commandInfo.getPlayerSkin();
 
 		if (name == null)
 		{
@@ -41,7 +43,7 @@ public class PlaybackCommand
 
 		try
 		{
-			return Playing.start(commandInfo, name, playerData);
+			return Playing.start(commandInfo, name, playerName, playerSkin);
 		}
 		catch (Exception e)
 		{

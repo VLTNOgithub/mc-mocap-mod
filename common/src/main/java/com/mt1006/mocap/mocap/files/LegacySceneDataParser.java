@@ -2,8 +2,9 @@ package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.utils.Utils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.util.Scanner;
@@ -58,33 +59,42 @@ public class LegacySceneDataParser
 			subscene.offset[0] = Double.parseDouble(scanner.next());
 			subscene.offset[1] = Double.parseDouble(scanner.next());
 			subscene.offset[2] = Double.parseDouble(scanner.next());
-			subscene.playerData = parsePlayerData(scanner);
+			subscene.playerName = parsePlayerName(scanner);
+			subscene.playerSkin = parsePlayerSkin(scanner);
 			subscene.playerAsEntity = new PlayerAsEntity(Utils.toNullableStr(scanner.next()), null);
 		}
 		catch (Exception ignore) {}
 		return subscene;
 	}
 
-	private static PlayerData parsePlayerData(Scanner scanner)
+	private static @Nullable String parsePlayerName(Scanner scanner)
 	{
-		String name = null;
-		PlayerData.SkinSource skinSource = PlayerData.SkinSource.DEFAULT;
+		try
+		{
+			String nameStr = scanner.next();
+			return nameStr.length() <= 16 ? Utils.toNullableStr(nameStr) : null;
+		}
+		catch (Exception ignore) {}
+
+		return null;
+	}
+
+	private static PlayerSkin parsePlayerSkin(Scanner scanner)
+	{
+		PlayerSkin.SkinSource skinSource = PlayerSkin.SkinSource.DEFAULT;
 		String skinPath = Utils.NULL_STR;
 
 		try
 		{
-			String nameStr = scanner.next();
-			name = nameStr.length() <= 16 ? Utils.toNullableStr(nameStr) : null;
-
 			skinPath = scanner.next();
 
 			// Pre-1.3 compatibility
-			if (!skinPath.equals(Utils.NULL_STR)) { skinSource = PlayerData.SkinSource.FROM_MINESKIN; }
+			if (!skinPath.equals(Utils.NULL_STR)) { skinSource = PlayerSkin.SkinSource.FROM_MINESKIN; }
 
-			skinSource = PlayerData.SkinSource.fromID(Integer.parseInt(scanner.next()));
+			skinSource = PlayerSkin.SkinSource.fromID(Integer.parseInt(scanner.next()));
 		}
 		catch (Exception ignore) {}
 
-		return new PlayerData(name, skinSource, skinPath);
+		return new PlayerSkin(skinSource, skinPath);
 	}
 }

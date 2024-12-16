@@ -7,7 +7,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mt1006.mocap.command.io.CommandInfo;
-import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.utils.Fields;
@@ -21,40 +20,33 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
-public class PlayerData
+public class PlayerSkin
 {
-	public static final PlayerData EMPTY = new PlayerData((String)null);
+	public static final PlayerSkin DEFAULT = new PlayerSkin();
 	private static final String MINESKIN_API_URL = "https://api.mineskin.org/get/uuid/";
-	public final @Nullable String name;
 	public final SkinSource skinSource;
 	public final String skinPath;
 
-	public PlayerData(@Nullable String name)
+	private PlayerSkin()
 	{
-		this.name = name;
 		this.skinSource = SkinSource.DEFAULT;
 		this.skinPath = Utils.NULL_STR;
 	}
 
-	public PlayerData(@Nullable String name, SkinSource skinSource, @Nullable String skinPath)
+	public PlayerSkin(SkinSource skinSource, @Nullable String skinPath)
 	{
-		this.name = name;
 		this.skinSource = skinSource;
 		this.skinPath = Utils.toNotNullStr(skinPath);
 	}
 
-	public PlayerData(@Nullable JsonObject json)
+	public PlayerSkin(@Nullable JsonObject json)
 	{
 		if (json == null)
 		{
-			this.name = null;
 			this.skinSource = SkinSource.DEFAULT;
 			this.skinPath = Utils.NULL_STR;
 			return;
 		}
-
-		JsonElement nameElement = json.get("name");
-		this.name = nameElement != null ? nameElement.getAsString() : null;
 
 		JsonElement skinSourceElement = json.get("skin_source");
 		this.skinSource = skinSourceElement != null ? SkinSource.fromName(skinSourceElement.getAsString()) : SkinSource.DEFAULT;
@@ -65,11 +57,10 @@ public class PlayerData
 
 	public @Nullable JsonObject toJson()
 	{
-		if (name == null && skinSource == SkinSource.DEFAULT) { return null; }
+		if (skinSource == SkinSource.DEFAULT) { return null; }
 
 		JsonObject json = new JsonObject();
-		if (name != null) { json.add("name", new JsonPrimitive(name)); }
-		if (skinSource != SkinSource.DEFAULT) { json.add("skin_source", new JsonPrimitive(skinSource.getName())); }
+		json.add("skin_source", new JsonPrimitive(skinSource.getName()));
 		if (!skinPath.equals(Utils.NULL_STR)) { json.add("skin_path", new JsonPrimitive(skinPath)); }
 
 		return json;
@@ -114,31 +105,11 @@ public class PlayerData
 		}
 	}
 
-	public PlayerData mergeWithParent(PlayerData parent)
+	public PlayerSkin mergeWithParent(PlayerSkin parent)
 	{
 		return (skinSource != SkinSource.DEFAULT)
-				? new PlayerData(name != null ? name : parent.name, skinSource, skinPath)
-				: new PlayerData(name != null ? name : parent.name, parent.skinSource, parent.skinPath);
-	}
-
-	public boolean checkIfProperName(CommandOutput commandOutput)
-	{
-		if (name == null) { return true; }
-
-		if (name.length() > 16)
-		{
-			commandOutput.sendFailure("scenes.add_to.failed");
-			commandOutput.sendFailure("scenes.add_to.failed.too_long_name");
-			return false;
-		}
-
-		if (name.contains(" "))
-		{
-			commandOutput.sendFailure("scenes.add_to.failed");
-			commandOutput.sendFailure("scenes.add_to.failed.contain_spaces");
-			return false;
-		}
-		return true;
+				? new PlayerSkin(skinSource, skinPath)
+				: new PlayerSkin(parent.skinSource, parent.skinPath);
 	}
 
 	private @Nullable Property propertyFromMineskinURL(String mineskinURL)

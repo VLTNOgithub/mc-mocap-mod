@@ -1,6 +1,7 @@
 package com.mt1006.mocap.events;
 
 import com.mt1006.mocap.MocapMod;
+import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.network.MocapPacketC2S;
 import com.mt1006.mocap.network.MocapPacketS2C;
@@ -28,6 +29,7 @@ public class PlayerConnectionEvent
 	public static void onPlayerLeave(ServerPlayer player)
 	{
 		players.remove(player);
+		CommandsContext.removePlayer(player);
 	}
 
 	public static void addPlayer(@Nullable ServerPlayer player)

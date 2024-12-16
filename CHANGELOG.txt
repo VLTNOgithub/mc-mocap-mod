@@ -7,6 +7,7 @@
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
 -Settings are now divided into 3 categories - recording, playback and advanced.
 -Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
+-Split "player_info" modifier into "player_name" and "player_skin".
 -Removed position offset arguments from "/mocap scenes add_to".
 -Replaced command "/mocap recording state" with "/mocap recording list".
 -Replaced settings "trackVehicleEntities", "trackItemEntities" and "trackOtherEntities" with "track_entities".

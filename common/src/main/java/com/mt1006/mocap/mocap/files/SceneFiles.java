@@ -206,8 +206,12 @@ public class SceneFiles
 					subscene.offset[2] = commandInfo.getDouble("offset_z");
 					return subscene;
 
-				case "player_info":
-					subscene.playerData = commandInfo.getPlayerData();
+				case "player_name":
+					subscene.playerName = commandInfo.getPlayerName();
+					return subscene;
+
+				case "player_skin":
+					subscene.playerSkin = commandInfo.getPlayerSkin();
 					return subscene;
 
 				case "player_as_entity":
@@ -272,27 +276,27 @@ public class SceneFiles
 		commandOutput.sendSuccess("scenes.element_info.id", name, pos);
 		commandOutput.sendSuccess("scenes.element_info.name", subscene.name);
 
-		if (subscene.playerData.name == null) { commandOutput.sendSuccess("scenes.element_info.player_name.default"); }
-		else { commandOutput.sendSuccess("scenes.element_info.player_name.custom", subscene.playerData.name); }
+		if (subscene.playerName == null) { commandOutput.sendSuccess("scenes.element_info.player_name.default"); }
+		else { commandOutput.sendSuccess("scenes.element_info.player_name.custom", subscene.playerName); }
 
-		switch (subscene.playerData.skinSource)
+		switch (subscene.playerSkin.skinSource)
 		{
 			case DEFAULT:
 				commandOutput.sendSuccess("scenes.element_info.skin.default");
 				break;
 
 			case FROM_PLAYER:
-				commandOutput.sendSuccess("scenes.element_info.skin.profile", subscene.playerData.skinPath);
+				commandOutput.sendSuccess("scenes.element_info.skin.profile", subscene.playerSkin.skinPath);
 				break;
 
 			case FROM_FILE:
-				commandOutput.sendSuccess("scenes.element_info.skin.file", subscene.playerData.skinPath);
+				commandOutput.sendSuccess("scenes.element_info.skin.file", subscene.playerSkin.skinPath);
 				break;
 
 			case FROM_MINESKIN:
 				commandOutput.sendSuccess("scenes.element_info.skin.mineskin");
 				Component urlComponent = Utils.getEventComponent(ClickEvent.Action.OPEN_URL,
-						subscene.playerData.skinPath, String.format("  (§n%s§r)", subscene.playerData.skinPath));
+						subscene.playerSkin.skinPath, String.format("  (§n%s§r)", subscene.playerSkin.skinPath));
 				commandOutput.sendSuccessComponent(urlComponent);
 				break;
 		}
@@ -316,7 +320,7 @@ public class SceneFiles
 		for (SceneData.Subscene element : sceneData.subscenes)
 		{
 			commandOutput.sendSuccessLiteral("[%d] %s <%.3f> [%.3f; %.3f; %.3f] (%s)", i++, element.name,
-					element.startDelay, element.offset[0], element.offset[1], element.offset[2], element.playerData.name);
+					element.startDelay, element.offset[0], element.offset[1], element.offset[2], element.playerName);
 		}
 
 		commandOutput.sendSuccessLiteral("[id] name <start_delay> [x; y; z] (player_name)");

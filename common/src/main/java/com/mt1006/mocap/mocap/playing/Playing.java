@@ -2,11 +2,12 @@ package com.mt1006.mocap.mocap.playing;
 
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerData;
+import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.mocap.playing.playback.Playback;
 import com.mt1006.mocap.mocap.recording.Recording;
 import com.mt1006.mocap.mocap.recording.RecordingContext;
 import com.mt1006.mocap.mocap.settings.Settings;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,18 +22,18 @@ public class Playing
 	private static double timer = 0.0;
 	private static double previousPlaybackSpeed = 0.0;
 
-	public static boolean start(CommandInfo commandInfo, String name, PlayerData playerData)
+	public static boolean start(CommandInfo commandInfo, String name, @Nullable String playerName, PlayerSkin playerSkin)
 	{
-		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, playerData); }
+		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, playerName, playerSkin); }
 
-		Playback.Root playback = Playback.start(commandInfo, name, playerData, getNextId());
+		Playback.Root playback = Playback.start(commandInfo, name, playerName, playerSkin, getNextId());
 		if (playback == null) { return false; }
 		playbacks.add(playback);
 		commandInfo.sendSuccess("playback.start.success");
 		return true;
 	}
 
-	private static boolean startCurrentlyRecorded(CommandInfo commandInfo, String name, PlayerData playerData)
+	private static boolean startCurrentlyRecorded(CommandInfo commandInfo, String name, @Nullable String playerName, PlayerSkin playerSkin)
 	{
 		List<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
 		if (contexts == null) { return false; }
@@ -40,7 +41,7 @@ public class Playing
 		int successes = 0;
 		for (RecordingContext ctx : contexts)
 		{
-			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, playerData, getNextId());
+			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, playerName, playerSkin, getNextId());
 			if (playback == null) { continue; }
 			playbacks.add(playback);
 			successes++;

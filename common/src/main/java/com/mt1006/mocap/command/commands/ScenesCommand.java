@@ -10,13 +10,11 @@ import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.files.SceneFiles;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.NbtTagArgument;
-import net.minecraft.commands.arguments.ResourceArgument;
-import net.minecraft.core.registries.Registries;
 
 import java.util.List;
 
@@ -37,24 +35,12 @@ public class ScenesCommand
 			then(Commands.argument("scene_name", StringArgumentType.string()).
 			then(Commands.argument("to_add", StringArgumentType.string()).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
-			then(CommandUtils.withPlayerArguments(COMMAND_ADD_TO))))));
+			then(CommandUtils.playerArguments(COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
 			then(CommandUtils.withStringAndIntArgument(SceneFiles::removeElement, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
 			then(Commands.argument("scene_name", StringArgumentType.string()).
-			then(Commands.argument("to_modify", IntegerArgumentType.integer()).
-			then(Commands.literal("subscene_name").then(Commands.argument("new_name", StringArgumentType.string()).executes(COMMAND_MODIFY))).
-			then(Commands.literal("start_delay").then(Commands.argument("delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_MODIFY))).
-			then(Commands.literal("position_offset").
-				then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).
-				then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
-				then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(COMMAND_MODIFY))))).
-			then(Commands.literal("player_info").then(CommandUtils.withPlayerArguments(COMMAND_MODIFY))).
-			then(Commands.literal("player_as_entity").
-				then(Commands.literal("disabled").executes(COMMAND_MODIFY)).
-				then(Commands.literal("enabled").
-					then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).executes(COMMAND_MODIFY).
-					then(Commands.argument("nbt", NbtTagArgument.nbtTag()).executes(COMMAND_MODIFY))))))));
+			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", IntegerArgumentType.integer()), COMMAND_MODIFY, true))));
 		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name")).
 			then(CommandUtils.withStringAndIntArgument(SceneFiles::elementInfo, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
@@ -75,9 +61,10 @@ public class ScenesCommand
 			try
 			{
 				subscene.startDelay = commandInfo.getDouble("start_delay");
-				subscene.playerData = commandInfo.getPlayerData();
+				subscene.playerName = commandInfo.getPlayerName();
+				subscene.playerSkin = commandInfo.getPlayerSkin();
 
-				if (!subscene.playerData.checkIfProperName(commandInfo)) { return false; }
+				if (!PlaybackModifiers.checkIfProperName(commandInfo, subscene.playerName)) { return false; }
 			}
 			catch (Exception ignore) {}
 
