@@ -3,11 +3,8 @@ package com.mt1006.mocap.mocap.files;
 import com.google.gson.*;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.io.CommandOutput;
-import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.settings.Settings;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -114,56 +111,28 @@ public class SceneData
 	public static class Subscene
 	{
 		public String name;
-		public double startDelay = 0.0;
-		public double[] offset = new double[3];
-		public @Nullable String playerName = null;
-		public PlayerSkin playerSkin = PlayerSkin.DEFAULT;
-		public PlayerAsEntity playerAsEntity = PlayerAsEntity.DISABLED;
-		public EntityFilter entityFilter = EntityFilter.FOR_PLAYBACK; //TODO: implement
+		public PlaybackModifiers modifiers;
 
 		public Subscene(String name)
 		{
 			this.name = name;
+			this.modifiers = PlaybackModifiers.empty();
 		}
 
 		public Subscene(JsonObject json) throws Exception
 		{
 			JsonElement nameElement = json.get("name");
 			if (nameElement == null) { throw new Exception("JSON \"name\" element not found!"); }
+
 			name = nameElement.getAsString();
-
-			startDelay = getJsonDouble(json, "start_delay");
-			offset[0] = getJsonDouble(json, "offset_x");
-			offset[1] = getJsonDouble(json, "offset_y");
-			offset[2] = getJsonDouble(json, "offset_z");
-
-			JsonElement playerNameElement = json.get("player_name");
-			playerName = playerNameElement != null ? playerNameElement.getAsString() : null;
-
-			JsonElement playerSkinElement = json.get("player_skin");
-			playerSkin = new PlayerSkin(playerSkinElement != null ? playerSkinElement.getAsJsonObject() : null);
-			
-			JsonElement playerAsEntityElement = json.get("player_as_entity");
-			playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
+			modifiers = new PlaybackModifiers(json);
 		}
 
 		public JsonObject toJson()
 		{
 			JsonObject json = new JsonObject();
 			json.add("name", new JsonPrimitive(name));
-
-			addJsonDouble(json, "start_delay", startDelay);
-			addJsonDouble(json, "offset_x", offset[0]);
-			addJsonDouble(json, "offset_y", offset[1]);
-			addJsonDouble(json, "offset_z", offset[2]);
-
-			if (playerName != null) { json.add("player_name", new JsonPrimitive(playerName)); }
-
-			JsonObject playerDataJson = playerSkin.toJson();
-			if (playerDataJson != null) { json.add("player_skin", playerDataJson); }
-
-			JsonObject playerAsEntityJson = playerAsEntity.toJson();
-			if (playerAsEntityJson != null) { json.add("player_as_entity", playerAsEntityJson); }
+			modifiers.addToJson(json);
 			return json;
 		}
 
@@ -174,17 +143,6 @@ public class SceneData
 				return new Subscene(toJson());
 			}
 			catch (Exception e) { throw new RuntimeException("Something went wrong when copying subscene!"); }
-		}
-
-		private static double getJsonDouble(JsonObject json, String name)
-		{
-			JsonElement element = json.get(name);
-			return element != null ? element.getAsDouble() : 0.0;
-		}
-
-		private static void addJsonDouble(JsonObject json, String name, double val)
-		{
-			if (val != 0.0) { json.add(name, new JsonPrimitive(val)); }
 		}
 	}
 }

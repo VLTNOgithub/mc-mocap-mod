@@ -3,7 +3,7 @@ package com.mt1006.mocap.mocap.playing.playback;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.playing.DataManager;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -14,22 +14,22 @@ public class ScenePlayback extends Playback
 	private final List<Playback> subscenes = new ArrayList<>();
 
 	protected static @Nullable ScenePlayback startRoot(CommandInfo commandInfo, DataManager dataManager,
-													   String name, @Nullable String playerName, PlayerSkin playerSkin)
+													   String name, PlaybackModifiers modifiers)
 	{
-		try { return new ScenePlayback(commandInfo, dataManager, name, playerName, playerSkin, null, null); }
+		try { return new ScenePlayback(commandInfo, dataManager, name, modifiers, null); }
 		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable ScenePlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
 	{
-		try { return new ScenePlayback(commandInfo, dataManager, info.name, null, null, parent, info); }
+		try { return new ScenePlayback(commandInfo, dataManager, info.name, parent.modifiers, info); }
 		catch (StartException e) { return null; }
 	}
 
-	private ScenePlayback(CommandInfo commandInfo, DataManager dataManager, String name, @Nullable String rootPlayerName,
-						  @Nullable PlayerSkin rootPlayerSkin, @Nullable Playback parent, @Nullable SceneData.Subscene info) throws StartException
+	private ScenePlayback(CommandInfo commandInfo, DataManager dataManager, String name,
+						  PlaybackModifiers modifiers, @Nullable SceneData.Subscene info) throws StartException
 	{
-		super(parent == null, commandInfo.level, commandInfo.sourcePlayer, rootPlayerName, rootPlayerSkin, parent, info);
+		super(info == null, commandInfo.level, commandInfo.sourcePlayer, modifiers, info);
 
 		SceneData sceneData = dataManager.getScene(name);
 		if (sceneData == null) { return; }

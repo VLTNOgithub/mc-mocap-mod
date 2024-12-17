@@ -60,11 +60,10 @@ public class ScenesCommand
 
 			try
 			{
-				subscene.startDelay = commandInfo.getDouble("start_delay");
-				subscene.playerName = commandInfo.getPlayerName();
-				subscene.playerSkin = commandInfo.getPlayerSkin();
+				subscene.modifiers.playerName = commandInfo.getPlayerName();
+				subscene.modifiers.playerSkin = commandInfo.getPlayerSkin();
 
-				if (!PlaybackModifiers.checkIfProperName(commandInfo, subscene.playerName)) { return false; }
+				if (!PlaybackModifiers.checkIfProperName(commandInfo, subscene.modifiers.playerName)) { return false; }
 			}
 			catch (Exception ignore) {}
 

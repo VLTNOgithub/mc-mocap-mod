@@ -5,7 +5,6 @@ import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.playing.DataManager;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.mocap.recording.Recording;
 import com.mt1006.mocap.mocap.recording.RecordingContext;
 import com.mt1006.mocap.mocap.settings.Settings;
@@ -25,7 +24,7 @@ public abstract class Playback
 	protected final PlaybackModifiers modifiers;
 	protected int tickCounter = 0; //TODO: StartContext?
 
-	public static @Nullable Root start(CommandInfo commandInfo, String name, @Nullable String playerName, PlayerSkin playerSkin, int id)
+	public static @Nullable Root start(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, int id)
 	{
 		DataManager dataManager = new DataManager();
 		if (!dataManager.load(commandInfo, name))
@@ -37,16 +36,16 @@ public abstract class Playback
 
 		Playback playback = switch (SceneType.fromName(name))
 		{
-			case RECORDING -> RecordingPlayback.startRoot(commandInfo, dataManager, name, playerName, playerSkin);
-			case SCENE -> ScenePlayback.startRoot(commandInfo, dataManager, name, playerName, playerSkin);
+			case RECORDING -> RecordingPlayback.startRoot(commandInfo, dataManager.getRecording(name), modifiers);
+			case SCENE -> ScenePlayback.startRoot(commandInfo, dataManager, name, modifiers);
 		};
 		return playback != null ? new Root(playback, id, name) : null;
 	}
 
 	public static @Nullable Root start(CommandInfo commandInfo, RecordingData recordingData, String name,
-									   @Nullable String playerName, PlayerSkin playerSkin, int id)
+									   PlaybackModifiers modifiers, int id)
 	{
-		Playback playback = RecordingPlayback.startRoot(commandInfo, recordingData, playerName, playerSkin);
+		Playback playback = RecordingPlayback.startRoot(commandInfo, recordingData, modifiers);
 		return playback != null ? new Root(playback, id, name) : null;
 	}
 
@@ -60,8 +59,8 @@ public abstract class Playback
 		};
 	}
 
-	protected Playback(boolean root, ServerLevel level, @Nullable ServerPlayer owner, @Nullable String rootPlayerName,
-					   @Nullable PlayerSkin rootPlayerSkin, @Nullable Playback parent, @Nullable SceneData.Subscene info)
+	protected Playback(boolean root, ServerLevel level, @Nullable ServerPlayer owner,
+					   PlaybackModifiers modifiers, @Nullable SceneData.Subscene subscene)
 	{
 		this.root = root;
 		this.level = level;
@@ -69,14 +68,13 @@ public abstract class Playback
 
 		if (root)
 		{
-			if (rootPlayerSkin == null || parent != null || info != null) { throw new RuntimeException(); }
-			this.modifiers = PlaybackModifiers.forRoot(rootPlayerName, rootPlayerSkin);
+			if (subscene != null) { throw new RuntimeException(); }
+			this.modifiers = modifiers;
 		}
 		else
 		{
-			if (rootPlayerSkin != null || parent == null || info == null) { throw new RuntimeException(); }
-			this.modifiers = PlaybackModifiers.fromParent(parent.modifiers, info.playerName, info.playerSkin,
-					info.playerAsEntity, info.offset, info.startDelay, info.entityFilter);
+			if (subscene == null) { throw new RuntimeException(); }
+			this.modifiers = subscene.modifiers.mergeWithParent(modifiers);
 		}
 	}
 
@@ -90,7 +88,7 @@ public abstract class Playback
 	{
 		if (tickCounter == 0) { return true; }
 
-		if (modifiers.startDelay <= tickCounter)
+		if (modifiers.startDelay.ticks <= tickCounter)
 		{
 			if (!Settings.RECORDING_SYNCHRONIZATION.val) { return true; }
 

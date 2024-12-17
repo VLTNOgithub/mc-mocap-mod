@@ -77,6 +77,15 @@ public class InputArgument
 					: List.of(Pair.of(3, SCENES));
 		}
 
+		if (subcommand.equals("playback/modifiers"))
+		{
+			String subcommand3 = CommandUtils.getNode(ctx, 3);
+			if (subcommand3 != null && subcommand3.equals("add_to"))
+			{
+				args = List.of(Pair.of(4, SCENES), Pair.of(5, PLAYABLE));
+			}
+		}
+
 		int suggestionFlags = 0;
 		int suggestionPos = 0;
 		String prefix = "";

@@ -180,7 +180,7 @@ public class ActionContext
 
 	public BlockPos shiftBlockPos(BlockPos blockPos)
 	{
-		return blockPos.offset(modifiers.blockOffset);
+		return blockPos.offset(modifiers.offset.blockOffset);
 	}
 
 	public static class EntityData

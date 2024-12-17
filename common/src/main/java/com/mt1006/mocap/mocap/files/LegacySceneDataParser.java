@@ -1,8 +1,10 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.mocap.playing.modifiers.Offset;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import com.mt1006.mocap.mocap.playing.modifiers.StartDelay;
 import com.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,13 +57,12 @@ public class LegacySceneDataParser
 		SceneData.Subscene subscene = new SceneData.Subscene(scanner.next());
 		try
 		{
-			subscene.startDelay = Double.parseDouble(scanner.next());
-			subscene.offset[0] = Double.parseDouble(scanner.next());
-			subscene.offset[1] = Double.parseDouble(scanner.next());
-			subscene.offset[2] = Double.parseDouble(scanner.next());
-			subscene.playerName = parsePlayerName(scanner);
-			subscene.playerSkin = parsePlayerSkin(scanner);
-			subscene.playerAsEntity = new PlayerAsEntity(Utils.toNullableStr(scanner.next()), null);
+			subscene.modifiers.startDelay = StartDelay.fromSeconds(Double.parseDouble(scanner.next()));
+			subscene.modifiers.offset = new Offset(Double.parseDouble(scanner.next()),
+					Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()));
+			subscene.modifiers.playerName = parsePlayerName(scanner);
+			subscene.modifiers.playerSkin = parsePlayerSkin(scanner);
+			subscene.modifiers.playerAsEntity = new PlayerAsEntity(Utils.toNullableStr(scanner.next()), null);
 		}
 		catch (Exception ignore) {}
 		return subscene;

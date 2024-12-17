@@ -17,7 +17,7 @@ public class MocapCommand
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("mocap").requires(source -> source.hasPermission(2));
 
 		commandBuilder.then(RecordingCommand.getArgumentBuilder());
-		commandBuilder.then(PlaybackCommand.getArgumentBuilder());
+		commandBuilder.then(PlaybackCommand.getArgumentBuilder(buildContext));
 		commandBuilder.then(RecordingsCommand.getArgumentBuilder());
 		commandBuilder.then(ScenesCommand.getArgumentBuilder(buildContext));
 		commandBuilder.then(SettingsCommand.getArgumentBuilder());

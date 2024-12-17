@@ -4,14 +4,6 @@ import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
-import com.mt1006.mocap.utils.Utils;
-import net.minecraft.commands.arguments.NbtTagArgument;
-import net.minecraft.commands.arguments.ResourceArgument;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -190,56 +182,20 @@ public class SceneFiles
 
 		try
 		{
-			switch (propertyName)
+			if (propertyName.equals("subscene_name"))
 			{
-				case "subscene_name":
-					subscene.name = commandInfo.getString("new_name");
-					return subscene;
-
-				case "start_delay":
-					subscene.startDelay = commandInfo.getDouble("delay");
-					return subscene;
-
-				case "position_offset":
-					subscene.offset[0] = commandInfo.getDouble("offset_x");
-					subscene.offset[1] = commandInfo.getDouble("offset_y");
-					subscene.offset[2] = commandInfo.getDouble("offset_z");
-					return subscene;
-
-				case "player_name":
-					subscene.playerName = commandInfo.getPlayerName();
-					return subscene;
-
-				case "player_skin":
-					subscene.playerSkin = commandInfo.getPlayerSkin();
-					return subscene;
-
-				case "player_as_entity":
-					String playerAsEntityStr = commandInfo.getNode(6);
-					if (playerAsEntityStr == null) { break; }
-
-					if (playerAsEntityStr.equals("enabled"))
-					{
-						String playerAsEntityId = ResourceArgument.getEntityType(commandInfo.ctx, "entity").key().location().toString();
-
-						Tag tag;
-						try { tag = NbtTagArgument.getNbtTag(commandInfo.ctx, "nbt"); }
-						catch (Exception e) { tag = null; }
-						CompoundTag nbt = (tag instanceof CompoundTag) ? (CompoundTag)tag : null;
-
-						subscene.playerAsEntity = new PlayerAsEntity(playerAsEntityId, nbt != null ? nbt.toString() : null);
-						return subscene;
-					}
-					else if (playerAsEntityStr.equals("disabled"))
-					{
-						subscene.playerAsEntity = PlayerAsEntity.DISABLED;
-						return subscene;
-					}
-					break;
+				subscene.name = commandInfo.getString("new_name");
+				return subscene;
 			}
 
-			rootCommandInfo.sendFailure("error.unable_to_get_argument");
-			return null;
+			boolean success = subscene.modifiers.modify(commandInfo, propertyName, 5);
+			if (!success)
+			{
+				rootCommandInfo.sendFailure("error.unable_to_get_argument");
+				return null;
+			}
+
+			return subscene;
 		}
 		catch (Exception e)
 		{
@@ -276,36 +232,7 @@ public class SceneFiles
 		commandOutput.sendSuccess("scenes.element_info.id", name, pos);
 		commandOutput.sendSuccess("scenes.element_info.name", subscene.name);
 
-		if (subscene.playerName == null) { commandOutput.sendSuccess("scenes.element_info.player_name.default"); }
-		else { commandOutput.sendSuccess("scenes.element_info.player_name.custom", subscene.playerName); }
-
-		switch (subscene.playerSkin.skinSource)
-		{
-			case DEFAULT:
-				commandOutput.sendSuccess("scenes.element_info.skin.default");
-				break;
-
-			case FROM_PLAYER:
-				commandOutput.sendSuccess("scenes.element_info.skin.profile", subscene.playerSkin.skinPath);
-				break;
-
-			case FROM_FILE:
-				commandOutput.sendSuccess("scenes.element_info.skin.file", subscene.playerSkin.skinPath);
-				break;
-
-			case FROM_MINESKIN:
-				commandOutput.sendSuccess("scenes.element_info.skin.mineskin");
-				Component urlComponent = Utils.getEventComponent(ClickEvent.Action.OPEN_URL,
-						subscene.playerSkin.skinPath, String.format("  (§n%s§r)", subscene.playerSkin.skinPath));
-				commandOutput.sendSuccessComponent(urlComponent);
-				break;
-		}
-
-		commandOutput.sendSuccess("scenes.element_info.start_delay", subscene.startDelay, (int)Math.round(subscene.startDelay * 20.0));
-		commandOutput.sendSuccess("scenes.element_info.offset", subscene.offset[0], subscene.offset[1], subscene.offset[2]);
-
-		if (!subscene.playerAsEntity.isEnabled()) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
-		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", subscene.playerAsEntity.entityId); }
+		subscene.modifiers.list(commandOutput);
 		return true;
 	}
 
@@ -319,8 +246,8 @@ public class SceneFiles
 		int i = 1;
 		for (SceneData.Subscene element : sceneData.subscenes)
 		{
-			commandOutput.sendSuccessLiteral("[%d] %s <%.3f> [%.3f; %.3f; %.3f] (%s)", i++, element.name,
-					element.startDelay, element.offset[0], element.offset[1], element.offset[2], element.playerName);
+			commandOutput.sendSuccessLiteral("[%d] %s <%.3f> [%.3f; %.3f; %.3f] (%s)", i++, element.name, element.modifiers.startDelay.seconds,
+					element.modifiers.offset.x, element.modifiers.offset.y, element.modifiers.offset.z, element.modifiers.playerName);
 		}
 
 		commandOutput.sendSuccessLiteral("[id] name <start_delay> [x; y; z] (player_name)");

@@ -3,6 +3,7 @@ package com.mt1006.mocap.mocap.recording;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mt1006.mocap.MocapMod;
+import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
@@ -15,7 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class Recording
 {
@@ -33,12 +37,10 @@ public class Recording
 		}
 	}
 
-	private static final int DOUBLE_START_LIMIT = 1024;
 	private static final QuickDiscard quickDiscard = QuickDiscard.SAFE;
 
 	private static final List<RecordingContext> contexts = new ArrayList<>();
 	private static final Multimap<String, RecordingContext> contextsBySource = HashMultimap.create();
-	private static final Map<String, String> awaitDoubleStart = new HashMap<>();
 
 	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer)
 	{
@@ -56,10 +58,9 @@ public class Recording
 		ServerPlayer sourcePlayer = commandInfo.sourcePlayer;
 		if (sourcePlayer == null) { return true; }
 
-		String sourcePlayerName = sourcePlayer.getName().getString();
 		String recordedPlayerName = recordedPlayer.getName().getString();
 
-		if (!recordedPlayerName.equals(awaitDoubleStart.getOrDefault(sourcePlayerName, null)))
+		if (!recordedPlayerName.equals(CommandsContext.get(sourcePlayer).doubleStart))
 		{
 			for (RecordingContext ctx : contexts)
 			{
@@ -70,7 +71,7 @@ public class Recording
 				}
 			}
 		}
-		awaitDoubleStart.remove(sourcePlayerName);
+		CommandsContext.get(sourcePlayer).doubleStart = null;
 		return true;
 	}
 
@@ -102,12 +103,7 @@ public class Recording
 
 		if (addToDoubleStart && ctx.sourcePlayer != null)
 		{
-			if (awaitDoubleStart.size() > DOUBLE_START_LIMIT)
-			{
-				awaitDoubleStart.clear();
-				MocapMod.LOGGER.warn("awaitDoubleStart limit reached, clearing map");
-			}
-			awaitDoubleStart.put(ctx.sourcePlayer.getName().getString(), ctx.recordedPlayer.getName().getString());
+			CommandsContext.get(ctx.sourcePlayer).doubleStart = ctx.recordedPlayer.getName().getString();
 		}
 	}
 
@@ -542,7 +538,6 @@ public class Recording
 	{
 		contexts.clear();
 		contextsBySource.clear();
-		awaitDoubleStart.clear();
 	}
 
 	private record ResolvedContexts(List<RecordingContext> list, boolean isSingle, RecordingId fullId)
@@ -600,7 +595,7 @@ public class Recording
 			ServerPlayer source = commandInfo.sourcePlayer;
 			if (source == null)
 			{
-				//TODO: error message
+				commandInfo.sendFailure("failure.resolve_player");
 				return null;
 			}
 

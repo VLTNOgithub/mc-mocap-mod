@@ -1,7 +1,9 @@
 -It's now possible to record multiple recordings at the same time.
 -It's now possible to start playback of currently recorded recordings.
+-It's now possible to set playback modifiers for "/mocap playback start" command.
 -Renamed "/mocap playing" to "/mocap playback".
--Added "/mocap recording discard" command.
+-Added command to discard recordings - "/mocap recording discard".
+-Added command to set playback modifiers - "/mocap playback modifiers".
 -Added support for custom NBT data with "player_as_entity" modifier.
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).

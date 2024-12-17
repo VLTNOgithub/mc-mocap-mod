@@ -5,7 +5,6 @@ import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.CommandContextBuilder;
@@ -43,7 +42,6 @@ public class CommandUtils
 		builder.then(Commands.literal("from_mineskin").then(Commands.argument("mineskin_url", StringArgumentType.greedyString()).executes(command)));
 		return builder;
 	}
-
 
 	public static ArgumentBuilder<CommandSourceStack, ?> withModifiers(CommandBuildContext buildContext,
 																	   ArgumentBuilder<CommandSourceStack, ?> builder,

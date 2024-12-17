@@ -9,7 +9,7 @@ import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.playing.DataManager;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.network.MocapPacketS2C;
 import com.mt1006.mocap.utils.*;
@@ -32,30 +32,22 @@ public class RecordingPlayback extends Playback
 	private int pos = 0;
 	private int dyingTicks = 0;
 
-	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, DataManager dataManager,
-														   String name, @Nullable String playerName, PlayerSkin playerSkin)
+	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording, PlaybackModifiers modifiers)
 	{
-		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(name), playerName, playerSkin, null, null); }
-		catch (StartException e) { return null; }
-	}
-
-	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording,
-														   @Nullable String playerName, PlayerSkin playerSkin)
-	{
-		try { return new RecordingPlayback(commandInfo, recording, playerName, playerSkin, null, null); }
+		try { return new RecordingPlayback(commandInfo, recording, modifiers, null); }
 		catch (StartException e) { return null; }
 	}
 
 	protected static @Nullable RecordingPlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
 	{
-		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), null, null, parent, info); }
+		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), parent.modifiers, info); }
 		catch (StartException e) { return null; }
 	}
 
-	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording, @Nullable String rootPlayerName,
-							  @Nullable PlayerSkin rootPlayerSkin, @Nullable Playback parent, @Nullable SceneData.Subscene info) throws StartException
+	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording,
+							  PlaybackModifiers modifiers, @Nullable SceneData.Subscene subscene) throws StartException
 	{
-		super(parent == null, commandInfo.level, commandInfo.sourcePlayer, rootPlayerName, rootPlayerSkin, parent, info);
+		super(subscene == null, commandInfo.level, commandInfo.sourcePlayer, modifiers, subscene);
 
 		if (recording == null) { throw new StartException(); } //TODO: test if gives error message (especially as subscene)
 		this.recording = recording;
@@ -91,7 +83,7 @@ public class RecordingPlayback extends Playback
 			EntityData.PLAYER_SKIN_PARTS.set(fakePlayer, (byte)0b01111111);
 			fakePlayer.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
 			recording.initEntityPosition(fakePlayer, modifiers.offset);
-			recording.preExecute(fakePlayer, modifiers.blockOffset);
+			recording.preExecute(fakePlayer, modifiers.offset.blockOffset);
 
 			packetTargets.broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, fakePlayer));
 			level.addNewPlayer(fakePlayer);
@@ -124,7 +116,7 @@ public class RecordingPlayback extends Playback
 			if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
 
 			level.addFreshEntity(entity);
-			recording.preExecute(entity, modifiers.blockOffset);
+			recording.preExecute(entity, modifiers.offset.blockOffset);
 
 			if (Settings.ALLOW_GHOSTS.val)
 			{
