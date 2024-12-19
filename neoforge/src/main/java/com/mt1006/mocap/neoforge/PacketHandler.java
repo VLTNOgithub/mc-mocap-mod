@@ -3,8 +3,6 @@ package com.mt1006.mocap.neoforge;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.network.MocapPacketC2S;
 import com.mt1006.mocap.network.MocapPacketS2C;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -18,10 +16,6 @@ import org.jetbrains.annotations.Nullable;
 @EventBusSubscriber(modid = MocapMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class PacketHandler
 {
-	//TODO: remove?
-	public static final CustomPacketPayload.Type<CustomPacketPayload> INSTANCE =
-			new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(MocapMod.MOD_ID, "neoforge"));
-
 	@SubscribeEvent
 	public static void register(RegisterPayloadHandlersEvent event)
 	{

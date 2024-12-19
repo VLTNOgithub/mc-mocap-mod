@@ -19,7 +19,8 @@ public class MocapModNeoForge implements MocapModLoaderInterface
 
 	public MocapModNeoForge(IEventBus eventBus)
 	{
-		modContainer = ModLoadingContext.get().getActiveContainer();
+		ModContainer modContainer = ModLoadingContext.get().getActiveContainer();
+		this.modContainer = modContainer.getModId().equals("minecraft") ? null : modContainer;
 		MocapMod.init(isDedicatedServer, this);
 	}
 
