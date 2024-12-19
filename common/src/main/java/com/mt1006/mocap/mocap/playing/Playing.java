@@ -30,16 +30,18 @@ public class Playing
 	public static boolean start(CommandInfo commandInfo, String name, @Nullable String playerName, PlayerSkin playerSkin)
 	{
 		PlaybackModifiers modifiers = CommandsContext.getFinalModifiers(commandInfo.sourcePlayer, playerName, playerSkin);
-		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers); }
+		boolean defaultModifiers = modifiers.areDefault(playerName, playerSkin);
+
+		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers, defaultModifiers); }
 
 		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getNextId());
 		if (playback == null) { return false; }
 		playbacks.add(playback);
-		commandInfo.sendSuccess(modifiers.areDefault() ? "playback.start.success" : "playback.start.success.modifiers");
+		commandInfo.sendSuccess(defaultModifiers ? "playback.start.success" : "playback.start.success.modifiers");
 		return true;
 	}
 
-	private static boolean startCurrentlyRecorded(CommandInfo commandInfo, String name, PlaybackModifiers modifiers)
+	private static boolean startCurrentlyRecorded(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
 		List<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
 		if (contexts == null) { return false; }
@@ -54,7 +56,7 @@ public class Playing
 		}
 
 		if (successes == 0) { return false; }
-		commandInfo.sendSuccess(modifiers.areDefault() ? "playback.start.success" : "playback.start.success.modifiers");
+		commandInfo.sendSuccess(defaultModifiers ? "playback.start.success" : "playback.start.success.modifiers");
 		return true;
 	}
 

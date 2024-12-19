@@ -76,9 +76,10 @@ public class PlaybackModifiers
 		return new PlaybackModifiers(playerName, playerSkin, playerAsEntity, offset, startDelay, entityFilter);
 	}
 
-	public boolean areDefault()
+	public boolean areDefault(@Nullable String commandPlayerName, @Nullable PlayerSkin commandPlayerSkin)
 	{
-		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
+		return (playerName == null || playerName.equals(commandPlayerName))
+				&& (playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT || playerSkin == commandPlayerSkin)
 				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO;
 	}
 
