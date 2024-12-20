@@ -1,10 +1,7 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.command.io.CommandOutput;
-import com.mt1006.mocap.mocap.playing.modifiers.Offset;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
-import com.mt1006.mocap.mocap.playing.modifiers.StartDelay;
+import com.mt1006.mocap.mocap.playing.modifiers.*;
 import com.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +51,7 @@ public class LegacySceneDataParser
 
 	private static SceneData.Subscene parseSubscene(Scanner scanner)
 	{
-		SceneData.Subscene subscene = new SceneData.Subscene(scanner.next());
+		SceneData.Subscene subscene = new SceneData.Subscene(scanner.next(), PlaybackModifiers.empty());
 		try
 		{
 			subscene.modifiers.startDelay = StartDelay.fromSeconds(Double.parseDouble(scanner.next()));

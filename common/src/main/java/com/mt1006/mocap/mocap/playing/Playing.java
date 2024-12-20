@@ -6,13 +6,11 @@ import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import com.mt1006.mocap.mocap.playing.playback.Playback;
 import com.mt1006.mocap.mocap.recording.Recording;
 import com.mt1006.mocap.mocap.recording.RecordingContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,11 +25,8 @@ public class Playing
 	private static double timer = 0.0;
 	private static double previousPlaybackSpeed = 0.0;
 
-	public static boolean start(CommandInfo commandInfo, String name, @Nullable String playerName, PlayerSkin playerSkin)
+	public static boolean start(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
-		PlaybackModifiers modifiers = CommandsContext.getFinalModifiers(commandInfo.sourcePlayer, playerName, playerSkin);
-		boolean defaultModifiers = modifiers.areDefault(playerName, playerSkin);
-
 		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers, defaultModifiers); }
 
 		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getNextId());
@@ -111,6 +106,7 @@ public class Playing
 			boolean success = ctx.modifiers.modify(commandInfo, propertyName, 4);
 			if (!success)
 			{
+				//TODO: replace with "something went wrong" (alpha-3)
 				rootCommandInfo.sendFailure("error.unable_to_get_argument");
 				return false;
 			}
@@ -155,7 +151,7 @@ public class Playing
 		return true;
 	}
 
-	public static boolean modifiersAddTo(CommandInfo commandInfo, String sceneName, SceneData.Subscene subscene)
+	public static boolean modifiersAddTo(CommandInfo commandInfo, String sceneName, String toAdd)
 	{
 		ServerPlayer source = commandInfo.sourcePlayer;
 		if (source == null)
@@ -164,7 +160,7 @@ public class Playing
 			return false;
 		}
 
-		subscene.modifiers = CommandsContext.get(source).modifiers;
+		SceneData.Subscene subscene = new SceneData.Subscene(toAdd, CommandsContext.get(source).modifiers);
 		return SceneFiles.addElement(commandInfo, sceneName, subscene);
 	}
 

@@ -17,6 +17,8 @@
 -Replaced setting "trackPlayedEntities" with "prevent_tracking_played_entities" (true by default) which better represents what it's actually doing.
 -Renamed settings: "playing_speed" to "playback_speed", "recording_sync" to "recording_synchronization", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
+-Renamed "from_..." to "skin_from_..." simple modifiers in "playback start" and "scene add_to" commands.
+-It's now possible to add player_as_entity modifier using simple modifiers (thanks to Narfu for suggestion).
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
 -Scene format is now JSON-based.
 -Improvements to recording format.
@@ -34,6 +36,7 @@
 -Fixed fake players in "player as entity" mode not being able to interact with blocks (thanks to awesome_nobel46 for reporting).
 -Fixed vehicles not appearing in the playback after disabling "playItemEntities", "playOtherEntities" and "playBlockActions", despite "playVehicleEntities" being enabled.
 -Fixed directories with a proper name showing up on a list of recordings or scenes.
+-Fixed server crashing when trying to start playback with player name longer than 16 characters (thanks to SPY for reporting).
 -Minor spelling improvements.
 -Minor improvements to error detection.
 

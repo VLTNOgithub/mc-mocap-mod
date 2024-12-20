@@ -4,14 +4,13 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.command.io.CommandInfo;
-import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.playing.Playing;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.jetbrains.annotations.Nullable;
 
 public class PlaybackCommand
 {
@@ -21,7 +20,7 @@ public class PlaybackCommand
 
 		commandBuilder.then(Commands.literal("start").
 			then(Commands.argument("name", StringArgumentType.string()).executes(CommandUtils.command(PlaybackCommand::start)).
-			then(CommandUtils.playerArguments(CommandUtils.command(PlaybackCommand::start)))));
+			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
 		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(Playing::stopAll)));
@@ -40,18 +39,20 @@ public class PlaybackCommand
 	private static boolean start(CommandInfo commandInfo)
 	{
 		String name = commandInfo.getNullableString("name");
-		@Nullable String playerName = commandInfo.getPlayerName();
-		PlayerSkin playerSkin = commandInfo.getPlayerSkin();
-
 		if (name == null)
 		{
 			commandInfo.sendFailure("error.unable_to_get_argument");
 			return false;
 		}
 
+		PlaybackModifiers modifiers = commandInfo.getSimpleModifiers(commandInfo);
+		if (modifiers == null) { return false; }
+
 		try
 		{
-			return Playing.start(commandInfo, name, playerName, playerSkin);
+			PlaybackModifiers finalModifiers = CommandsContext.getFinalModifiers(commandInfo.sourcePlayer, modifiers);
+			boolean hasDefaultModifiers = CommandsContext.hasDefaultModifiers(commandInfo.sourcePlayer);
+			return Playing.start(commandInfo, name, finalModifiers, hasDefaultModifiers);
 		}
 		catch (Exception e)
 		{
@@ -80,11 +81,8 @@ public class PlaybackCommand
 		try
 		{
 			String name = commandInfo.getString("scene_name");
-
 			String toAdd = commandInfo.getString("to_add");
-			SceneData.Subscene subscene = new SceneData.Subscene(toAdd);
-
-			return Playing.modifiersAddTo(commandInfo, name, subscene);
+			return Playing.modifiersAddTo(commandInfo, name, toAdd);
 		}
 		catch (IllegalArgumentException e)
 		{

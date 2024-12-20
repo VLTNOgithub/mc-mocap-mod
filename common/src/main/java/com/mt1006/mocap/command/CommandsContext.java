@@ -1,7 +1,6 @@
 package com.mt1006.mocap.command;
 
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import com.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,14 +29,17 @@ public class CommandsContext
 		contexts.remove(player);
 	}
 
-	public static PlaybackModifiers getFinalModifiers(@Nullable ServerPlayer source, @Nullable String playerName, PlayerSkin playerSkin)
+	public static boolean hasDefaultModifiers(@Nullable ServerPlayer source)
+	{
+		return source == null || CommandsContext.get(source).modifiers.areDefault();
+	}
+
+	public static PlaybackModifiers getFinalModifiers(@Nullable ServerPlayer source, PlaybackModifiers simpleModifiers)
 	{
 		PlaybackModifiers modifiers = source != null
 				? CommandsContext.get(source).modifiers.copy()
 				: PlaybackModifiers.empty();
 
-		if (playerName != null) { modifiers.playerName = playerName; }
-		if (playerSkin.skinSource != PlayerSkin.SkinSource.DEFAULT) { modifiers.playerSkin = playerSkin; }
-		return modifiers;
+		return simpleModifiers.mergeWithParent(modifiers);
 	}
 }

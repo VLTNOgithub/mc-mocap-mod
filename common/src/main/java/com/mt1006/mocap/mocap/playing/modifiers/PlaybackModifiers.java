@@ -52,12 +52,8 @@ public class PlaybackModifiers
 
 	public static PlaybackModifiers empty()
 	{
-		return forRoot(null, PlayerSkin.DEFAULT);
-	}
-
-	public static PlaybackModifiers forRoot(@Nullable String playerName, PlayerSkin playerSkin)
-	{
-		return new PlaybackModifiers(playerName, playerSkin, PlayerAsEntity.DISABLED, Offset.ZERO, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK);
+		return new PlaybackModifiers(null, PlayerSkin.DEFAULT, PlayerAsEntity.DISABLED,
+				Offset.ZERO, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK);
 	}
 
 	public PlaybackModifiers mergeWithParent(PlaybackModifiers parent)
@@ -76,10 +72,9 @@ public class PlaybackModifiers
 		return new PlaybackModifiers(playerName, playerSkin, playerAsEntity, offset, startDelay, entityFilter);
 	}
 
-	public boolean areDefault(@Nullable String commandPlayerName, @Nullable PlayerSkin commandPlayerSkin)
+	public boolean areDefault()
 	{
-		return (playerName == null || playerName.equals(commandPlayerName))
-				&& (playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT || playerSkin == commandPlayerSkin)
+		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
 				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO;
 	}
 
@@ -146,7 +141,7 @@ public class PlaybackModifiers
 				return true;
 
 			case "player_name":
-				playerName = commandInfo.getPlayerName();
+				playerName = commandInfo.getNullableString("player_name");
 				return true;
 
 			case "player_skin":

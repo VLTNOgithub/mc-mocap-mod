@@ -113,10 +113,10 @@ public class SceneData
 		public String name;
 		public PlaybackModifiers modifiers;
 
-		public Subscene(String name)
+		public Subscene(String name, PlaybackModifiers modifiers)
 		{
 			this.name = name;
-			this.modifiers = PlaybackModifiers.empty();
+			this.modifiers = modifiers;
 		}
 
 		public Subscene(JsonObject json) throws Exception

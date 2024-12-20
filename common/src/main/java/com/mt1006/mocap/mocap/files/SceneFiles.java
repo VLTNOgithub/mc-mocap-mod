@@ -191,6 +191,7 @@ public class SceneFiles
 			boolean success = subscene.modifiers.modify(commandInfo, propertyName, 5);
 			if (!success)
 			{
+				//TODO: replace with "something went wrong" (alpha-3)
 				rootCommandInfo.sendFailure("error.unable_to_get_argument");
 				return null;
 			}

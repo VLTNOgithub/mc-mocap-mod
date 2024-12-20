@@ -35,7 +35,7 @@ public class ScenesCommand
 			then(Commands.argument("scene_name", StringArgumentType.string()).
 			then(Commands.argument("to_add", StringArgumentType.string()).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
-			then(CommandUtils.playerArguments(COMMAND_ADD_TO))))));
+			then(CommandUtils.playerArguments(buildContext, COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
 			then(CommandUtils.withStringAndIntArgument(SceneFiles::removeElement, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
@@ -54,19 +54,11 @@ public class ScenesCommand
 		try
 		{
 			String name = commandInfo.getString("scene_name");
-
 			String toAdd = commandInfo.getString("to_add");
-			SceneData.Subscene subscene = new SceneData.Subscene(toAdd);
+			PlaybackModifiers simpleModifiers = commandInfo.getSimpleModifiers(commandInfo);
+			if (simpleModifiers == null) { return false; }
 
-			try
-			{
-				subscene.modifiers.playerName = commandInfo.getPlayerName();
-				subscene.modifiers.playerSkin = commandInfo.getPlayerSkin();
-
-				if (!PlaybackModifiers.checkIfProperName(commandInfo, subscene.modifiers.playerName)) { return false; }
-			}
-			catch (Exception ignore) {}
-
+			SceneData.Subscene subscene = new SceneData.Subscene(toAdd, simpleModifiers);
 			return SceneFiles.addElement(commandInfo, name, subscene);
 		}
 		catch (IllegalArgumentException e)
