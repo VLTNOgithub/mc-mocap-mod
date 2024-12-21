@@ -130,19 +130,19 @@ public class MocapPacketS2C implements CustomPacketPayload
 		client.respond(new MocapPacketS2C(ON_LOGIN, null));
 	}
 
-	public static void sendNocolPlayerAdd(ServerPlayer serverPlayer, UUID player)
+	public static void sendNocolPlayerAdd(ServerPlayer serverPlayer, UUID playerToAdd)
 	{
-		send(serverPlayer, NOCOL_PLAYER_ADD, player);
+		send(serverPlayer, NOCOL_PLAYER_ADD, playerToAdd);
 	}
 
-	public static void sendNocolPlayerRemove(ServerPlayer serverPlayer, UUID player)
+	public static void sendNocolPlayerRemove(ServerPlayer serverPlayer, UUID playerToAdd)
 	{
-		send(serverPlayer, NOCOL_PLAYER_REMOVE, player);
+		send(serverPlayer, NOCOL_PLAYER_REMOVE, playerToAdd);
 	}
 
-	public static void sendInputSuggestionsAdd(ServerPlayer serverPlayer, Collection<String> strings)
+	public static void sendInputSuggestionsAdd(ServerPlayer player, Collection<String> strings)
 	{
-		send(serverPlayer, INPUT_SUGGESTIONS_ADD, strings);
+		send(player, INPUT_SUGGESTIONS_ADD, strings);
 	}
 
 	public static void sendInputSuggestionsAddOnLogin(MocapPacketC2S.Client client, Collection<String> strings)
@@ -150,19 +150,19 @@ public class MocapPacketS2C implements CustomPacketPayload
 		client.respond(new MocapPacketS2C(INPUT_SUGGESTIONS_ADD, strings));
 	}
 
-	public static void sendInputSuggestionsRemove(ServerPlayer serverPlayer, Collection<String> strings)
+	public static void sendInputSuggestionsRemove(ServerPlayer player, Collection<String> strings)
 	{
-		send(serverPlayer, INPUT_SUGGESTIONS_REMOVE, strings);
+		send(player, INPUT_SUGGESTIONS_REMOVE, strings);
 	}
 
-	public static void sendCustomSkinData(ServerPlayer serverPlayer, String name, byte[] byteArray)
+	public static void sendCustomSkinData(ServerPlayer player, String name, byte[] byteArray)
 	{
-		send(serverPlayer, CUSTOM_SKIN_DATA, Pair.of(name, byteArray));
+		send(player, CUSTOM_SKIN_DATA, Pair.of(name, byteArray));
 	}
 
-	private static void send(ServerPlayer serverPlayer, int op, Object object)
+	private static void send(ServerPlayer player, int op, Object object)
 	{
-		MocapMod.loaderInterface.sendPacketToClient(serverPlayer, new MocapPacketS2C(op, object));
+		MocapMod.loaderInterface.sendPacketToClient(player, new MocapPacketS2C(op, object));
 	}
 
 	public interface Server
