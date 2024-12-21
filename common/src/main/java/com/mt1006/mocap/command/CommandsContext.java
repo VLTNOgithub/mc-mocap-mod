@@ -10,7 +10,9 @@ import java.util.Map;
 public class CommandsContext
 {
 	private static final Map<ServerPlayer, CommandsContext> contexts = new HashMap<>();
+	public static int haveSyncEnabled = 0;
 	public PlaybackModifiers modifiers = PlaybackModifiers.empty();
+	private boolean sync = false;
 	public @Nullable String doubleStart = null;
 
 	public static CommandsContext get(ServerPlayer player)
@@ -26,6 +28,10 @@ public class CommandsContext
 
 	public static void removePlayer(ServerPlayer player)
 	{
+		CommandsContext ctx = contexts.get(player);
+		if (ctx == null) { return; }
+
+		if (ctx.sync) { haveSyncEnabled--; }
 		contexts.remove(player);
 	}
 
@@ -41,5 +47,23 @@ public class CommandsContext
 				: PlaybackModifiers.empty();
 
 		return simpleModifiers.mergeWithParent(modifiers);
+	}
+
+	public boolean setSync(boolean sync)
+	{
+		boolean oldSync = this.sync;
+		this.sync = sync;
+
+		if (oldSync != sync)
+		{
+			if (sync) { haveSyncEnabled++; }
+			else { haveSyncEnabled--; }
+		}
+		return oldSync;
+	}
+
+	public boolean getSync()
+	{
+		return sync;
 	}
 }

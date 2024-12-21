@@ -152,6 +152,8 @@
   "mocap.playback.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
   "mocap.playback.start.success": "Playback started...",
   "mocap.playback.start.success.modifiers": "Playback started... (with modifiers)",
+  "mocap.playback.start.success.sync": "Playback started... (with synchronization)",
+  "mocap.playback.start.success.modifiers.sync": "Playback started... (with modifiers and synchronization)",
 
   "mocap.playback.stop.unable_to_find_scene": "§lError:§r unable to find scene with given id!",
   "mocap.playback.stop.unable_to_find_scene.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
@@ -182,7 +184,6 @@
   "mocap.settings.info.about.prevent_tracking_played_entities": "Prevents tracking (recording) entities that are currently played",
   "mocap.settings.info.about.entity_tracking_distance": "Limits the entity tracking distance (>0 - tracking radius in blocks; 0 - disable tracking; -1 - distance not limited)",
   "mocap.settings.info.about.record_player_death": "Enables recording player death and stops recording at that moment",
-  "mocap.settings.info.about.recording_synchronization": "Makes recording of complex scenes easier by synchronizing start of played scene with start of recording",
 
   "mocap.settings.info.about.playback_speed": "Allows you to change speed of played recording or scene",
   "mocap.settings.info.about.play_vehicle_entities": "Enables playback of vehicle entities (like boats or horses)",
@@ -216,6 +217,12 @@
   "mocap.settings.set.success.not_changed": "Value remained unchanged - %s",
   "mocap.settings.set.invalid_value": "Value you're trying to change to is invalid!",
   "mocap.settings.set.error": "§lError:§r unable to read input value!",
+
+
+  "mocap.misc.sync.enable.changed": "Synchronization enabled",
+  "mocap.misc.sync.enable.not_changed": "Synchronization has already been enabled",
+  "mocap.misc.sync.disable.changed": "Synchronization disabled",
+  "mocap.misc.sync.disable.not_changed": "Synchronization has already been disabled",
 
 
   "mocap.help": "%s - §lHelp§r\n  /mocap recording [...] - Recording player movements\n  /mocap recordings [...] - Managing recording files\n  /mocap scenes [...] - Creating and modifying scenes\n  /mocap playback [...] - Playback of scenes and recordings\n  /mocap settings [...] - Shows and modifies settings\n  /mocap info - Displays information about mod\n  /mocap help - Displays this message\n§lHow to use:§r\n- First, you need to start recording using \"/mocap recording start\". It will record all your movements or movements of a player given as an argument. \n- Then, you can stop recording using \"/mocap recording stop\" and save it with \"/mocap recording save <name>\".\n- Use \"/mocap playback start <name>\" to play recording.\n- You can also create scenes to which you can add multiple recordings or other scenes, with parameters like player name, position offset, or start delay.\n- To create scene use \"/mocap scenes add <scene_name>\". Then, add your recording using \"/mocap scenes add_to <scene_name> <recording_name> [player_name] [skin_source_type] [skin_source]\" (you can skip arguments in square brackets if you want).\n- To play scene use \"/mocap playback start .<scene_name>\" - you need to put a dot before the scene name.\n- By putting a dot before name, when using \"/mocap scenes add_to ...\", you can also add scenes to other scenes.",

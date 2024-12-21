@@ -22,7 +22,7 @@ public class WorldLoadEvent
 
 	public static void onServerWorldUnload()
 	{
-		Playing.stopAll(CommandOutput.DUMMY);
+		Playing.stopAll(CommandOutput.DUMMY, null);
 		Settings.unload();
 		Files.deinit();
 		Recording.onServerStop();

@@ -1,5 +1,7 @@
 package com.mt1006.mocap.mocap.playing;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
@@ -11,16 +13,17 @@ import com.mt1006.mocap.mocap.recording.Recording;
 import com.mt1006.mocap.mocap.recording.RecordingContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 
 public class Playing
 {
 	public static final String MOCAP_ENTITY_TAG = "mocap_entity";
-	public static final List<Playback.Root> playbacks = Collections.synchronizedList(new LinkedList<>());
+	public static final Multimap<String, Playback.Root> playbacksByOwner = HashMultimap.create();
+	public static final Collection<Playback.Root> playbacks = playbacksByOwner.values();
 	private static long tickCounter = 0;
 	private static double timer = 0.0;
 	private static double previousPlaybackSpeed = 0.0;
@@ -28,17 +31,16 @@ public class Playing
 	public static boolean start(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
 		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers, defaultModifiers); }
-
 		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getNextId());
 		if (playback == null) { return false; }
-		playbacks.add(playback);
-		commandInfo.sendSuccess(defaultModifiers ? "playback.start.success" : "playback.start.success.modifiers");
+		addPlayback(playback);
+		sendStartMessage(commandInfo, defaultModifiers);
 		return true;
 	}
 
 	private static boolean startCurrentlyRecorded(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
-		List<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
+		Collection<RecordingContext> contexts = Recording.resolveContexts(commandInfo, name);
 		if (contexts == null) { return false; }
 
 		int successes = 0;
@@ -46,13 +48,27 @@ public class Playing
 		{
 			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, modifiers, getNextId());
 			if (playback == null) { continue; }
-			playbacks.add(playback);
+			addPlayback(playback);
 			successes++;
 		}
 
 		if (successes == 0) { return false; }
-		commandInfo.sendSuccess(defaultModifiers ? "playback.start.success" : "playback.start.success.modifiers");
+		sendStartMessage(commandInfo, defaultModifiers);
 		return true;
+	}
+
+	private static void sendStartMessage(CommandInfo commandInfo, boolean defaultModifiers)
+	{
+		String key = "playback.start.success";
+		if (!defaultModifiers) { key += ".modifiers"; }
+
+		if (commandInfo.sourcePlayer != null)
+		{
+			CommandsContext commandsContext = CommandsContext.get(commandInfo.sourcePlayer);
+			if (commandsContext.getSync()) { key += ".sync"; }
+		}
+
+		commandInfo.sendSuccess(key);
 	}
 
 	public static void stop(CommandOutput commandOutput, int id)
@@ -70,9 +86,11 @@ public class Playing
 		commandOutput.sendFailureWithTip("playback.stop.unable_to_find_scene");
 	}
 
-	public static boolean stopAll(CommandOutput commandOutput)
+	public static boolean stopAll(CommandOutput commandOutput, @Nullable ServerPlayer player)
 	{
-		playbacks.forEach((p) -> p.instance.stop());
+		if (player == null) { playbacks.forEach((p) -> p.instance.stop()); }
+		else { playbacksByOwner.get(player.getName().getString()).forEach((p) -> p.instance.stop()); }
+
 		commandOutput.sendSuccess("playback.stop_all.success");
 		return true;
 	}
@@ -189,7 +207,7 @@ public class Playing
 
 		while ((long)timer == tickCounter)
 		{
-			ArrayList<Playback.Root> toRemove = new ArrayList<>();
+			List<Playback.Root> toRemove = new ArrayList<>();
 
 			for (Playback.Root playback : playbacks)
 			{
@@ -197,12 +215,27 @@ public class Playing
 				else { playback.instance.tick(); }
 			}
 
-			playbacks.removeAll(toRemove);
+			removePlaybacks(toRemove);
 			if (playbacks.isEmpty()) { break; }
 
 			timer += 1.0 / Settings.PLAYBACK_SPEED.val;
 		}
 		tickCounter++;
+	}
+
+	private static void addPlayback(Playback.Root playback)
+	{
+		ServerPlayer owner = playback.instance.owner;
+		playbacksByOwner.put(owner != null ? owner.getName().getString() : "", playback);
+	}
+
+	private static void removePlaybacks(Collection<Playback.Root> toRemove)
+	{
+		for (Playback.Root playback : toRemove)
+		{
+			ServerPlayer owner = playback.instance.owner;
+			playbacksByOwner.remove(owner != null ? owner.getName().getString() : null, playback);
+		}
 	}
 
 	private static int getNextId()

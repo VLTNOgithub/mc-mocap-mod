@@ -4,6 +4,7 @@ import com.mt1006.mocap.MocapMod;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 public class RecordingId
@@ -56,7 +57,7 @@ public class RecordingId
 		this.str = String.format("-%s.%s.%s", getNotNullPart(source), getNotNullPart(recorded), getNotNullPart(name));
 	}
 
-	public RecordingId(List<RecordingContext> contexts, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
+	public RecordingId(Collection<RecordingContext> contexts, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
 	{
 		String source = getSourceName(sourcePlayer);
 		String recorded = recordedPlayer.getName().getString();

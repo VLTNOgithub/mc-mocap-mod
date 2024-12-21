@@ -14,8 +14,9 @@
 -Replaced command "/mocap recording state" with "/mocap recording list".
 -Replaced settings "trackVehicleEntities", "trackItemEntities" and "trackOtherEntities" with "track_entities".
 -Replaced settings "playVehicleEntities", "playItemEntities" and "playOtherEntities" with "play_entities".
--Replaced setting "trackPlayedEntities" with "prevent_tracking_played_entities" (true by default) which better represents what it's actually doing.
--Renamed settings: "playing_speed" to "playback_speed", "recording_sync" to "recording_synchronization", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
+-Replaced "trackPlayedEntities" setting with "prevent_tracking_played_entities" (true by default) which better represents what it's actually doing.
+-Replaced "recording_sync" setting with "/mocap misc sync" command.
+-Renamed settings: "playing_speed" to "playback_speed", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
 -Renamed "from_..." to "skin_from_..." simple modifiers in "playback start" and "scene add_to" commands.
 -It's now possible to add player_as_entity modifier using simple modifiers (thanks to Narfu for suggestion).

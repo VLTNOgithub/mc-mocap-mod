@@ -9,6 +9,7 @@ import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.Files;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
+import com.mt1006.mocap.mocap.playing.Playing;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -16,10 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Recording
 {
@@ -39,8 +37,8 @@ public class Recording
 
 	private static final QuickDiscard quickDiscard = QuickDiscard.SAFE;
 
-	private static final List<RecordingContext> contexts = new ArrayList<>();
 	private static final Multimap<String, RecordingContext> contextsBySource = HashMultimap.create();
+	private static final Collection<RecordingContext> contexts = contextsBySource.values();
 
 	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer)
 	{
@@ -122,9 +120,12 @@ public class Recording
 		ResolvedContexts resolvedContexts = ResolvedContexts.resolve(commandInfo, id, false);
 		if (resolvedContexts == null) { return false; }
 
-		return resolvedContexts.isSingle
-				? stopSingle(commandInfo, resolvedContexts.list.get(0))
+		boolean success = resolvedContexts.isSingle
+				? stopSingle(commandInfo, resolvedContexts.list.iterator().next())
 				: stopMultiple(commandInfo, resolvedContexts.list);
+
+		if (CommandsContext.haveSyncEnabled != 0) { refreshSyncOnStop(resolvedContexts); }
+		return success;
 	}
 
 	private static boolean stopSingle(CommandOutput commandOutput, RecordingContext ctx)
@@ -160,7 +161,7 @@ public class Recording
 		}
 	}
 
-	private static boolean stopMultiple(CommandOutput commandOutput, List<RecordingContext> contexts)
+	private static boolean stopMultiple(CommandOutput commandOutput, Collection<RecordingContext> contexts)
 	{
 		int stopped = 0, cancelled = 0, stillWaiting = 0, unknownState = 0;
 
@@ -202,6 +203,30 @@ public class Recording
 		return true;
 	}
 
+	private static void refreshSyncOnStop(ResolvedContexts resolvedContexts)
+	{
+		Set<ServerPlayer> players = new HashSet<>();
+		for (RecordingContext ctx : resolvedContexts.list)
+		{
+			if (ctx.sourcePlayer != null) { players.add(ctx.sourcePlayer); }
+		}
+
+		for (ServerPlayer player : players)
+		{
+			boolean stillRecording = false;
+			for (RecordingContext ctx : getContextsBySource(player))
+			{
+				if (ctx.state == RecordingContext.State.RECORDING)
+				{
+					stillRecording = true;
+					break;
+				}
+			}
+
+			if (!stillRecording) { Playing.stopAll(CommandOutput.DUMMY, player); }
+		}
+	}
+
 	public static boolean discard(CommandInfo commandInfo, @Nullable String id)
 	{
 		ResolvedContexts resolvedContexts = ResolvedContexts.resolve(commandInfo, id, false);
@@ -209,7 +234,7 @@ public class Recording
 
 		if (resolvedContexts.isSingle)
 		{
-			RecordingContext ctx = resolvedContexts.list.get(0);
+			RecordingContext ctx = resolvedContexts.list.iterator().next();
 			boolean success = discardSingle(commandInfo, ctx);
 
 			if (success && ctx.state == RecordingContext.State.DISCARDED && quickDiscard.allowsSingle(ctx))
@@ -250,7 +275,7 @@ public class Recording
 		}
 	}
 
-	private static boolean discardMultiple(CommandOutput commandOutput, List<RecordingContext> contexts)
+	private static boolean discardMultiple(CommandOutput commandOutput, Collection<RecordingContext> contexts)
 	{
 		int discarded = 0, cancelled = 0, stillRecording = 0, unknownState = 0;
 
@@ -298,7 +323,7 @@ public class Recording
 		if (resolvedContexts == null) { return false; }
 
 		return resolvedContexts.isSingle
-				? saveSingle(commandInfo, resolvedContexts.list.get(0), name)
+				? saveSingle(commandInfo, resolvedContexts.list.iterator().next(), name)
 				: saveMultiple(commandInfo, resolvedContexts.list, name);
 	}
 
@@ -343,7 +368,7 @@ public class Recording
 		}
 	}
 
-	private static boolean saveMultiple(CommandOutput commandOutput, List<RecordingContext> contexts, String namePrefix)
+	private static boolean saveMultiple(CommandOutput commandOutput, Collection<RecordingContext> contexts, String namePrefix)
 	{
 		List<RecordingContext> stopped = new ArrayList<>();
 		for (RecordingContext ctx : contexts)
@@ -395,7 +420,7 @@ public class Recording
 
 		if (resolvedContexts.isSingle)
 		{
-			RecordingContext ctx = resolvedContexts.list.get(0);
+			RecordingContext ctx = resolvedContexts.list.iterator().next();
 			commandInfo.sendSuccess("recording.list.state", resolvedContexts.fullId.str, ctx.state.name());
 			return true;
 		}
@@ -463,9 +488,7 @@ public class Recording
 
 	public static List<RecordingContext> fromRecordedPlayer(int id)
 	{
-		if (contexts.size() == 1) { return (contexts.get(0).recordedPlayer.getId() == id) ? List.of(contexts.get(0)) : List.of(); }
-
-		List<RecordingContext> list = new ArrayList<>();
+		List<RecordingContext> list = new ArrayList<>(1);
 		for (RecordingContext ctx : contexts)
 		{
 			if (ctx.recordedPlayer.getId() == id) { list.add(ctx); }
@@ -476,9 +499,8 @@ public class Recording
 	public static List<RecordingContext> fromRecordedPlayer(Entity entity)
 	{
 		if (!(entity instanceof Player)) { return List.of(); }
-		if (contexts.size() == 1) { return (contexts.get(0).recordedPlayer == entity) ? List.of(contexts.get(0)) : List.of(); }
 
-		List<RecordingContext> list = new ArrayList<>();
+		List<RecordingContext> list = new ArrayList<>(1);
 		for (RecordingContext ctx : contexts)
 		{
 			if (ctx.recordedPlayer == entity) { list.add(ctx); }
@@ -486,12 +508,12 @@ public class Recording
 		return list;
 	}
 
-	public static List<RecordingContext> getContexts()
+	public static Collection<RecordingContext> getContexts()
 	{
 		return contexts;
 	}
 
-	public static @Nullable List<RecordingContext> resolveContexts(CommandInfo commandInfo, String id)
+	public static @Nullable Collection<RecordingContext> resolveContexts(CommandInfo commandInfo, String id)
 	{
 		ResolvedContexts resolvedContexts = ResolvedContexts.resolve(commandInfo, id, false);
 		return resolvedContexts != null ? resolvedContexts.list : null;
@@ -499,13 +521,7 @@ public class Recording
 
 	public static List<EntityTracker.TrackedEntity> listTrackedEntities(Entity entity)
 	{
-		if (contexts.size() == 1)
-		{
-			EntityTracker.TrackedEntity trackedEntity = contexts.get(0).getTrackedEntity(entity);
-			return trackedEntity != null ? List.of(trackedEntity) : List.of();
-		}
-
-		List<EntityTracker.TrackedEntity> list = new ArrayList<>();
+		List<EntityTracker.TrackedEntity> list = new ArrayList<>(1);
 		for (RecordingContext ctx : contexts)
 		{
 			EntityTracker.TrackedEntity trackedEntity = ctx.getTrackedEntity(entity);
@@ -520,27 +536,29 @@ public class Recording
 		if (!id.isProper()) { return false; }
 
 		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
-		contexts.add(ctx);
-		if (sourcePlayer != null) { contextsBySource.put(sourcePlayer.getName().getString(), ctx); }
+		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
 
 		InputArgument.addServerInput(id.str);
 		return true;
 	}
 
+	public static Collection<RecordingContext> getContextsBySource(ServerPlayer player)
+	{
+		return contextsBySource.get(player.getName().getString());
+	}
+
 	public static void removeContext(RecordingContext ctx)
 	{
-		contexts.remove(ctx);
-		if (ctx.sourcePlayer != null) { contextsBySource.remove(ctx.sourcePlayer.getName().getString(), ctx); }
+		contextsBySource.remove(ctx.sourcePlayer != null ? ctx.sourcePlayer.getName().getString() : "", ctx);
 		InputArgument.removeServerInput(ctx.id.str);
 	}
 
 	public static void onServerStop()
 	{
-		contexts.clear();
 		contextsBySource.clear();
 	}
 
-	private record ResolvedContexts(List<RecordingContext> list, boolean isSingle, RecordingId fullId)
+	private record ResolvedContexts(Collection<RecordingContext> list, boolean isSingle, RecordingId fullId)
 	{
 		public static @Nullable ResolvedContexts resolve(CommandInfo commandInfo, @Nullable String idStr, boolean listMode)
 		{
@@ -599,7 +617,7 @@ public class Recording
 				return null;
 			}
 
-			Collection<RecordingContext> sourceContexts = contextsBySource.get(source.getName().getString());
+			Collection<RecordingContext> sourceContexts = getContextsBySource(source);
 
 			if (sourceContexts.size() > 1)
 			{

@@ -1,5 +1,6 @@
 package com.mt1006.mocap.mocap.playing.playback;
 
+import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.SceneData;
@@ -7,7 +8,6 @@ import com.mt1006.mocap.mocap.playing.DataManager;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.recording.Recording;
 import com.mt1006.mocap.mocap.recording.RecordingContext;
-import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
@@ -18,9 +18,8 @@ public abstract class Playback
 
 	protected final boolean root;
 	protected final ServerLevel level;
-	protected final @Nullable ServerPlayer owner;
+	public final @Nullable ServerPlayer owner;
 	protected boolean finished = false;
-
 	protected final PlaybackModifiers modifiers;
 	protected int tickCounter = 0; //TODO: StartContext?
 
@@ -90,11 +89,13 @@ public abstract class Playback
 
 		if (modifiers.startDelay.ticks <= tickCounter)
 		{
-			if (!Settings.RECORDING_SYNCHRONIZATION.val) { return true; }
+			if (CommandsContext.haveSyncEnabled == 0 || owner == null) { return true; }
 
-			for (RecordingContext ctx : Recording.getContexts())
+			CommandsContext commandsContext = CommandsContext.get(owner);
+			if (!commandsContext.getSync()) { return true; }
+
+			for (RecordingContext ctx : Recording.getContextsBySource(owner))
 			{
-				//TODO: add player-specific check
 				if (ctx.state == RecordingContext.State.RECORDING) { return true; }
 			}
 		}

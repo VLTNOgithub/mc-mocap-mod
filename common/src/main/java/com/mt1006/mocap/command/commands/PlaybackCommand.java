@@ -23,7 +23,7 @@ public class PlaybackCommand
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
-		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(Playing::stopAll)));
+		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command((info) -> Playing.stopAll(info, null)))); //TODO: todo
 		commandBuilder.then(Commands.literal("modifiers").
 			then(CommandUtils.withModifiers(buildContext, Commands.literal("set"), CommandUtils.command(Playing::modifiersSet), false)).
 			then(Commands.literal("list").executes(CommandUtils.command(Playing::modifiersList))).
