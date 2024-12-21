@@ -16,4 +16,9 @@ public class StartDelay
 	{
 		return seconds != 0.0 ? new StartDelay(seconds) : ZERO;
 	}
+
+	public StartDelay add(StartDelay delay)
+	{
+		return fromSeconds(seconds + delay.seconds);
+	}
 }

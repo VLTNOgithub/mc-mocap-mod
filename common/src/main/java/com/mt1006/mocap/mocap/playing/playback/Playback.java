@@ -60,7 +60,7 @@ public abstract class Playback
 	}
 
 	protected Playback(boolean root, ServerLevel level, @Nullable ServerPlayer owner,
-					   PlaybackModifiers modifiers, @Nullable SceneData.Subscene subscene)
+					   PlaybackModifiers parentModifiers, @Nullable SceneData.Subscene subscene)
 	{
 		this.root = root;
 		this.level = level;
@@ -69,12 +69,12 @@ public abstract class Playback
 		if (root)
 		{
 			if (subscene != null) { throw new RuntimeException(); }
-			this.modifiers = modifiers;
+			this.modifiers = parentModifiers;
 		}
 		else
 		{
 			if (subscene == null) { throw new RuntimeException(); }
-			this.modifiers = subscene.modifiers.mergeWithParent(modifiers);
+			this.modifiers = subscene.modifiers.mergeWithParent(parentModifiers);
 		}
 	}
 

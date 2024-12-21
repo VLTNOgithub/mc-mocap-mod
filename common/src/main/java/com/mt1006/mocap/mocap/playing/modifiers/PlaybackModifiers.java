@@ -62,7 +62,8 @@ public class PlaybackModifiers
 				playerName != null ? playerName : parent.playerName,
 				playerSkin.mergeWithParent(parent.playerSkin),
 				playerAsEntity.isEnabled() ? playerAsEntity : parent.playerAsEntity,
-				parent.offset.shift(offset),
+				offset.shift(parent.offset),
+				//startDelay.add(parent.startDelay), //TODO: fix how delaying start works?
 				startDelay,
 				entityFilter);
 	}

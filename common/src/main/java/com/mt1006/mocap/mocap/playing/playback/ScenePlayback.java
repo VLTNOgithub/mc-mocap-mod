@@ -27,9 +27,9 @@ public class ScenePlayback extends Playback
 	}
 
 	private ScenePlayback(CommandInfo commandInfo, DataManager dataManager, String name,
-						  PlaybackModifiers modifiers, @Nullable SceneData.Subscene info) throws StartException
+						  PlaybackModifiers parentModifiers, @Nullable SceneData.Subscene info) throws StartException
 	{
-		super(info == null, commandInfo.level, commandInfo.sourcePlayer, modifiers, info);
+		super(info == null, commandInfo.level, commandInfo.sourcePlayer, parentModifiers, info);
 
 		SceneData sceneData = dataManager.getScene(name);
 		if (sceneData == null) { return; }

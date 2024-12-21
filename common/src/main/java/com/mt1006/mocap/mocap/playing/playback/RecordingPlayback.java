@@ -45,9 +45,9 @@ public class RecordingPlayback extends Playback
 	}
 
 	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording,
-							  PlaybackModifiers modifiers, @Nullable SceneData.Subscene subscene) throws StartException
+							  PlaybackModifiers parentModifiers, @Nullable SceneData.Subscene subscene) throws StartException
 	{
-		super(subscene == null, commandInfo.level, commandInfo.sourcePlayer, modifiers, subscene);
+		super(subscene == null, commandInfo.level, commandInfo.sourcePlayer, parentModifiers, subscene);
 
 		if (recording == null) { throw new StartException(); } //TODO: test if gives error message (especially as subscene)
 		this.recording = recording;
