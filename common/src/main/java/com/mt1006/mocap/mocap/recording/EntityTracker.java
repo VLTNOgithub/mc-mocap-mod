@@ -33,23 +33,16 @@ public class EntityTracker
 
 	public void onTick()
 	{
-		updateTracked();
-		updateVehicle();
+		if (Settings.ENTITY_TRACKING_DISTANCE.val != 0.0)
+		{
+			updateTracked();
+			updateVehicle();
+		}
 		removeOld();
 	}
 
 	private void updateTracked()
 	{
-		if (Settings.ENTITY_TRACKING_DISTANCE.val == 0.0)
-		{
-			if (!map.isEmpty())
-			{
-				map.forEach((uuid, trackedEntity) -> ctx.addAction(EntityUpdate.removeEntity(trackedEntity.id)));
-				map.clear();
-			}
-			return;
-		}
-
 		double entityTrackingDist = Settings.ENTITY_TRACKING_DISTANCE.val;
 		boolean limitDistance = entityTrackingDist >= 0.0;
 		double maxDistanceSqr = entityTrackingDist * entityTrackingDist;
@@ -63,13 +56,10 @@ public class EntityTracker
 			}
 
 			if (!ctx.entityFilter.isAllowed(entity)) { continue; }
-			//if (Settings.DYNAMIC_ENTITY_FILTERS.get())
 
 			TrackedEntity trackedEntity = map.get(entity);
 			if (trackedEntity == null)
 			{
-				//if (!ctx.entityFilter.isAllowed(entity)) { continue; }
-
 				trackedEntity = new TrackedEntity(ctx, counter++, entity);
 				map.put(entity, trackedEntity);
 				ctx.addAction(EntityUpdate.addEntity(trackedEntity.id, entity));
