@@ -39,6 +39,7 @@
 -Fixed vehicles not appearing in the playback after disabling "playItemEntities", "playOtherEntities" and "playBlockActions", despite "playVehicleEntities" being enabled.
 -Fixed directories with a proper name showing up on a list of recordings or scenes.
 -Fixed server crashing when trying to start playback with player name longer than 16 characters (thanks to SPY for reporting).
+-Fixed fake players with empty name having tiny gray bar above head.
 -Minor spelling improvements.
 -Minor improvements to error detection.
 
