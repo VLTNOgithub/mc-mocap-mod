@@ -159,7 +159,12 @@
   "mocap.playback.stop.unable_to_find_scene.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
   "mocap.playback.stop.success": "Playback stopped",
 
-  "mocap.playback.stop_all.success": "Playback of all scenes stopped",
+  "mocap.playback.stop_all.own.all": "All playbacks stopped",
+  "mocap.playback.stop_all.own.not_all": "All of your playbacks have been stopped, but there are still other playbacks",
+  "mocap.playback.stop_all.own.empty": "You don't have any playbacks to stop, but there are other playbacks",
+  "mocap.playback.stop_all.own.tip": "Use \"/mocap playback stop_add true\" to stop them",
+  "mocap.playback.stop_all.all": "All playbacks on server stopped",
+  "mocap.playback.stop_all.empty": "There are no playbacks to stop",
 
   "mocap.playback.modifiers.set": "Playback modifier successfully changed",
   "mocap.playback.modifiers.list": "§l[PLAYBACK MODIFIERS]§r",
@@ -257,6 +262,7 @@
   "mocap.warning.experimental.stable_download": "§ndownload a stable release§r!\n",
   "mocap.warning.experimental.disable_message": "§n[Disable this message]",
 
+  "mocap.error.generic": "§lError:§r something went wrong!",
   "mocap.error.playback_error": "§lError:§r something went wrong during playback!",
   "mocap.error.failed_to_remove_fake_player": "§lError:§r failed to remove fake player!",
   "mocap.error.failed_to_init_directories": "§lError:§r failed to initialize directories!",

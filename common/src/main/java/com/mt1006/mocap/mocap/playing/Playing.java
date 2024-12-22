@@ -86,13 +86,33 @@ public class Playing
 		commandOutput.sendFailureWithTip("playback.stop.unable_to_find_scene");
 	}
 
-	public static boolean stopAll(CommandOutput commandOutput, @Nullable ServerPlayer player)
+	public static void stopAll(CommandOutput commandOutput, @Nullable ServerPlayer player)
 	{
-		if (player == null) { playbacks.forEach((p) -> p.instance.stop()); }
-		else { playbacksByOwner.get(player.getName().getString()).forEach((p) -> p.instance.stop()); }
+		if (player == null)
+		{
+			playbacks.forEach((p) -> p.instance.stop());
+			commandOutput.sendSuccess(playbacks.isEmpty() ? "playback.stop_all.empty": "playback.stop_all.all");
+		}
+		else
+		{
+			Collection<Playback.Root> playerPlaybacks = playbacksByOwner.get(player.getName().getString());
+			playerPlaybacks.forEach((p) -> p.instance.stop());
 
-		commandOutput.sendSuccess("playback.stop_all.success");
-		return true;
+			if (playerPlaybacks.isEmpty())
+			{
+				commandOutput.sendSuccess(playbacks.isEmpty()
+						? "playback.stop_all.empty"
+						: "playback.stop_all.own.empty");
+			}
+			else
+			{
+				commandOutput.sendSuccess(playerPlaybacks.size() == playbacks.size()
+						? "playback.stop_all.own.all"
+						: "playback.stop_all.own.not_all");
+			}
+
+			if (playerPlaybacks.size() != playbacks.size()) { commandOutput.sendSuccess("playback.stop_all.own.tip"); }
+		}
 	}
 
 	public static boolean modifiersSet(CommandInfo rootCommandInfo)
@@ -124,8 +144,7 @@ public class Playing
 			boolean success = ctx.modifiers.modify(commandInfo, propertyName, 4);
 			if (!success)
 			{
-				//TODO: replace with "something went wrong" (alpha-3)
-				rootCommandInfo.sendFailure("error.unable_to_get_argument");
+				rootCommandInfo.sendFailure("error.generic");
 				return false;
 			}
 

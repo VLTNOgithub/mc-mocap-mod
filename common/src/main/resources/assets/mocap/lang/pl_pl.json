@@ -159,7 +159,12 @@
   "mocap.playback.stop.unable_to_find_scene.tip": "Użyj \"/mocap playback list\" aby uzyskać listę wszystkich obecnie odtwarzanych scen",
   "mocap.playback.stop.success": "Odtwarzanie zatrzymane",
 
-  "mocap.playback.stop_all.success": "Odtwarzanie wszystkich scen zatrzymane",
+  "mocap.playback.stop_all.own.all": "Wszystkie odtwarzania zatrzymane",
+  "mocap.playback.stop_all.own.not_all": "Wszytkie twoje odtwarzania zostały zatrzymane, ale wciąż są inne odtwarzania",
+  "mocap.playback.stop_all.own.empty": "Nie masz żadnych odtwarzań do zatrzymania, ale wciąż są inne odtwarzania",
+  "mocap.playback.stop_all.own.tip": "Użyj \"/mocap playback stop_add true\" aby je zatrzymanć",
+  "mocap.playback.stop_all.all": "Wszystkie odtwarzania na serwerze zatrzymane",
+  "mocap.playback.stop_all.empty": "Nie ma odtwarzań do zatrzymania",
 
   "mocap.playback.modifiers.set": "Modyfikator odtwarzania pomyślnie zmieniony",
   "mocap.playback.modifiers.list": "§l[MODYFIKATORY ODTWARZANIA]§r",
@@ -257,6 +262,7 @@
   "mocap.warning.experimental.stable_download": "§npobierz stabilne wydanie§r!\n",
   "mocap.warning.experimental.disable_message": "§n[Wyłącz tę wiadomość]",
 
+  "mocap.error.generic": "§lError:§r coś poszło nie tak!",
   "mocap.error.playback_error": "§lBłąd:§r coś poszło nie tak w trakcie odtwarzania!",
   "mocap.error.failed_to_remove_fake_player": "§lBłąd:§r nie udało się usunąć odtwarzanego gracza!",
   "mocap.error.failed_to_init_directories": "§lBłąd:§r nie udało się zainicjalizować folderów!",
