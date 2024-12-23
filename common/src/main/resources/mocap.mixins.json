@@ -16,8 +16,7 @@
 		"fields.LevelMixin",
 		"fields.LivingEntityMixin",
 		"fields.PigMixin",
-		"fields.PlayerMixin",
-		"TestMixin"
+		"fields.PlayerMixin"
 	],
 	"client":
 	[

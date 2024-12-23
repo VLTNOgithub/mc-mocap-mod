@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class MocapMod
 {
-	//TODO: add support for empty player names
 	public static final String MOD_ID = "mocap";
 	public static final String FOR_VERSION = "1.21.1";
 	public static final boolean EXPERIMENTAL = true;

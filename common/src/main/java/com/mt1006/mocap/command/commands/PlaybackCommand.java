@@ -24,7 +24,7 @@ public class PlaybackCommand
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
-		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(PlaybackCommand::stopAll)). //TODO: better stop_all messages
+		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(PlaybackCommand::stopAll)).
 				then(Commands.argument("for_all_players", BoolArgumentType.bool()).executes(CommandUtils.command(PlaybackCommand::stopAll))));
 		commandBuilder.then(Commands.literal("modifiers").
 			then(CommandUtils.withModifiers(buildContext, Commands.literal("set"), CommandUtils.command(Playing::modifiersSet), false)).

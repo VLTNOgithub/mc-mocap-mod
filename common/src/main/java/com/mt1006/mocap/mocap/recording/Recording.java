@@ -21,6 +21,7 @@ import java.util.*;
 
 public class Recording
 {
+	//TODO: add second "recording stop" required after stopped by death
 	//TODO: temporary enum and variable, move it to config
 	private enum QuickDiscard
 	{
@@ -114,9 +115,6 @@ public class Recording
 
 	public static boolean stop(CommandInfo commandInfo, @Nullable String id)
 	{
-		//TODO: add playback stopping for recordingSync (make it stop recordings started by player) - add more config for sync
-		//if (Settings.RECORDING_SYNC.val) { Playing.stopAll(commandInfo); }
-
 		ResolvedContexts resolvedContexts = ResolvedContexts.resolve(commandInfo, id, false);
 		if (resolvedContexts == null) { return false; }
 

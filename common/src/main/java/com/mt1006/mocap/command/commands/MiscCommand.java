@@ -13,6 +13,7 @@ public class MiscCommand
 	{
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("misc");
 
+		//TODO: add "stop_playbacks" sync argument
 		commandBuilder.then(Commands.literal("sync").
 			then(Commands.literal("enable").executes(CommandUtils.command(MiscCommand::syncEnable))).
 			then(Commands.literal("disable").executes(CommandUtils.command(MiscCommand::syncDisable))));
