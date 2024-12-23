@@ -11,6 +11,7 @@ import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
+import com.mt1006.mocap.mocap.playing.modifiers.StartDelay;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -55,10 +56,19 @@ public class ScenesCommand
 		{
 			String name = commandInfo.getString("scene_name");
 			String toAdd = commandInfo.getString("to_add");
-			PlaybackModifiers simpleModifiers = commandInfo.getSimpleModifiers(commandInfo);
-			if (simpleModifiers == null) { return false; }
 
-			SceneData.Subscene subscene = new SceneData.Subscene(toAdd, simpleModifiers);
+			double delay = 0;
+			try
+			{
+				delay = commandInfo.getDouble("start_delay");
+			}
+			catch (IllegalArgumentException ignore) {}
+
+			PlaybackModifiers modifiers = commandInfo.getSimpleModifiers(commandInfo);
+			if (modifiers == null) { return false; }
+			modifiers.startDelay = StartDelay.fromSeconds(delay);
+
+			SceneData.Subscene subscene = new SceneData.Subscene(toAdd, modifiers);
 			return SceneFiles.addElement(commandInfo, name, subscene);
 		}
 		catch (IllegalArgumentException e)
