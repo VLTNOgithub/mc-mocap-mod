@@ -48,6 +48,8 @@ public class PlaybackModifiers
 
 		JsonElement playerAsEntityElement = json.get("player_as_entity");
 		playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
+
+		entityFilter = EntityFilter.FOR_PLAYBACK;
 	}
 
 	public static PlaybackModifiers empty()
