@@ -2,6 +2,7 @@ package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.utils.Utils;
@@ -16,10 +17,10 @@ public class RecordingsCommand
 	{
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("recordings");
 
-		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withTwoStringArguments(RecordingFiles::copy, "src_name", "dest_name")));
-		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withTwoStringArguments(RecordingFiles::rename, "old_name", "new_name")));
-		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withStringArgument(RecordingFiles::remove, "name")));
-		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(RecordingFiles::info, "name")));
+		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(RecordingFiles::copy, InputArgument::recordingArgument, "src_name", "dest_name")));
+		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(RecordingFiles::rename, InputArgument::recordingArgument, "old_name", "new_name")));
+		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(RecordingFiles::remove, InputArgument::recordingArgument, "name")));
+		commandBuilder.then(Commands.literal("info").then(CommandUtils.withInputArgument(RecordingFiles::info, InputArgument::recordingArgument, "name")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(RecordingsCommand::list)));
 
 		return commandBuilder;

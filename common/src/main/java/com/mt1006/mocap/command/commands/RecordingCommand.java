@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.recording.Recording;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,7 +25,8 @@ public class RecordingCommand
 			then(Commands.argument("player", GameProfileArgument.gameProfile()).executes(CommandUtils.command(RecordingCommand::start))));
 		//commandBuilder.then(Commands.literal("start_multiple").then(CommandUtils.withStringArgument(Recording::startMultiple, "players")));
 		commandBuilder.then(Commands.literal("stop").executes(CommandUtils.command(RecordingCommand::stop)).
-			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::stop))));
+			then(Commands.argument("id", StringArgumentType.string()).
+				suggests(InputArgument::currentlyRecordedArgument).executes(CommandUtils.command(RecordingCommand::stop))));
 		commandBuilder.then(Commands.literal("discard").executes(CommandUtils.command(RecordingCommand::discard)).
 			then(Commands.argument("id", StringArgumentType.string()).executes(CommandUtils.command(RecordingCommand::discard))));
 		commandBuilder.then(Commands.literal("save").then(CommandUtils.withStringArgument(RecordingCommand::saveAuto, "name").

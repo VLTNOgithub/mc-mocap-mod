@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
+import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.SceneData;
@@ -29,23 +30,23 @@ public class ScenesCommand
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("scenes");
 
 		commandBuilder.then(Commands.literal("add").then(CommandUtils.withStringArgument(SceneFiles::add, "name")));
-		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withTwoStringArguments(SceneFiles::copy, "src_name", "dest_name")));
-		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withTwoStringArguments(SceneFiles::rename, "old_name", "new_name")));
-		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withStringArgument(SceneFiles::remove, "name")));
+		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(SceneFiles::copy, InputArgument::sceneArgument, "src_name", "dest_name")));
+		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(SceneFiles::rename, InputArgument::sceneArgument, "old_name", "new_name")));
+		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(SceneFiles::remove, InputArgument::sceneArgument, "name")));
 		commandBuilder.then(Commands.literal("add_to").
-			then(Commands.argument("scene_name", StringArgumentType.string()).
-			then(Commands.argument("to_add", StringArgumentType.string()).executes(COMMAND_ADD_TO).
+			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(InputArgument::sceneArgument).
+			then(Commands.argument("to_add", StringArgumentType.string()).suggests(InputArgument::playableArgument).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
 			then(CommandUtils.playerArguments(buildContext, COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
-			then(CommandUtils.withStringAndIntArgument(SceneFiles::removeElement, "scene_name", "to_remove")));
+			then(CommandUtils.withInputAndIntArgument(SceneFiles::removeElement, InputArgument::sceneArgument, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
-			then(Commands.argument("scene_name", StringArgumentType.string()).
+			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(InputArgument::sceneArgument).
 			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", IntegerArgumentType.integer()), COMMAND_MODIFY, true))));
 		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name")).
-			then(CommandUtils.withStringAndIntArgument(SceneFiles::elementInfo, "scene_name", "element_pos")));
+			then(CommandUtils.withInputAndIntArgument(SceneFiles::elementInfo, InputArgument::sceneArgument, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
-			then(CommandUtils.withStringArgument(SceneFiles::listElements, "scene_name")));
+			then(CommandUtils.withInputArgument(SceneFiles::listElements, InputArgument::sceneArgument, "scene_name")));
 
 		return commandBuilder;
 	}

@@ -7,8 +7,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.context.CommandContextBuilder;
 import com.mojang.brigadier.context.ParsedCommandNode;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mt1006.mocap.command.io.CommandInfo;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -67,7 +67,9 @@ public class CommandUtils
 
 		if (isScene)
 		{
-			builder.then(Commands.literal("subscene_name").then(Commands.argument("new_name", StringArgumentType.string()).executes(command)));
+			builder.then(Commands.literal("subscene_name")
+					.then(Commands.argument("new_name", StringArgumentType.string())
+							.suggests(InputArgument::playableArgument).executes(command)));
 		}
 		return builder;
 	}
@@ -82,16 +84,25 @@ public class CommandUtils
 		return Commands.argument(arg, StringArgumentType.string()).executes((ctx) -> stringCommand(function, ctx, arg, false));
 	}
 
-	public static RequiredArgumentBuilder<CommandSourceStack, String> withTwoStringArguments(TriFunction<CommandInfo, String, String, Boolean> function, String arg1, String arg2)
+	public static RequiredArgumentBuilder<CommandSourceStack, String> withInputArgument(BiFunction<CommandInfo, String, Boolean> function,SuggestionProvider<CommandSourceStack> suggestions, String arg)
+	{
+		return withStringArgument(function, arg).suggests(suggestions);
+	}
+
+	public static RequiredArgumentBuilder<CommandSourceStack, String> withInputAndStringArgument(TriFunction<CommandInfo, String, String, Boolean> function,
+																								 SuggestionProvider<CommandSourceStack> suggestions, String arg1, String arg2)
 	{
 		return Commands.argument(arg1, StringArgumentType.string())
+				.suggests(suggestions)
 				.then(Commands.argument(arg2, StringArgumentType.string())
 				.executes((ctx) -> twoStringCommand(function, ctx, arg1, arg2)));
 	}
 
-	public static RequiredArgumentBuilder<CommandSourceStack, String> withStringAndIntArgument(TriFunction<CommandInfo, String, Integer, Boolean> function, String arg1, String arg2)
+	public static RequiredArgumentBuilder<CommandSourceStack, String> withInputAndIntArgument(TriFunction<CommandInfo, String, Integer, Boolean> function,
+																							  SuggestionProvider<CommandSourceStack> suggestions, String arg1, String arg2)
 	{
 		return Commands.argument(arg1, StringArgumentType.string())
+				.suggests(suggestions)
 				.then(Commands.argument(arg2, IntegerArgumentType.integer())
 				.executes((ctx) -> stringAndIntCommand(function, ctx, arg1, arg2)));
 	}
@@ -148,23 +159,6 @@ public class CommandUtils
 			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return 0;
 		}
-	}
-
-	public static <T> @Nullable CommandContextBuilder<T> getFinalCommandContext(CommandContextBuilder<T> ctx)
-	{
-		while (true)
-		{
-			String command = getNode(ctx, 0);
-			if (command != null && (command.equals("mocap") || command.equals("mocap:mocap"))) { return ctx; }
-
-			ctx = ctx.getChild();
-			if (ctx == null) { return null; }
-		}
-	}
-
-	public static @Nullable String getNode(CommandContextBuilder<?> ctx, int pos)
-	{
-		return getNode(ctx.getNodes(), pos);
 	}
 
 	public static @Nullable String getNode(List<? extends ParsedCommandNode<?>> nodes, int pos)

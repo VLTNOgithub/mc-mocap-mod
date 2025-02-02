@@ -44,7 +44,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.addServerInput(name);
+		InputArgument.inputSet.add(name);
 		return true;
 	}
 
@@ -63,7 +63,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.addServerInput(destName);
+		InputArgument.inputSet.add(destName);
 		commandOutput.sendSuccess("recordings.copy.success");
 		return true;
 	}
@@ -82,8 +82,8 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.removeServerInput(oldName);
-		InputArgument.addServerInput(newName);
+		InputArgument.inputSet.remove(oldName);
+		InputArgument.inputSet.add(newName);
 		commandOutput.sendSuccess("recordings.rename.success");
 		return true;
 	}
@@ -99,7 +99,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.removeServerInput(name);
+		InputArgument.inputSet.remove(name);
 		commandOutput.sendSuccess("recordings.remove.success");
 		return true;
 	}
@@ -172,7 +172,7 @@ public class RecordingFiles
 		for (int i = suffix + 1; i <= suffix + ALT_NAME_MAX_I ; i++)
 		{
 			String possibleName = String.format("%s%d", prefix, i);
-			if (!InputArgument.serverInputSet.contains(possibleName)) { return possibleName; }
+			if (!InputArgument.inputSet.contains(possibleName)) { return possibleName; }
 		}
 		return null;
 	}

@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.CommandsContext;
+import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.playing.Playing;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
@@ -20,19 +21,21 @@ public class PlaybackCommand
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("playback");
 
 		commandBuilder.then(Commands.literal("start").
-			then(Commands.argument("name", StringArgumentType.string()).executes(CommandUtils.command(PlaybackCommand::start)).
+			then(Commands.argument("name", StringArgumentType.string()).
+				suggests(InputArgument::playableArgument).executes(CommandUtils.command(PlaybackCommand::start)).
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
 		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(PlaybackCommand::stopAll)).
-				then(Commands.argument("for_all_players", BoolArgumentType.bool()).executes(CommandUtils.command(PlaybackCommand::stopAll))));
+			then(Commands.argument("for_all_players", BoolArgumentType.bool()).executes(CommandUtils.command(PlaybackCommand::stopAll))));
 		commandBuilder.then(Commands.literal("modifiers").
 			then(CommandUtils.withModifiers(buildContext, Commands.literal("set"), CommandUtils.command(Playing::modifiersSet), false)).
 			then(Commands.literal("list").executes(CommandUtils.command(Playing::modifiersList))).
 			then(Commands.literal("reset").executes(CommandUtils.command(Playing::modifiersReset))).
 			then(Commands.literal("add_to").
-				then(Commands.argument("scene_name", StringArgumentType.string()).
-				then(Commands.argument("to_add", StringArgumentType.string()).executes(CommandUtils.command(PlaybackCommand::modifiersAddTo))))));
+				then(Commands.argument("scene_name", StringArgumentType.string()).suggests(InputArgument::sceneArgument).
+				then(Commands.argument("to_add", StringArgumentType.string()).suggests(InputArgument::playableArgument).
+					executes(CommandUtils.command(PlaybackCommand::modifiersAddTo))))));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(Playing::list)));
 
 		return commandBuilder;

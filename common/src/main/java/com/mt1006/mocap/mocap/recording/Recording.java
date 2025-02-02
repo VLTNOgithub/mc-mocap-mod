@@ -536,7 +536,7 @@ public class Recording
 		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
 		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
 
-		InputArgument.addServerInput(id.str);
+		InputArgument.inputSet.add(id.str);
 		return true;
 	}
 
@@ -548,7 +548,7 @@ public class Recording
 	public static void removeContext(RecordingContext ctx)
 	{
 		contextsBySource.remove(ctx.sourcePlayer != null ? ctx.sourcePlayer.getName().getString() : "", ctx);
-		InputArgument.removeServerInput(ctx.id.str);
+		InputArgument.inputSet.remove(ctx.id.str);
 	}
 
 	public static void onServerStop()

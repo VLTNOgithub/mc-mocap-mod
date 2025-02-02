@@ -29,7 +29,7 @@ public class SceneFiles
 
 		SceneData sceneData = SceneData.empty();
 		boolean success = sceneData.save(commandOutput, file, "scenes.add.success", "scenes.add.error");
-		if (success) { InputArgument.addServerInput(nameWithDot(name)); }
+		if (success) { InputArgument.inputSet.add(nameWithDot(name)); }
 		return success;
 	}
 
@@ -48,7 +48,7 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.addServerInput(nameWithDot(destName));
+		InputArgument.inputSet.add(nameWithDot(destName));
 		commandOutput.sendSuccess("scenes.copy.success");
 		return true;
 	}
@@ -67,8 +67,8 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.removeServerInput(nameWithDot(oldName));
-		InputArgument.addServerInput(nameWithDot(newName));
+		InputArgument.inputSet.remove(nameWithDot(oldName));
+		InputArgument.inputSet.add(nameWithDot(newName));
 		commandOutput.sendSuccess("scenes.rename.success");
 		return true;
 	}
@@ -84,7 +84,7 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.removeServerInput(nameWithDot(name));
+		InputArgument.inputSet.remove(nameWithDot(name));
 		commandOutput.sendSuccess("scenes.remove.success");
 		return true;
 	}

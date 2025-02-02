@@ -1,7 +1,6 @@
 package com.mt1006.mocap.network;
 
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.events.PlayerConnectionEvent;
 import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import net.minecraft.network.FriendlyByteBuf;
@@ -75,7 +74,6 @@ public class MocapPacketC2S implements CustomPacketPayload
 			case ACCEPT_SERVER:
 				PlayerConnectionEvent.addPlayer(player);
 				PlayerConnectionEvent.experimentalReleaseWarning(player);
-				if (player != null) { MocapPacketS2C.sendInputSuggestionsAddOnLogin(client, InputArgument.serverInputSet); }
 				break;
 
 			case REQUEST_CUSTOM_SKIN:

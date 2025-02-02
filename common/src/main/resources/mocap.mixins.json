@@ -21,7 +21,6 @@
 	"client":
 	[
 		"AbstractClientPlayerMixin",
-		"CommandSuggestionsMixin",
 		"LivingEntityRendererMixin"
 	],
 	"injectors": { "defaultRequire": 1 }

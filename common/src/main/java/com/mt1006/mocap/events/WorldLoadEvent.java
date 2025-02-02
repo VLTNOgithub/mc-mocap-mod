@@ -31,7 +31,6 @@ public class WorldLoadEvent
 
 	public static void onClientWorldUnload()
 	{
-		InputArgument.clientInputSet.clear();
 		PlayerConnectionEvent.players.clear();
 		PlayerConnectionEvent.nocolPlayers.clear();
 		CustomClientSkinManager.clearCache();
