@@ -23,7 +23,7 @@
 -It's now possible to add player_as_entity modifier using simple modifiers (thanks to Narfu for suggestion).
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
 -Scene format is now JSON-based.
--Suggestions for recordings/scenes names no longer require mod to be installed on client.
+-Suggestions for recordings/scenes names no longer require mod to be installed on a client.
 -For scene name suggestions where dot can be omitted, user input without a dot is now properly parsed by suggestion provider.
 -Improvements to recording format.
 -Improvements to recording information command output.

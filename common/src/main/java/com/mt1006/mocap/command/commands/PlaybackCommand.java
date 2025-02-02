@@ -1,6 +1,5 @@
 package com.mt1006.mocap.command.commands;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -26,8 +25,9 @@ public class PlaybackCommand
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
-		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command(PlaybackCommand::stopAll)).
-			then(Commands.argument("for_all_players", BoolArgumentType.bool()).executes(CommandUtils.command(PlaybackCommand::stopAll))));
+		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false))).
+			then(Commands.literal("including_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, true)))).
+			then(Commands.literal("excluding_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false)))));
 		commandBuilder.then(Commands.literal("modifiers").
 			then(CommandUtils.withModifiers(buildContext, Commands.literal("set"), CommandUtils.command(Playing::modifiersSet), false)).
 			then(Commands.literal("list").executes(CommandUtils.command(Playing::modifiersList))).
@@ -81,17 +81,9 @@ public class PlaybackCommand
 		}
 	}
 
-	private static boolean stopAll(CommandInfo commandInfo)
+	private static boolean stopAll(CommandInfo commandInfo, boolean includeOthers)
 	{
-		try
-		{
-			boolean forAllPlayers = commandInfo.getBool("for_all_players");
-			Playing.stopAll(commandInfo, forAllPlayers ? null : commandInfo.sourcePlayer);
-		}
-		catch (IllegalArgumentException e)
-		{
-			Playing.stopAll(commandInfo, commandInfo.sourcePlayer);
-		}
+		Playing.stopAll(commandInfo, includeOthers ? null : commandInfo.sourcePlayer);
 		return true;
 	}
 

@@ -162,7 +162,7 @@
   "mocap.playback.stop_all.own.all": "Wszystkie odtwarzania zatrzymane",
   "mocap.playback.stop_all.own.not_all": "Wszytkie twoje odtwarzania zostały zatrzymane, ale wciąż są inne odtwarzania",
   "mocap.playback.stop_all.own.empty": "Nie masz żadnych odtwarzań do zatrzymania, ale wciąż są inne odtwarzania",
-  "mocap.playback.stop_all.own.tip": "Użyj \"/mocap playback stop_add true\" aby je zatrzymanć",
+  "mocap.playback.stop_all.own.tip": "Użyj \"/mocap playback stop_all including_others\" aby je zatrzymanć",
   "mocap.playback.stop_all.all": "Wszystkie odtwarzania na serwerze zatrzymane",
   "mocap.playback.stop_all.empty": "Nie ma odtwarzań do zatrzymania",
 

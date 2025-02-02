@@ -162,7 +162,7 @@
   "mocap.playback.stop_all.own.all": "All playbacks stopped",
   "mocap.playback.stop_all.own.not_all": "All of your playbacks have been stopped, but there are still other playbacks",
   "mocap.playback.stop_all.own.empty": "You don't have any playbacks to stop, but there are other playbacks",
-  "mocap.playback.stop_all.own.tip": "Use \"/mocap playback stop_add true\" to stop them",
+  "mocap.playback.stop_all.own.tip": "Use \"/mocap playback stop_all including_others\" to stop them",
   "mocap.playback.stop_all.all": "All playbacks on server stopped",
   "mocap.playback.stop_all.empty": "There are no playbacks to stop",
 
