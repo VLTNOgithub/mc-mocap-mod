@@ -1,11 +1,10 @@
 package com.mt1006.mocap.command.commands;
 
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.CommandsContext;
-import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.mocap.playing.Playing;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
@@ -21,10 +20,11 @@ public class PlaybackCommand
 
 		commandBuilder.then(Commands.literal("start").
 			then(Commands.argument("name", StringArgumentType.string()).
-				suggests(InputArgument::playableArgument).executes(CommandUtils.command(PlaybackCommand::start)).
+				suggests(CommandSuggestions::playableArgument).executes(CommandUtils.command(PlaybackCommand::start)).
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
-			then(Commands.argument("id", IntegerArgumentType.integer()).executes(CommandUtils.command(PlaybackCommand::stop))));
+			then(Commands.argument("id", StringArgumentType.string()).
+				suggests(CommandSuggestions::playbackIdSuggestions).executes(CommandUtils.command(PlaybackCommand::stop))));
 		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false))).
 			then(Commands.literal("including_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, true)))).
 			then(Commands.literal("excluding_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false)))));
@@ -33,8 +33,8 @@ public class PlaybackCommand
 			then(Commands.literal("list").executes(CommandUtils.command(Playing::modifiersList))).
 			then(Commands.literal("reset").executes(CommandUtils.command(Playing::modifiersReset))).
 			then(Commands.literal("add_to").
-				then(Commands.argument("scene_name", StringArgumentType.string()).suggests(InputArgument::sceneArgument).
-				then(Commands.argument("to_add", StringArgumentType.string()).suggests(InputArgument::playableArgument).
+				then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
+				then(Commands.argument("to_add", StringArgumentType.string()).suggests(CommandSuggestions::playableArgument).
 					executes(CommandUtils.command(PlaybackCommand::modifiersAddTo))))));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(Playing::list)));
 
@@ -70,8 +70,12 @@ public class PlaybackCommand
 	{
 		try
 		{
-			int id = commandInfo.getInteger("id");
-			Playing.stop(commandInfo, id);
+			String idStr = commandInfo.getString("id");
+			int dashPos = idStr.indexOf('-');
+			int id = Integer.parseInt(dashPos != -1 ? idStr.substring(0, dashPos) : idStr);
+			String expectedName = dashPos != -1 ? idStr.substring(dashPos + 1) : null;
+
+			Playing.stop(commandInfo, id, expectedName);
 			return true;
 		}
 		catch (IllegalArgumentException e)

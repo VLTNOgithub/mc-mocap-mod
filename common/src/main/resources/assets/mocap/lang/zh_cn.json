@@ -155,8 +155,9 @@
   "mocap.playback.start.success.sync": "播放开始... (with synchronization)",
   "mocap.playback.start.success.modifiers.sync": "播放开始... (with modifiers and synchronization)",
 
-  "mocap.playback.stop.unable_to_find_scene": "§l错误：§r无法找到给定id的场景！",
-  "mocap.playback.stop.unable_to_find_scene.tip": "使用\"/mocap playback list\"来获取所有当前播放中场景的列表",
+  "mocap.playback.stop.unable_to_find_playback": "Could not find a playback with given id!",
+  "mocap.playback.stop.unable_to_find_playback.tip": "使用\"/mocap playback list\"来获取所有当前播放中场景的列表",
+  "mocap.playback.stop.wrong_playback_name": "Name of the playback with given id doesn't match expected name!",
   "mocap.playback.stop.success": "播放停止",
 
   "mocap.playback.stop_all.own.all": "All playbacks stopped",

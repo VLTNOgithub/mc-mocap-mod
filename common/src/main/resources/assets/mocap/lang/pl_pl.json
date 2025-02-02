@@ -155,8 +155,9 @@
   "mocap.playback.start.success.sync": "Odtwarzanie rozpoczęte... (z synchronizacją)",
   "mocap.playback.start.success.modifiers.sync": "Odtwarzanie rozpoczęte... (z modyfikatorami i synchronizacją)",
 
-  "mocap.playback.stop.unable_to_find_scene": "§lBłąd:§r nie udało się znaleźć sceny o podanym numerze!",
-  "mocap.playback.stop.unable_to_find_scene.tip": "Użyj \"/mocap playback list\" aby uzyskać listę wszystkich obecnie odtwarzanych scen",
+  "mocap.playback.stop.unable_to_find_playback": "Nie udało się znaleźć odtwarzanej sceny o podanym numerze!",
+  "mocap.playback.stop.unable_to_find_playback.tip": "Użyj \"/mocap playback list\" aby uzyskać listę wszystkich obecnie odtwarzanych scen",
+  "mocap.playback.stop.wrong_playback_name": "Nazwa odtwarzanej sceny o podanym numerze nie pasuje do oczekiwanej nazwy!",
   "mocap.playback.stop.success": "Odtwarzanie zatrzymane",
 
   "mocap.playback.stop_all.own.all": "Wszystkie odtwarzania zatrzymane",

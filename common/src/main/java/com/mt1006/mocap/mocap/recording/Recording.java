@@ -3,8 +3,8 @@ package com.mt1006.mocap.mocap.recording;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mt1006.mocap.MocapMod;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.CommandsContext;
-import com.mt1006.mocap.command.InputArgument;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.Files;
@@ -536,7 +536,7 @@ public class Recording
 		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
 		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
 
-		InputArgument.inputSet.add(id.str);
+		CommandSuggestions.inputSet.add(id.str);
 		return true;
 	}
 
@@ -548,7 +548,7 @@ public class Recording
 	public static void removeContext(RecordingContext ctx)
 	{
 		contextsBySource.remove(ctx.sourcePlayer != null ? ctx.sourcePlayer.getName().getString() : "", ctx);
-		InputArgument.inputSet.remove(ctx.id.str);
+		CommandSuggestions.inputSet.remove(ctx.id.str);
 	}
 
 	public static void onServerStop()

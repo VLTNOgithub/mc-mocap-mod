@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.InputArgument;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.core.BlockPos;
@@ -44,7 +44,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.inputSet.add(name);
+		CommandSuggestions.inputSet.add(name);
 		return true;
 	}
 
@@ -63,7 +63,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.inputSet.add(destName);
+		CommandSuggestions.inputSet.add(destName);
 		commandOutput.sendSuccess("recordings.copy.success");
 		return true;
 	}
@@ -82,8 +82,8 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.inputSet.remove(oldName);
-		InputArgument.inputSet.add(newName);
+		CommandSuggestions.inputSet.remove(oldName);
+		CommandSuggestions.inputSet.add(newName);
 		commandOutput.sendSuccess("recordings.rename.success");
 		return true;
 	}
@@ -99,7 +99,7 @@ public class RecordingFiles
 			return false;
 		}
 
-		InputArgument.inputSet.remove(name);
+		CommandSuggestions.inputSet.remove(name);
 		commandOutput.sendSuccess("recordings.remove.success");
 		return true;
 	}
@@ -172,7 +172,7 @@ public class RecordingFiles
 		for (int i = suffix + 1; i <= suffix + ALT_NAME_MAX_I ; i++)
 		{
 			String possibleName = String.format("%s%d", prefix, i);
-			if (!InputArgument.inputSet.contains(possibleName)) { return possibleName; }
+			if (!CommandSuggestions.inputSet.contains(possibleName)) { return possibleName; }
 		}
 		return null;
 	}

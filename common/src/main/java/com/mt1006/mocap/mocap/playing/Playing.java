@@ -31,7 +31,7 @@ public class Playing
 	public static boolean start(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
 		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers, defaultModifiers); }
-		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getNextId());
+		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getMaxId() + 1);
 		if (playback == null) { return false; }
 		addPlayback(playback);
 		sendStartMessage(commandInfo, defaultModifiers);
@@ -46,7 +46,7 @@ public class Playing
 		int successes = 0;
 		for (RecordingContext ctx : contexts)
 		{
-			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, modifiers, getNextId());
+			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, modifiers, getMaxId() + 1);
 			if (playback == null) { continue; }
 			addPlayback(playback);
 			successes++;
@@ -71,19 +71,25 @@ public class Playing
 		commandInfo.sendSuccess(key);
 	}
 
-	public static void stop(CommandOutput commandOutput, int id)
+	public static void stop(CommandOutput commandOutput, int id, @Nullable String expectedName)
 	{
 		for (Playback.Root playback : playbacks)
 		{
 			if (playback.id == id)
 			{
+				if (expectedName != null && !expectedName.equals(playback.name))
+				{
+					commandOutput.sendFailure("playback.stop.wrong_playback_name");
+					return;
+				}
+
 				playback.instance.stop();
 				commandOutput.sendSuccess("playback.stop.success");
 				return;
 			}
 		}
 
-		commandOutput.sendFailureWithTip("playback.stop.unable_to_find_scene");
+		commandOutput.sendFailureWithTip("playback.stop.unable_to_find_playback");
 	}
 
 	public static void stopAll(CommandOutput commandOutput, @Nullable ServerPlayer player)
@@ -257,14 +263,14 @@ public class Playing
 		}
 	}
 
-	private static int getNextId()
+	public static int getMaxId()
 	{
-		int maxInt = 1;
+		int maxInt = 0;
 		for (Playback.Root playback : playbacks)
 		{
-			if (playback.id >= maxInt)
+			if (playback.id > maxInt)
 			{
-				maxInt = playback.id + 1;
+				maxInt = playback.id;
 			}
 		}
 		return maxInt;

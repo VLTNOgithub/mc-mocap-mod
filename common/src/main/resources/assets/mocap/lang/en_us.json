@@ -155,8 +155,9 @@
   "mocap.playback.start.success.sync": "Playback started... (with synchronization)",
   "mocap.playback.start.success.modifiers.sync": "Playback started... (with modifiers and synchronization)",
 
-  "mocap.playback.stop.unable_to_find_scene": "§lError:§r unable to find scene with given id!",
-  "mocap.playback.stop.unable_to_find_scene.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
+  "mocap.playback.stop.unable_to_find_playback": "Could not find a playback with given id!",
+  "mocap.playback.stop.unable_to_find_playback.tip": "Use \"/mocap playback list\" to get list of all currently played scenes",
+  "mocap.playback.stop.wrong_playback_name": "Name of the playback with given id doesn't match expected name!",
   "mocap.playback.stop.success": "Playback stopped",
 
   "mocap.playback.stop_all.own.all": "All playbacks stopped",

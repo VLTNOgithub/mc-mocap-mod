@@ -107,12 +107,14 @@ public abstract class Playback
 		public final Playback instance;
 		public final int id;
 		public final String name;
+		public final String suggestionStr;
 
 		public Root(Playback instance, int id, String name)
 		{
 			this.instance = instance;
 			this.id = id;
 			this.name = name;
+			this.suggestionStr = String.format("%03d-%s", id, name);
 		}
 	}
 

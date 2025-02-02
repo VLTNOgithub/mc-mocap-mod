@@ -69,7 +69,7 @@ public class CommandUtils
 		{
 			builder.then(Commands.literal("subscene_name")
 					.then(Commands.argument("new_name", StringArgumentType.string())
-							.suggests(InputArgument::playableArgument).executes(command)));
+							.suggests(CommandSuggestions::playableArgument).executes(command)));
 		}
 		return builder;
 	}

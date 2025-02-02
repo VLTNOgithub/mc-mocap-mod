@@ -5,12 +5,13 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.files.SceneFiles;
+import com.mt1006.mocap.mocap.playing.Playing;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class InputArgument
+public class CommandSuggestions
 {
 	private static final int RECORDINGS = 1;
 	private static final int SCENES = 2;
@@ -19,7 +20,7 @@ public class InputArgument
 
 	public static final HashSet<String> inputSet = new HashSet<>();
 
-	private static CompletableFuture<Suggestions> inputArgument(SuggestionsBuilder builder, int suggestionFlags, boolean ignoreFirstChar)
+	private static CompletableFuture<Suggestions> inputSuggestions(SuggestionsBuilder builder, int suggestionFlags, boolean ignoreFirstChar)
 	{
 		for (String input : inputSet)
 		{
@@ -40,27 +41,33 @@ public class InputArgument
 		return builder.buildFuture();
 	}
 
-	public static CompletableFuture<Suggestions> recordingArgument(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> recordingSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
-		return inputArgument(builder, RECORDINGS, false);
+		return inputSuggestions(builder, RECORDINGS, false);
 	}
 
-	public static CompletableFuture<Suggestions> sceneArgument(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> sceneSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
-		return inputArgument(builder, SCENES, true);
+		return inputSuggestions(builder, SCENES, true);
 	}
 
-	public static CompletableFuture<Suggestions> currentlyRecordedArgument(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> currentlyRecordedSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
-		return inputArgument(builder, CURRENTLY_RECORDED, true);
+		return inputSuggestions(builder, CURRENTLY_RECORDED, true);
 	}
 
 	public static CompletableFuture<Suggestions> playableArgument(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
-		return inputArgument(builder, PLAYABLE, false);
+		return inputSuggestions(builder, PLAYABLE, false);
 	}
 
-	public static void initServerInputSet()
+	public static CompletableFuture<Suggestions> playbackIdSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
+	{
+		Playing.playbacks.forEach((p) -> builder.suggest(p.suggestionStr));
+		return builder.buildFuture();
+	}
+
+	public static void initInputSet()
 	{
 		inputSet.clear();
 

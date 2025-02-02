@@ -1,7 +1,7 @@
 package com.mt1006.mocap.events;
 
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.InputArgument;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.Files;
 import com.mt1006.mocap.mocap.playing.Playing;
@@ -17,7 +17,7 @@ public class WorldLoadEvent
 		MocapMod.server = server;
 		Files.init();
 		Settings.load();
-		InputArgument.initServerInputSet();
+		CommandSuggestions.initInputSet();
 	}
 
 	public static void onServerWorldUnload()

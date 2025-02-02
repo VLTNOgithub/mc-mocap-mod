@@ -1,7 +1,7 @@
 package com.mt1006.mocap.mocap.files;
 
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.command.InputArgument;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import org.apache.commons.io.FileUtils;
@@ -29,7 +29,7 @@ public class SceneFiles
 
 		SceneData sceneData = SceneData.empty();
 		boolean success = sceneData.save(commandOutput, file, "scenes.add.success", "scenes.add.error");
-		if (success) { InputArgument.inputSet.add(nameWithDot(name)); }
+		if (success) { CommandSuggestions.inputSet.add(nameWithDot(name)); }
 		return success;
 	}
 
@@ -48,7 +48,7 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.inputSet.add(nameWithDot(destName));
+		CommandSuggestions.inputSet.add(nameWithDot(destName));
 		commandOutput.sendSuccess("scenes.copy.success");
 		return true;
 	}
@@ -67,8 +67,8 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.inputSet.remove(nameWithDot(oldName));
-		InputArgument.inputSet.add(nameWithDot(newName));
+		CommandSuggestions.inputSet.remove(nameWithDot(oldName));
+		CommandSuggestions.inputSet.add(nameWithDot(newName));
 		commandOutput.sendSuccess("scenes.rename.success");
 		return true;
 	}
@@ -84,7 +84,7 @@ public class SceneFiles
 			return false;
 		}
 
-		InputArgument.inputSet.remove(nameWithDot(name));
+		CommandSuggestions.inputSet.remove(nameWithDot(name));
 		commandOutput.sendSuccess("scenes.remove.success");
 		return true;
 	}
