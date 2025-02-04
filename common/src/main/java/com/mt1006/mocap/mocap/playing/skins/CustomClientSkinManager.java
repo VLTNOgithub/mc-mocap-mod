@@ -23,13 +23,13 @@ public class CustomClientSkinManager
 	private static final int MAX_CLIENT_CACHE_SIZE = 4096;
 	private static final String SKIN_RES_PREFIX = "custom_skin/";
 	private static final String SLIM_SKIN_RES_PREFIX = SKIN_RES_PREFIX + Files.SLIM_SKIN_PREFIX;
-	private static final ConcurrentMap<String, Boolean> clientMap = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, Boolean> skinCache = new ConcurrentHashMap<>();
 	private static boolean clientWarned = false;
 
 	public static @Nullable ResourceLocation get(@Nullable String name)
 	{
 		if (name == null) { return null; }
-		Boolean accessible = clientMap.get(name);
+		Boolean accessible = skinCache.get(name);
 
 		if (accessible == null)
 		{
@@ -41,7 +41,7 @@ public class CustomClientSkinManager
 
 	public static void loadClientSkin(String name)
 	{
-		if (clientMap.size() > MAX_CLIENT_CACHE_SIZE)
+		if (skinCache.size() > MAX_CLIENT_CACHE_SIZE)
 		{
 			if (clientWarned) { return; }
 
@@ -54,7 +54,7 @@ public class CustomClientSkinManager
 			return;
 		}
 
-		clientMap.put(name, false);
+		skinCache.put(name, false);
 		MocapPacketC2S.sendRequestCustomSkin(name);
 	}
 
@@ -64,7 +64,7 @@ public class CustomClientSkinManager
 		String name = customSkinData.getFirst();
 		byte[] array = customSkinData.getSecond();
 
-		Boolean accessible = clientMap.get(name);
+		Boolean accessible = skinCache.get(name);
 		if (accessible == null || accessible) { return; }
 
 		try
@@ -88,7 +88,7 @@ public class CustomClientSkinManager
 			}
 
 			Minecraft.getInstance().getTextureManager().register(resFromName(name), new DynamicTexture(nativeImage));
-			clientMap.put(name, true);
+			skinCache.put(name, true);
 		}
 		catch (Exception e) { Utils.exception(e, "Failed to read skin texture!"); }
 	}
@@ -96,12 +96,12 @@ public class CustomClientSkinManager
 	public static void clearCache()
 	{
 		TextureManager textureManager = Minecraft.getInstance().getTextureManager();
-		for (Map.Entry<String, Boolean> entry : clientMap.entrySet())
+		for (Map.Entry<String, Boolean> entry : skinCache.entrySet())
 		{
 			Boolean val = entry.getValue();
 			if (val != null && val) { textureManager.release(resFromName(entry.getKey())); }
 		}
-		clientMap.clear();
+		skinCache.clear();
 		clientWarned = false;
 	}
 

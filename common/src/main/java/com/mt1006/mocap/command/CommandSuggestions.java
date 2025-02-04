@@ -111,4 +111,10 @@ public class CommandSuggestions
 		List<String> sceneList = SceneFiles.list();
 		if (sceneList != null) { inputSet.addAll(sceneList); }
 	}
+
+	public static void clearCache()
+	{
+		initInputSet();
+		sceneElementCache.clear();
+	}
 }

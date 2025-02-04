@@ -12,11 +12,11 @@ import java.util.concurrent.ConcurrentMap;
 public class CustomServerSkinManager
 {
 	public static final String PROPERTY_ID = "mocap:skin_from_file";
-	private static final ConcurrentMap<String, byte[]> serverMap = new ConcurrentHashMap<>();
+	private static final ConcurrentMap<String, byte[]> skinCache = new ConcurrentHashMap<>();
 
 	public static void sendSkinToClient(ServerPlayer player, String name)
 	{
-		byte[] image = serverMap.get(name);
+		byte[] image = skinCache.get(name);
 		if (image != null) { MocapPacketS2C.sendCustomSkinData(player, name, image); }
 		else { Util.backgroundExecutor().execute(() -> sendSkinToClientThread(player, name)); }
 	}
@@ -28,7 +28,7 @@ public class CustomServerSkinManager
 
 		if (array != null)
 		{
-			serverMap.put(name, array);
+			skinCache.put(name, array);
 			MocapPacketS2C.sendCustomSkinData(player, name, array);
 		}
 	}
@@ -36,5 +36,10 @@ public class CustomServerSkinManager
 	public static boolean checkIfProperName(CommandOutput commandOutput, String name)
 	{
 		return Files.checkIfProperName(commandOutput, name.startsWith(Files.SLIM_SKIN_PREFIX) ? name.substring(5) : name);
+	}
+
+	public static void clearCache()
+	{
+		skinCache.clear();
 	}
 }

@@ -1,9 +1,13 @@
 package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.CommandsContext;
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.events.PlayerConnectionEvent;
+import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
+import com.mt1006.mocap.network.MocapPacketS2C;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -17,7 +21,8 @@ public class MiscCommand
 		commandBuilder.then(Commands.literal("sync").
 			then(Commands.literal("enable").executes(CommandUtils.command(MiscCommand::syncEnable))).
 			then(Commands.literal("disable").executes(CommandUtils.command(MiscCommand::syncDisable))));
-		//TODO: add "refresh", "api"
+		commandBuilder.then(Commands.literal("clear_cache").executes(CommandUtils.command(MiscCommand::clearCache)));
+		//TODO: add "api"
 
 		return commandBuilder;
 	}
@@ -45,6 +50,16 @@ public class MiscCommand
 
 		CommandsContext ctx = CommandsContext.get(commandInfo.sourcePlayer);
 		commandInfo.sendSuccess(ctx.setSync(false) ? "misc.sync.disable.changed" : "misc.sync.disable.not_changed");
+		return true;
+	}
+
+	private static boolean clearCache(CommandInfo commandInfo)
+	{
+		CommandSuggestions.clearCache();
+		CustomServerSkinManager.clearCache();
+		PlayerConnectionEvent.players.forEach(MocapPacketS2C::sendClearCache);
+
+		commandInfo.sendSuccess("misc.clear_cache.cleared");
 		return true;
 	}
 }

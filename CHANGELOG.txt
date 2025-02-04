@@ -4,6 +4,7 @@
 -Renamed "/mocap playing" to "/mocap playback".
 -Added command to discard recordings - "/mocap recording discard".
 -Added command to set playback modifiers - "/mocap playback modifiers".
+-Added command to clear server and clients mocap cache - "/mocap misc clear_cache".
 -Added support for custom NBT data with "player_as_entity" modifier.
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
@@ -23,6 +24,7 @@
 -It's now possible to add player_as_entity modifier using simple modifiers (thanks to Narfu for suggestion).
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
 -Scene format is now JSON-based.
+-Added suggestions for "/mocap scenes modify" "to_modify" argument.
 -Added suggestions for "/mocap playback stop" command.
 -Suggestions for recordings/scenes names no longer require mod to be installed on a client.
 -For scene name suggestions where dot can be omitted, user input without a dot is now properly parsed by suggestion provider.
