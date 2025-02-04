@@ -9,6 +9,7 @@ import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.mocap.playing.Playing;
+import com.mt1006.mocap.mocap.playing.playback.Playback;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -66,7 +67,12 @@ public class CommandSuggestions
 
 	public static CompletableFuture<Suggestions> playbackIdSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
-		Playing.playbacks.forEach((p) -> builder.suggest(p.suggestionStr));
+		String remaining = builder.getRemaining();
+		for (Playback.Root playback : Playing.playbacks)
+		{
+			String str = playback.suggestionStr;
+			if (str.startsWith(remaining)) { builder.suggest(str); }
+		}
 		return builder.buildFuture();
 	}
 
