@@ -136,6 +136,7 @@
   "mocap.scenes.error.file_not_exists": "不存在以此为名的场景",
   "mocap.scenes.error.wrong_element_pos": "不存在给定编号的元素",
   "mocap.scenes.error.wrong_element_pos.tip": "使用\"/mocap scenes list <scene>\"来获取元素编号",
+  "mocap.scenes.error.wrong_subscene_name": "Name of the subscene on given position doesn't match expected name!",
 
 
   "mocap.playback.start.error": "§l错误：§r无法开启场景！",

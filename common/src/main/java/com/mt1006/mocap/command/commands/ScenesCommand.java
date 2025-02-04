@@ -2,7 +2,6 @@ package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mt1006.mocap.command.CommandSuggestions;
@@ -23,7 +22,6 @@ import java.util.List;
 public class ScenesCommand
 {
 	private static final Command<CommandSourceStack> COMMAND_ADD_TO = CommandUtils.command(ScenesCommand::addTo);
-	private static final Command<CommandSourceStack> COMMAND_MODIFY = CommandUtils.command(ScenesCommand::modify);
 
 	public static LiteralArgumentBuilder<CommandSourceStack> getArgumentBuilder(CommandBuildContext buildContext)
 	{
@@ -42,7 +40,8 @@ public class ScenesCommand
 			then(CommandUtils.withInputAndIntArgument(SceneFiles::removeElement, CommandSuggestions::sceneSuggestions, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
 			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
-			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", IntegerArgumentType.integer()), COMMAND_MODIFY, true))));
+			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", StringArgumentType.string()).
+				suggests(CommandSuggestions::sceneElementSuggestion), CommandUtils.command(ScenesCommand::modify), true))));
 		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name")).
 			then(CommandUtils.withInputAndIntArgument(SceneFiles::elementInfo, CommandSuggestions::sceneSuggestions, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
@@ -84,9 +83,13 @@ public class ScenesCommand
 		try
 		{
 			String name = commandInfo.getString("scene_name");
-			int pos = commandInfo.getInteger("to_modify");
 
-			return SceneFiles.modify(commandInfo, name, pos);
+			String posStr = commandInfo.getString("to_modify");
+			int dashPos = posStr.indexOf('-');
+			int pos = Integer.parseInt(dashPos != -1 ? posStr.substring(0, dashPos) : posStr);
+			String expectedName = dashPos != -1 ? posStr.substring(dashPos + 1) : null;
+
+			return SceneFiles.modify(commandInfo, name, pos, expectedName);
 		}
 		catch (IllegalArgumentException e)
 		{

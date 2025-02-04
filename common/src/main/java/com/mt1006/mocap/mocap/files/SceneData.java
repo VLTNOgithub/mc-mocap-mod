@@ -2,19 +2,22 @@ package com.mt1006.mocap.mocap.files;
 
 import com.google.gson.*;
 import com.mt1006.mocap.MocapMod;
+import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.settings.Settings;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SceneData
 {
-	public final ArrayList<Subscene> subscenes = new ArrayList<>();
+	public final List<Subscene> subscenes = new ArrayList<>();
 	public int version = 0;
 	public boolean experimentalVersion = false;
 	public long fileSize = 0;
@@ -27,7 +30,7 @@ public class SceneData
 		return sceneData;
 	}
 
-	public boolean save(CommandOutput commandOutput, File file, String onSuccess, String onError)
+	public boolean save(CommandOutput commandOutput, File file, String sceneName, String onSuccess, String onError)
 	{
 		JsonObject json = new JsonObject();
 		json.add("version", new JsonPrimitive(experimentalVersion ? (-version) : version));
@@ -43,6 +46,7 @@ public class SceneData
 			gsonBuilder.create().toJson(json, writer);
 			writer.close();
 
+			saveToSceneElementCache(sceneName);
 			commandOutput.sendSuccess(onSuccess);
 			return true;
 		}
@@ -59,7 +63,7 @@ public class SceneData
 		return data != null && load(commandOutput, data);
 	}
 
-	public boolean load(CommandOutput commandOutput, byte[] scene)
+	private boolean load(CommandOutput commandOutput, byte[] scene)
 	{
 		fileSize = scene.length;
 
@@ -106,6 +110,20 @@ public class SceneData
 			return false;
 		}
 		return true;
+	}
+
+	public @Nullable List<String> saveToSceneElementCache(String sceneName)
+	{
+		List<String> elements = new ArrayList<>(subscenes.size());
+		int id = 1;
+		for (SceneData.Subscene subscene : subscenes)
+		{
+			elements.add(String.format("%03d-%s", id, subscene.name));
+			id++;
+		}
+
+		CommandSuggestions.sceneElementCache.put(sceneName, elements);
+		return elements;
 	}
 
 	public static class Subscene

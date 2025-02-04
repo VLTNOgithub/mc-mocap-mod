@@ -28,7 +28,7 @@ public class SceneFiles
 		}
 
 		SceneData sceneData = SceneData.empty();
-		boolean success = sceneData.save(commandOutput, file, "scenes.add.success", "scenes.add.error");
+		boolean success = sceneData.save(commandOutput, file, name, "scenes.add.success", "scenes.add.error");
 		if (success) { CommandSuggestions.inputSet.add(nameWithDot(name)); }
 		return success;
 	}
@@ -49,6 +49,12 @@ public class SceneFiles
 		}
 
 		CommandSuggestions.inputSet.add(nameWithDot(destName));
+		List<String> elementCache = CommandSuggestions.sceneElementCache.get(nameWithDot(srcName));
+		if (elementCache != null)
+		{
+			CommandSuggestions.sceneElementCache.put(nameWithDot(destName), new ArrayList<>(elementCache));
+		}
+
 		commandOutput.sendSuccess("scenes.copy.success");
 		return true;
 	}
@@ -69,6 +75,13 @@ public class SceneFiles
 
 		CommandSuggestions.inputSet.remove(nameWithDot(oldName));
 		CommandSuggestions.inputSet.add(nameWithDot(newName));
+		List<String> elementCache = CommandSuggestions.sceneElementCache.get(nameWithDot(oldName));
+		if (elementCache != null)
+		{
+			CommandSuggestions.sceneElementCache.remove(nameWithDot(oldName));
+			CommandSuggestions.sceneElementCache.put(nameWithDot(newName), elementCache);
+		}
+
 		commandOutput.sendSuccess("scenes.rename.success");
 		return true;
 	}
@@ -85,6 +98,7 @@ public class SceneFiles
 		}
 
 		CommandSuggestions.inputSet.remove(nameWithDot(name));
+		CommandSuggestions.sceneElementCache.remove(nameWithDot(name));
 		commandOutput.sendSuccess("scenes.remove.success");
 		return true;
 	}
@@ -104,7 +118,7 @@ public class SceneFiles
 		if (!sceneData.load(commandOutput, name)) { return false; }
 
 		sceneData.subscenes.add(subscene);
-		return sceneData.save(commandOutput, file, "scenes.add_to.success", "scenes.add_to.error");
+		return sceneData.save(commandOutput, file, name, "scenes.add_to.success", "scenes.add_to.error");
 	}
 
 	public static boolean removeElement(CommandOutput commandOutput, String name, int pos)
@@ -128,10 +142,10 @@ public class SceneFiles
 		}
 
 		sceneData.subscenes.remove(pos - 1);
-		return sceneData.save(commandOutput, file, "scenes.remove_from.success", "scenes.remove_from.error");
+		return sceneData.save(commandOutput, file, name, "scenes.remove_from.success", "scenes.remove_from.error");
 	}
 
-	public static boolean modify(CommandInfo commandInfo, String name, int pos)
+	public static boolean modify(CommandInfo commandInfo, String name, int pos, @Nullable String expectedName)
 	{
 		File file = Files.getSceneFile(commandInfo, name);
 		if (file == null) { return false; }
@@ -151,7 +165,15 @@ public class SceneFiles
 			return false;
 		}
 
-		SceneData.Subscene newSubscene = modifySubscene(commandInfo, sceneData.subscenes.get(pos - 1));
+		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
+		if (expectedName != null && !expectedName.equals(subscene.name))
+		{
+			commandInfo.sendFailure("scenes.modify.error");
+			commandInfo.sendFailure("scenes.error.wrong_subscene_name");
+			return false;
+		}
+
+		SceneData.Subscene newSubscene = modifySubscene(commandInfo, subscene);
 		if (newSubscene == null)
 		{
 			commandInfo.sendFailure("scenes.modify.error");
@@ -159,7 +181,7 @@ public class SceneFiles
 		}
 
 		sceneData.subscenes.set(pos - 1, newSubscene);
-		return sceneData.save(commandInfo, file, "scenes.modify.success", "scenes.modify.error");
+		return sceneData.save(commandInfo, file, name, "scenes.modify.success", "scenes.modify.error");
 	}
 
 	private static @Nullable SceneData.Subscene modifySubscene(CommandInfo rootCommandInfo, SceneData.Subscene oldSubscene)

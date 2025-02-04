@@ -136,6 +136,7 @@
   "mocap.scenes.error.file_not_exists": "Scena o tej nazwie nie istnieje",
   "mocap.scenes.error.wrong_element_pos": "Element o podanym numerze nie istnieje",
   "mocap.scenes.error.wrong_element_pos.tip": "Użyj \"/mocap scenes list <scena>\" aby uzyskać numery poszczególnych elementów",
+  "mocap.scenes.error.wrong_subscene_name": "Nazwa elementu sceny na danej pozycji nie pasuje do oczekiwanej nazwy!",
 
 
   "mocap.playback.start.error": "§lBłąd:§r nie udało się rozpocząć odtwarzania sceny!",

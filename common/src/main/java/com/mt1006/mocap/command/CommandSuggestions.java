@@ -1,14 +1,16 @@
 package com.mt1006.mocap.command;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
+import com.mt1006.mocap.mocap.files.SceneData;
 import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.mocap.playing.Playing;
 
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandSuggestions
@@ -18,10 +20,12 @@ public class CommandSuggestions
 	private static final int CURRENTLY_RECORDED = 4;
 	private static final int PLAYABLE = RECORDINGS | SCENES | CURRENTLY_RECORDED;
 
-	public static final HashSet<String> inputSet = new HashSet<>();
+	public static final Set<String> inputSet = new HashSet<>();
+	public static final Map<String, List<String>> sceneElementCache = new HashMap<>();
 
 	private static CompletableFuture<Suggestions> inputSuggestions(SuggestionsBuilder builder, int suggestionFlags, boolean ignoreFirstChar)
 	{
+		String remaining = builder.getRemaining();
 		for (String input : inputSet)
 		{
 			int type = switch (input.charAt(0))
@@ -31,7 +35,6 @@ public class CommandSuggestions
 				default -> RECORDINGS;
 			};
 
-			String remaining = builder.getRemaining();
 			if ((suggestionFlags & type) != 0 && (input.startsWith(remaining)
 					|| (ignoreFirstChar && input.substring(1).startsWith(remaining))))
 			{
@@ -64,6 +67,31 @@ public class CommandSuggestions
 	public static CompletableFuture<Suggestions> playbackIdSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		Playing.playbacks.forEach((p) -> builder.suggest(p.suggestionStr));
+		return builder.buildFuture();
+	}
+
+	public static CompletableFuture<Suggestions> sceneElementSuggestion(CommandContext<?> ctx, SuggestionsBuilder builder)
+	{
+		String sceneName = StringArgumentType.getString(ctx, "scene_name");
+		if (sceneName.isEmpty()) { return builder.buildFuture(); }
+		if (sceneName.charAt(0) != '.') { sceneName = "." + sceneName; }
+
+		if (!inputSet.contains(sceneName)) { return builder.buildFuture(); }
+		List<String> elements = sceneElementCache.get(sceneName);
+
+		if (elements == null)
+		{
+			SceneData sceneData = new SceneData();
+			if (!sceneData.load(CommandOutput.LOGS, sceneName)) { builder.buildFuture(); }
+			elements = sceneData.saveToSceneElementCache(sceneName);
+		}
+		if (elements == null) { return builder.buildFuture(); }
+
+		String remaining = builder.getRemaining();
+		for (String str : elements)
+		{
+			if (str.startsWith(remaining)) { builder.suggest(str); }
+		}
 		return builder.buildFuture();
 	}
 

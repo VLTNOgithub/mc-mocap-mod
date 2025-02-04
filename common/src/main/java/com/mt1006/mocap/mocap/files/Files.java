@@ -16,7 +16,8 @@ public class Files
 	private static final String SKIN_DIR_NAME = "skins";
 	private static final String SLIM_SKIN_DIR_NAME = "slim";
 
-	private static final String CONFIG_FILE_NAME = "settings.mcmocap_conf";
+	private static final String CONFIG_FILE_NAME = "settings.mcmocap_conf"; //TODO: make it txt?
+	private static final String SCENE_ELEMENT_CACHE = "scene_element_cache";
 	private static final String RECORDING_EXTENSION = ".mcmocap_rec";
 	private static final String SCENE_EXTENSION = ".mcmocap_scene";
 	private static final String SKIN_EXTENSION = ".png";
@@ -116,6 +117,11 @@ public class Files
 	public static @Nullable File getSettingsFile()
 	{
 		return initialized ? new File(mocapDirectory, CONFIG_FILE_NAME) : null;
+	}
+
+	public static @Nullable File getSceneElementCache()
+	{
+		return initialized ? new File(mocapDirectory, SCENE_ELEMENT_CACHE) : null;
 	}
 
 	public static @Nullable File getRecordingFile(CommandOutput commandOutput, String name)
