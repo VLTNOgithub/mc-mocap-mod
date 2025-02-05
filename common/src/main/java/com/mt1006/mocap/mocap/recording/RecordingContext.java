@@ -173,7 +173,6 @@ public class RecordingContext
 		CANCELED(true),
 		DISCARDED(true),
 		SAVED(true),
-		ERROR(true), //TODO: remove?
 		UNDEFINED(true);
 
 		public final boolean removed;

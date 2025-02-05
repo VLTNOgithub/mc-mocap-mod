@@ -16,7 +16,7 @@ public class Files
 	private static final String SKIN_DIR_NAME = "skins";
 	private static final String SLIM_SKIN_DIR_NAME = "slim";
 
-	private static final String CONFIG_FILE_NAME = "settings.mcmocap_conf"; //TODO: make it txt?
+	private static final String CONFIG_FILE_NAME = "settings.txt";
 	private static final String SCENE_ELEMENT_CACHE = "scene_element_cache";
 	private static final String RECORDING_EXTENSION = ".mcmocap_rec";
 	private static final String SCENE_EXTENSION = ".mcmocap_scene";

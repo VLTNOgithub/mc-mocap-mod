@@ -23,12 +23,6 @@ public class SettingFields
 {
 	final Map<String, Field<?>> fieldMap = new HashMap<>();
 
-	//TODO: remove?
-	/*public SettingFields(String filename)
-	{
-		this.file = new File(Minecraft.getInstance().gameDirectory, "config/" + filename);
-	}*/
-
 	public IntegerField add(String name, int val)
 	{
 		IntegerField field = new IntegerField(name, val);

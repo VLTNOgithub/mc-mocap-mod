@@ -103,7 +103,7 @@ public class Movement implements Action
 
 		headRot = switch (flags & MASK_ROT)
 		{
-			case ROT_HEAD_EQ -> rotation[1]; //TODO: test
+			case ROT_HEAD_EQ -> rotation[1];
 			case ROT_HEAD_DIFF -> unpackRot(reader.readShort());
 			default -> 0.0f; // ROT_HEAD_0 or ROT_NO_DIFF
 		};

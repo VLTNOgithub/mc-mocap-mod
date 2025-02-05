@@ -16,7 +16,6 @@ public class NextTick implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		//MocapMod.LOGGER.warn("SKIP TICK (NT)"); //TODO: remove
 		return Result.NEXT_TICK;
 	}
 }
