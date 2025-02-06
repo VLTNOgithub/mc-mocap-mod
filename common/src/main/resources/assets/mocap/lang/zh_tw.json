@@ -1,0 +1,276 @@
+{
+  "mocap.recording.start.already_recording": "你已經在錄製這位玩家的動作了！",
+  "mocap.recording.start.already_recording.tip": "再次輸入此指令以強制開始，或使用「recording stop」停止錄製",
+  "mocap.recording.start.waiting_for_decision": "你對這位玩家的錄製正在等待決定！",
+  "mocap.recording.start.waiting_for_decision.tip": "再次輸入此指令以強制開始",
+  "mocap.recording.start.player_not_found": "§l錯誤：§r 找不到玩家！",
+  "mocap.recording.start.player_not_specified": "§l錯誤：§r 未指定玩家！",
+  "mocap.recording.start.player_not_specified.tip": "將暱稱加入指令中，或以玩家身分執行指令",
+  "mocap.recording.start.waiting_for_action": "採取任何動作或再次使用「/mocap recording start」開始錄製...",
+  "mocap.recording.start.recording_started": "錄製已開始...",
+  "mocap.recording.start.error": "§l錯誤：§r 無法開始錄製！",
+
+  "mocap.recording.stop.stopped": "錄製已停止 - 等待決定...",
+  "mocap.recording.stop.stopped.tip_stop": "使用「/mocap recording save <錄製名稱>」儲存，\n或使用「/mocap recording stop」捨棄。",
+  "mocap.recording.stop.stopped.tip_discard": "使用「/mocap recording save <錄製名稱>」儲存，\n或使用「/mocap recording discard」捨棄。",
+  "mocap.recording.stop.canceled": "錄製已取消 - 不再等待動作",
+  "mocap.recording.stop.quick_discard.disabled": "錄製已停止！",
+  "mocap.recording.stop.quick_discard.disabled.tip": "使用「/mocap recording discard」捨棄，\n或在設定中更改快速捨棄模式。",
+
+  "mocap.recording.discard.discarded": "錄製已捨棄",
+  "mocap.recording.discard.not_stopped": "錄製尚未停止，但你正試圖捨棄它！",
+  "mocap.recording.discard.quick_discard_tip": "快速捨棄已啟用或處於安全模式 - 你可以改用「stop」指令！",
+
+  "mocap.recording.save.saved": "錄製已成功儲存",
+  "mocap.recording.save.not_stopped": "錄製尚未停止，但你正試圖儲存它！",
+  "mocap.recording.save.already_exists": "已有同名錄製存在！",
+  "mocap.recording.save.already_exists.alternative": "試試「%s」",
+  "mocap.recording.save.multiple.saved": "已將 %s 儲存為 %s",
+  "mocap.recording.save.multiple.failed": "無法將 %s 儲存為 %s！",
+  "mocap.recording.save.multiple.unknown_state": "嘗試將 %s 儲存為 %s，但最終處於未知狀態 (%s)！",
+  "mocap.recording.save.multiple.already_exists": "無法儲存，因為已有同名錄製 %s 存在！",
+  "mocap.recording.save.multiple.error": "§l錯誤：§r 嘗試儲存一個或多個錄製時發生錯誤！",
+  "mocap.recording.save.error": "§l錯誤：§r 無法儲存錄製！",
+
+  "mocap.recording.list.state": "§l%s 的狀態：§r %s",
+  "mocap.recording.list.list": "§l%s 的清單：§r",
+  "mocap.recording.list.waiting_for_action": "§l等待動作：§r %s",
+  "mocap.recording.list.waiting_for_action.none": "§l等待動作：§r §7§o[無]§r",
+  "mocap.recording.list.recording": "§l錄製中：§r %s",
+  "mocap.recording.list.recording.none": "§l錄製中：§r §7§o[無]§r",
+  "mocap.recording.list.waiting_for_decision": "§l等待決定：§r %s",
+  "mocap.recording.list.waiting_for_decision.none": "§l等待決定：§r §7§o[無]§r",
+  "mocap.recording.list.unknown_state": "§l未知狀態：§r %s",
+  "mocap.recording.list.unknown_state.error": "§l錯誤：§r 清單中至少有一個錄製處於未知狀態！",
+
+  "mocap.recording.resolve.multiple_recordings": "你有多個錄製處於活動狀態或等待決定！",
+  "mocap.recording.resolve.multiple_recordings.tip": "指定確切的錄製 ID 或使用「_」停止所有錄製",
+  "mocap.recording.resolve.server_not_recording": "伺服器目前沒有錄製任何內容！",
+  "mocap.recording.resolve.player_not_recording": "你目前沒有錄製任何內容！",
+  "mocap.recording.resolve.player_not_recording.tip": "如果要停止其他玩家的錄製，請指定其 ID",
+  "mocap.recording.resolve.improper_structure": "ID 結構不正確！",
+  "mocap.recording.resolve.improper_group_structure": "群組 ID 結構不正確！",
+  "mocap.recording.resolve.improper_group_structure.tip": "正確的群組 ID 結構：「_」、「recorded_player._」、「_._」、「player.recorded_player._」、「player._._」、「_.recorded_player._」、「_._._」",
+  "mocap.recording.resolve.not_found": "找不到具有此 ID 的目前錄製的內容！",
+  "mocap.recording.resolve.list_tip": "使用「/mocap recording list」取得所有目前錄製的內容清單",
+
+  "mocap.recording.multiple.results": "結果：",
+  "mocap.recording.multiple.results.none": "結果：§7§o[無]§r",
+  "mocap.recording.multiple.results.stopped": " -已停止：%d",
+  "mocap.recording.multiple.results.canceled": " -已取消：%d",
+  "mocap.recording.multiple.results.discarded": " -已捨棄：%d",
+  "mocap.recording.multiple.results.still_waiting": " -仍在等待：%d",
+  "mocap.recording.multiple.results.still_recording": " -仍在錄製：%d",
+  "mocap.recording.multiple.results.error": " -錯誤/未知狀態：%d",
+  "mocap.recording.multiple.undefined_state": "§l錯誤：§r 至少有一個錄製以錯誤或未知狀態結束！",
+
+  "mocap.recording.undefined_state": "§l錯誤：§r 未定義狀態：%s",
+
+
+  "mocap.recordings.copy.failed": "無法複製錄製！",
+  "mocap.recordings.copy.success": "錄製已成功複製",
+
+  "mocap.recordings.rename.failed": "無法重新命名錄製！",
+  "mocap.recordings.rename.success": "錄製已成功重新命名",
+
+  "mocap.recordings.remove.failed": "無法移除錄製！",
+  "mocap.recordings.remove.success": "錄製已成功移除",
+
+  "mocap.recordings.info.failed": "無法取得錄製資訊！",
+  "mocap.recordings.info.info": "§l[錄製資訊]§r",
+  "mocap.recordings.info.length": "§l長度：§r %s 秒 (%d 個 tick)",
+  "mocap.recordings.info.size": "§l大小：§r %s KB (%d 個操作)",
+  "mocap.recordings.info.start_pos": "§l起始位置：§r %s",
+  "mocap.recordings.info.dies.yes": "§l以死亡結束：§r 是",
+  "mocap.recordings.info.dies.no": "§l以死亡結束：§r 否",
+  
+  "mocap.recordings.list": "§l錄製：§r%s",
+
+
+  "mocap.scenes.add.already_exists": "已有同名場景存在！",
+  "mocap.scenes.add.error": "§l錯誤：§r 無法新增場景！",
+  "mocap.scenes.add.success": "場景已成功新增",
+
+  "mocap.scenes.copy.failed": "無法複製場景！",
+  "mocap.scenes.copy.success": "場景已成功複製",
+
+  "mocap.scenes.rename.failed": "無法重新命名場景！",
+  "mocap.scenes.rename.success": "場景已成功重新命名",
+
+  "mocap.scenes.remove.failed": "無法移除場景！",
+  "mocap.scenes.remove.success": "場景已成功移除",
+
+  "mocap.scenes.add_to.error": "§l錯誤：§r 無法將元素新增至場景！",
+  "mocap.scenes.add_to.failed": "無法將元素新增至場景！",
+  "mocap.scenes.add_to.success": "元素已成功新增至場景",
+
+  "mocap.scenes.remove_from.error": "§l錯誤：§r 無法從場景中移除元素！",
+  "mocap.scenes.remove_from.success": "元素已成功從場景中移除",
+
+  "mocap.scenes.modify.error": "§l錯誤：§r 無法修改場景元素！",
+  "mocap.scenes.modify.success": "元素已成功修改",
+
+  "mocap.scenes.element_info.failed": "無法取得場景元素資訊！",
+  "mocap.scenes.element_info.info": "§l[場景元素資訊]§r",
+  "mocap.scenes.element_info.id": "§l場景/位置：§r %s / %d",
+  "mocap.scenes.element_info.name": "§l名稱：§r %s",
+  "mocap.scenes.element_info.player_name.default": "§l玩家名稱：§r §7§o[預設]§r",
+  "mocap.scenes.element_info.player_name.custom": "§l玩家名稱：§r %s",
+  "mocap.scenes.element_info.skin.default": "§l外觀：§r §7§o[預設]§r",
+  "mocap.scenes.element_info.skin.profile": "§l外觀：§r 來自玩家 - %s",
+  "mocap.scenes.element_info.skin.file": "§l外觀：§r 來自檔案 - %s",
+  "mocap.scenes.element_info.skin.mineskin": "§l外觀：§r 來自 mineskin.org：",
+  "mocap.scenes.element_info.start_delay": "§l開始延遲：§r %s 秒 (%d 個 tick)",
+  "mocap.scenes.element_info.offset": "§l位置偏移：§r [%f; %f; %f]",
+  "mocap.scenes.element_info.player_as_entity.disabled": "§l玩家作為實體：§r §7§o[已停用]§r",
+  "mocap.scenes.element_info.player_as_entity.enabled": "§l玩家作為實體：§r %s",
+
+  "mocap.scenes.list_elements": "§l場景元素清單：§r",
+
+  "mocap.scenes.info.failed": "無法取得場景資訊！",
+  "mocap.scenes.info.info": "§l[場景資訊]§r",
+  "mocap.scenes.info.size": "§l大小：§r %s KB (%d 個元素)",
+
+  "mocap.scenes.list": "§l場景：§r%s",
+
+  "mocap.scenes.error.file_not_exists": "沒有這個名稱的場景",
+  "mocap.scenes.error.wrong_element_pos": "沒有給定編號的元素",
+  "mocap.scenes.error.wrong_element_pos.tip": "使用「/mocap scenes list <場景>」取得元素編號",
+  "mocap.scenes.error.wrong_subscene_name": "給定位置的子場景名稱與預期名稱不符！",
+
+
+  "mocap.playback.start.error": "§l錯誤：§r 無法開始場景！",
+  "mocap.playback.start.error.loop": "場景或子場景包含自身！",
+  "mocap.playback.start.error.load": "無法載入所有資源！",
+  "mocap.playback.start.error.load.path": "資源路徑：%s",
+  "mocap.playback.start.error.empty_scene": "根場景為空！",
+  "mocap.playback.start.error.empty_scene.tip": "使用「/mocap scenes add_to」將元素新增至場景",
+  "mocap.playback.start.error.load_header": "§l錯誤：§r 無法載入錄製標頭！",
+  "mocap.playback.start.error.profile": "§l錯誤：§r 無法載入玩家設定檔！",
+  "mocap.playback.start.warning.unknown_entity": "嘗試使用未知實體作為玩家 - %s",
+  "mocap.playback.start.warning.skin.profile": "無法從玩家設定檔載入外觀",
+  "mocap.playback.start.warning.skin.file": "無法從檔案載入外觀",
+  "mocap.playback.start.warning.skin.mineskin": "無法從 mineskin.org 載入外觀",
+  "mocap.playback.start.success": "播放已開始...",
+  "mocap.playback.start.success.modifiers": "播放已開始... (已啟用修改器)",
+  "mocap.playback.start.success.sync": "播放已開始... (已啟用同步)",
+  "mocap.playback.start.success.modifiers.sync": "播放已開始... (已啟用修改器和同步)",
+
+  "mocap.playback.stop.unable_to_find_playback": "找不到具有給定 ID 的播放！",
+  "mocap.playback.stop.unable_to_find_playback.tip": "使用「/mocap playback list」取得所有目前播放的場景清單",
+  "mocap.playback.stop.wrong_playback_name": "具有給定 ID 的播放名稱與預期名稱不符！",
+  "mocap.playback.stop.success": "播放已停止",
+
+  "mocap.playback.stop_all.own.all": "所有播放已停止",
+  "mocap.playback.stop_all.own.not_all": "你的所有播放已停止，但仍有其他播放",
+  "mocap.playback.stop_all.own.empty": "你沒有任何播放可停止，但仍有其他播放",
+  "mocap.playback.stop_all.own.tip": "使用「/mocap playback stop_all including_others」停止它們",
+  "mocap.playback.stop_all.all": "伺服器上的所有播放已停止",
+  "mocap.playback.stop_all.empty": "沒有可停止的播放",
+
+  "mocap.playback.modifiers.set": "播放修改器已成功變更",
+  "mocap.playback.modifiers.list": "§l[播放修改器]§r",
+  "mocap.playback.modifiers.reset": "播放修改器已重設",
+
+  "mocap.playback.list": "§l目前正在播放：§r",
+
+
+  "mocap.settings.error": "§l錯誤：§r 找不到設定！",
+
+  "mocap.settings.list": "§l設定：§r",
+  "mocap.settings.list.info": "%s：%s",
+  "mocap.settings.list.info_def": "%s：%s §7§o[預設]§r",
+  
+  "mocap.settings.info.name": "§l名稱：§r %s",
+  "mocap.settings.info.about": "§l關於：§r %s",
+  
+  "mocap.settings.info.about.track_vehicle_entities": "啟用載具實體 (如船或馬) 的追蹤 (錄製)",
+  "mocap.settings.info.about.track_projectile_entities": "啟用投射物 (如箭或雪球) 的追蹤 (錄製)",
+  "mocap.settings.info.about.track_item_entities": "啟用物品實體的追蹤 (錄製)",
+  "mocap.settings.info.about.track_other_entities": "啟用載具和物品以外實體的追蹤 (錄製)",
+  "mocap.settings.info.about.prevent_tracking_played_entities": "防止追蹤 (錄製) 目前正在播放的實體",
+  "mocap.settings.info.about.entity_tracking_distance": "限制實體追蹤距離 (>0 - 追蹤半徑 (格)；0 - 停用追蹤；-1 - 距離無限制)",
+  "mocap.settings.info.about.record_player_death": "啟用玩家死亡錄製，並在該時刻停止錄製",
+  
+  "mocap.settings.info.about.playback_speed": "允許你變更播放錄製或場景的速度",
+  "mocap.settings.info.about.play_vehicle_entities": "啟用載具實體 (如船或馬) 的播放",
+  "mocap.settings.info.about.play_projectile_entities": "啟用投射物 (如箭或雪球) 的播放",
+  "mocap.settings.info.about.play_item_entities": "啟用物品實體的播放",
+  "mocap.settings.info.about.play_other_entities": "啟用載具和物品以外實體的播放",
+  "mocap.settings.info.about.can_push_entities": "讓假玩家推動其他實體",
+  "mocap.settings.info.about.entities_after_playback": "決定播放後實體的處理方式 (-1 - 作為正常實體釋放；0 - 不做任何處理；1 - 移除；2 - 以動畫方式殺死)",
+  "mocap.settings.info.about.block_actions_playback": "播放放置、破壞和與方塊互動的動作",
+  "mocap.settings.info.about.block_initialization": "在播放開始時，將方塊狀態設定為錄製開始前的狀態",
+  "mocap.settings.info.about.drop_from_blocks": "啟用破壞方塊的掉落物 (建議在停用「playItemEntities」時使用，以防止重複)",
+  
+  "mocap.settings.info.about.fluent_movements": "設定玩家與播放實體之間的距離，以便接收額外的封包以實現更流暢的動作 (>0 - 距離 (格)；0 - 停用流暢動作；-1 - 無限制)",
+  "mocap.settings.info.about.movement_precision": "設定錄製玩家移動的精確度 - 期望位置偏移與計算偏移之間的絕對值差異不會高於 1/val",
+  "mocap.settings.info.about.precise_rotation_recording": "提高錄製頭部旋轉的精確度",
+  "mocap.settings.info.about.precise_rotation_playback": "提高播放頭部旋轉的精確度 (錄製也需要以更高的精確度錄製才能生效)",
+  "mocap.settings.info.about.allow_mineskin_requests": "允許對 mineskin.org 發出 HTTPS 請求以載入外觀",
+  "mocap.settings.info.about.prevent_saving_entities": "防止遊戲在例如離開遊戲時儲存播放的實體",
+  "mocap.settings.info.about.use_creative_game_mode": "將假玩家的遊戲模式設定為創造模式 (怪物會忽略它們)",
+  "mocap.settings.info.about.allow_ghosts": "允許在使用「player_as_entity」修改器時使用幽靈 (不可見、僅限伺服器端的玩家)。它們的建立是為了執行非玩家實體無法執行的動作。",
+  "mocap.settings.info.about.experimental_release_warning": "當伺服器使用 Motion Capture 模組的實驗性 (alpha 或 beta) 版本時警告玩家。",
+  "mocap.settings.info.about.pretty_scene_files": "使場景 JSON 檔案看起來更美觀，但會略微增加檔案大小 (場景檔案非常小，所以這應該不是問題，除非你使用打孔卡來儲存它們)。",
+  
+  "mocap.settings.info.current_value": "§l目前值：§r %s",
+  "mocap.settings.info.default_value": "§l預設值：§r %s",
+  "mocap.settings.info.string_value": "%s %s",
+  "mocap.settings.info.copy_button": "§7[複製]",
+  "mocap.settings.info.copy_button_info": "將值複製到剪貼簿",
+  
+  "mocap.settings.set.success.changed": "值已從 %s 變更為 %s",
+  "mocap.settings.set.success.not_changed": "值保持不變 - %s",
+  "mocap.settings.set.invalid_value": "你嘗試變更的值無效！",
+  "mocap.settings.set.error": "§l錯誤：§r 無法讀取輸入值！",
+  
+
+  "mocap.misc.sync.enable.changed": "已啟用同步",
+  "mocap.misc.sync.enable.not_changed": "同步已啟用",
+  "mocap.misc.sync.disable.changed": "已停用同步",
+  "mocap.misc.sync.disable.not_changed": "同步已停用",
+  
+  "mocap.misc.clear_cache.cleared": "快取已清除",
+  
+
+  "mocap.help": "%s - §l說明§r\n /mocap recording [...] - 錄製玩家動作\n /mocap recordings [...] - 管理錄製檔案\n /mocap scenes [...] - 建立和修改場景\n /mocap playback [...] - 播放場景和錄製\n /mocap settings [...] - 顯示和修改設定\n /mocap info - 顯示模組資訊\n /mocap help - 顯示此訊息\n§l使用方法：§r\n- 首先，你需要使用「/mocap recording start」開始錄製。它會錄製你或指定玩家的所有動作。\n- 然後，你可以使用「/mocap recording stop」停止錄製，並使用「/mocap recording save <名稱>」儲存。\n- 使用「/mocap playback start <名稱>」播放錄製。\n- 你也可以建立場景，在其中新增多個錄製或其他場景，並設定參數，例如玩家名稱、位置偏移或開始延遲。\n- 若要建立場景，請使用「/mocap scenes add <場景名稱>」。然後，使用「/mocap scenes add_to <場景名稱> <錄製名稱> [玩家名稱] [外觀來源類型] [外觀來源]」新增你的錄製 (如果需要，可以跳過方括號中的參數)。\n- 若要播放場景，請使用「/mocap playback start .<場景名稱>」- 你需要在場景名稱前加上一個點。\n- 在使用「/mocap scenes add_to ...」時，在名稱前加上一個點，你也可以將場景新增至其他場景。",
+
+
+  "mocap.list.empty": "§7§o[空]§r",
+  "mocap.list.error": "§c§o[錯誤]§r",
+
+
+  "mocap.file.info.name": "§l名稱：§r %s",
+  "mocap.file.info.version.current": "§l格式版本：§r %d §7§o[目前]§r",
+  "mocap.file.info.version.old": "§l格式版本：§r %d §7§o[舊版]§r",
+  "mocap.file.info.version.not_supported": "§l格式版本：§r %d §7§o[不支援]§r",
+  "mocap.file.info.version.undefined": "§l格式版本：§r %d §7§o[未定義]§r",
+  "mocap.file.info.version.current.experimental": "§l格式版本：§r %d-exp §7§o[目前；實驗性]§r",
+  "mocap.file.info.version.old.experimental": "§l格式版本：§r %d-exp §7§o[舊版；實驗性]§r",
+  "mocap.file.info.version.not_supported.experimental": "§l格式版本：§r %d-exp §7§o[不支援；實驗性]§r",
+
+
+  "mocap.failure.improper_filename": "檔案名稱不正確！",
+  "mocap.failure.improper_filename.character": "你只能使用小寫字母、數字、底線、破折號或點",
+  "mocap.failure.improper_filename.dot_first": "你不能使用點作為第一個字元",
+  "mocap.failure.improper_filename.dash_first": "你不能使用破折號作為第一個字元",
+  "mocap.failure.improper_player_name": "玩家名稱不正確！",
+  "mocap.failure.improper_player_name.too_long": "玩家名稱的最大長度為 16",
+  "mocap.failure.improper_player_name.contains_spaces": "玩家名稱不能包含空格",
+  "mocap.failure.resolve_player": "無法解析玩家 - 此指令需要由玩家調用！",
+
+  "mocap.warning.custom_skin_cache_limit": "§l警告：§r 自訂外觀快取大小已達上限！",
+  "mocap.warning.custom_skin_cache_limit.tip": "重新加入世界以清除它",
+  "mocap.warning.experimental": "§l警告！§r\n你正在使用 Motion Capture 模組的實驗版本！\n你需要知道：\n -它可能有很多問題\n -許多新功能尚未完成，可能會有所變動\n -它不應該用於公開的模組包\n -未來版本可能與此版本的錄製和場景不相容！\n如果你計劃執行較長的專案，或者如果你期望此模組的穩定性，",
+  "mocap.warning.experimental.stable_download": "§n下載穩定版本§r！\n",
+  "mocap.warning.experimental.disable_message": "§n[停用此訊息]",
+
+  "mocap.error.generic": "§l錯誤：§r 發生錯誤！",
+  "mocap.error.playback_error": "§l錯誤：§r 播放期間發生錯誤！",
+  "mocap.error.failed_to_remove_fake_player": "§l錯誤：§r 無法移除假玩家！",
+  "mocap.error.failed_to_init_directories": "§l錯誤：§r 無法初始化目錄！",
+  "mocap.error.unable_to_get_argument": "§l錯誤：§r 無法取得參數！",
+  "mocap.error.failed_to_load_scene": "§l錯誤：§r 無法載入場景檔案！",
+  "mocap.error.failed_to_load_scene.not_supported": "不支援的場景檔案版本"
+}
