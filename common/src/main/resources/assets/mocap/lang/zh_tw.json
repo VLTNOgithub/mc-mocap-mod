@@ -124,6 +124,10 @@
   "mocap.scenes.element_info.offset": "§l位置偏移：§r [%f; %f; %f]",
   "mocap.scenes.element_info.player_as_entity.disabled": "§l玩家作為實體：§r §7§o[已停用]§r",
   "mocap.scenes.element_info.player_as_entity.enabled": "§l玩家作為實體：§r %s",
+  "mocap.scenes.element_info.scale.player_scale.normal": "§lPlayer scale:§r 1.0 §7§o[normal]§r",
+  "mocap.scenes.element_info.scale.player_scale.custom": "§lPlayer scale:§r %f",
+  "mocap.scenes.element_info.scale.scene_scale.normal": "§lScene scale:§r 1.0 §7§o[normal]§r",
+  "mocap.scenes.element_info.scale.scene_scale.custom": "§lScene scale:§r %f",
 
   "mocap.scenes.list_elements": "§l場景元素清單：§r",
 
