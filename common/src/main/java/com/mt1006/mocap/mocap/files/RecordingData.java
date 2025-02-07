@@ -6,13 +6,13 @@ import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.actions.BlockAction;
 import com.mt1006.mocap.mocap.actions.NextTick;
 import com.mt1006.mocap.mocap.actions.SkipTicks;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.utils.EntityData;
 import com.mt1006.mocap.utils.Utils;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -155,7 +155,7 @@ public class RecordingData
 		}
 	}
 
-	public void initEntityPosition(Entity entity, Vec3 posOffset)
+	public Vec3 initEntityPosition(Entity entity, Vec3 posOffset)
 	{
 		entity.moveTo(
 				startPos[0] + posOffset.x,
@@ -164,15 +164,16 @@ public class RecordingData
 				startRot[0],
 				startRot[1]);
 		entity.setYHeadRot(startRot[0]);
+		return posOffset.add(startPos[0], startPos[1], startPos[2]);
 	}
 
-	public void preExecute(Entity entity, Vec3i blockOffset)
+	public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos)
 	{
 		if (Settings.BLOCK_INITIALIZATION.val)
 		{
 			for (int i = blockActions.size() - 1; i >= 0; i--)
 			{
-				blockActions.get(i).preExecute(entity, blockOffset);
+				blockActions.get(i).preExecute(entity, modifiers, startPos);
 			}
 		}
 	}

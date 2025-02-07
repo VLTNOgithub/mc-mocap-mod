@@ -6,6 +6,7 @@
 -Added command to set playback modifiers - "/mocap playback modifiers".
 -Added command to clear server and clients mocap cache - "/mocap misc clear_cache".
 -Added support for custom NBT data with "player_as_entity" modifier.
+-Added "scale" playback modifier (thanks to netcore10 for suggestion).
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
 -Settings are now divided into 3 categories - recording, playback and advanced.
@@ -32,6 +33,7 @@
 -Improvements to recording information command output.
 -Improvements to error messages.
 -Improved output of trying to change setting value with "/mocap settings" command, when value remained unchanged.
+-Renamed "settings.mcmocap_conf" to "settings.txt".
 -Removed argument value limits that existed for some settings in "/mocap settings" command.
 -Output of "/mocap recordings list" and "/mocap scenes list" is now alphabetically sorted.
 -Changed some "errors" to "failures" and some "failures" to "errors" - it should be now easier to distinguish user errors (failures) from mod errors.

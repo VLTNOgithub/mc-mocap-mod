@@ -124,6 +124,10 @@
   "mocap.scenes.element_info.offset": "§lPrzesunięcie pozycji:§r [%f; %f; %f]",
   "mocap.scenes.element_info.player_as_entity.disabled": "§lGracz jako byt:§r §7§o[disabled]§r",
   "mocap.scenes.element_info.player_as_entity.enabled": "§lGracz jako byt:§r %s",
+  "mocap.scenes.element_info.scale.player_scale.normal": "§lSkala gracza:§r 1.0 §7§o[normalna]§r",
+  "mocap.scenes.element_info.scale.player_scale.custom": "§lSkala gracza:§r %f",
+  "mocap.scenes.element_info.scale.scene_scale.normal": "§lSkala sceny:§r 1.0 §7§o[normalna]§r",
+  "mocap.scenes.element_info.scale.scene_scale.custom": "§lSkala sceny:§r %f",
 
   "mocap.scenes.list_elements": "§lLista elementów w scenie:§r",
 

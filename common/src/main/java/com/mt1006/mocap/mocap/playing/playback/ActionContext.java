@@ -35,13 +35,14 @@ public class ActionContext
 	public final Level level;
 	public final PlaybackModifiers modifiers;
 	public final @Nullable FakePlayer ghostPlayer;
+	public final Vec3 startPos;
 	private boolean mainEntityRemoved = false;
 	public Entity entity;
 	private double[] position;
 	public int skippingTicks = 0;
 
 	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity,
-						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer)
+						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, double[] startPos)
 	{
 		this.owner = owner;
 		this.packetTargets = packetTargets;
@@ -49,6 +50,7 @@ public class ActionContext
 		this.level = entity.level();
 		this.modifiers = modifiers;
 		this.ghostPlayer = ghostPlayer;
+		this.startPos = modifiers.offset.add(startPos[0], startPos[1], startPos[2]);
 
 		setMainContextEntity();
 	}
@@ -150,8 +152,18 @@ public class ActionContext
 		position[1] = shiftY ? (position[1] + y) : (modifiers.offset.y + y);
 		position[2] = shiftXZ ? (position[2] + z) : (modifiers.offset.z + z);
 
-		entity.moveTo(position[0], position[1], position[2], rotY, rotX);
-		if (ghostPlayer != null) { ghostPlayer.moveTo(position[0], position[1], position[2], rotY, rotX); }
+		double scale = modifiers.scale.sceneScale;
+		double[] moveToPos = position;
+		if (scale != 1.0)
+		{
+			moveToPos = new double[3];
+			moveToPos[0] = ((position[0] - startPos.x) * scale) + startPos.x;
+			moveToPos[1] = ((position[1] - startPos.y) * scale) + startPos.y;
+			moveToPos[2] = ((position[2] - startPos.z) * scale) + startPos.z;
+		}
+
+		entity.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX);
+		if (ghostPlayer != null) { ghostPlayer.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX); }
 	}
 
 	private static void removeEntity(Entity entity)

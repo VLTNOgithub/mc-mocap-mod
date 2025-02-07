@@ -310,6 +310,7 @@ public class Movement implements Action
 		return Result.OK;
 	}
 
+	//TODO: do something with them
 	public static class Statistics
 	{
 		public int count;

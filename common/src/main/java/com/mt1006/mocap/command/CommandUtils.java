@@ -64,6 +64,11 @@ public class CommandUtils
 			then(Commands.literal("enabled").
 				then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).executes(command).
 				then(Commands.argument("nbt", NbtTagArgument.nbtTag()).executes(command)))));
+		builder.then(Commands.literal("scale").
+			then(Commands.literal("of_player").
+				then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command))).
+			then(Commands.literal("of_scene").
+				then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command))));
 
 		if (isScene)
 		{

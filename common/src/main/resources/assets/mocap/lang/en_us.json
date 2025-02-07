@@ -124,6 +124,10 @@
   "mocap.scenes.element_info.offset": "§lPosition offset:§r [%f; %f; %f]",
   "mocap.scenes.element_info.player_as_entity.disabled": "§lPlayer as entity:§r §7§o[disabled]§r",
   "mocap.scenes.element_info.player_as_entity.enabled": "§lPlayer as entity:§r %s",
+  "mocap.scenes.element_info.scale.player_scale.normal": "§lPlayer scale:§r 1.0 §7§o[normal]§r",
+  "mocap.scenes.element_info.scale.player_scale.custom": "§lPlayer scale:§r %f",
+  "mocap.scenes.element_info.scale.scene_scale.normal": "§lScene scale:§r 1.0 §7§o[normal]§r",
+  "mocap.scenes.element_info.scale.scene_scale.custom": "§lScene scale:§r %f",
 
   "mocap.scenes.list_elements": "§lScene elements list:§r",
 

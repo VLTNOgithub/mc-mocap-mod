@@ -23,9 +23,10 @@ public class PlaybackModifiers
 	public Offset offset;
 	public StartDelay startDelay;
 	public EntityFilter entityFilter; //TODO: implement
+	public Scale scale;
 
 	private PlaybackModifiers(@Nullable String playerName, PlayerSkin playerSkin, PlayerAsEntity playerAsEntity,
-							  Offset offset, StartDelay startDelay, EntityFilter entityFilter)
+							  Offset offset, StartDelay startDelay, EntityFilter entityFilter, Scale scale)
 	{
 		this.playerName = playerName;
 		this.playerSkin = playerSkin;
@@ -33,6 +34,7 @@ public class PlaybackModifiers
 		this.offset = offset;
 		this.startDelay = startDelay;
 		this.entityFilter = entityFilter;
+		this.scale = scale;
 	}
 
 	public PlaybackModifiers(JsonObject json)
@@ -50,12 +52,15 @@ public class PlaybackModifiers
 		playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
 
 		entityFilter = EntityFilter.FOR_PLAYBACK;
+
+		JsonElement scaleElement = json.get("scale");
+		scale = new Scale(scaleElement != null ? scaleElement.getAsJsonObject() : null);
 	}
 
 	public static PlaybackModifiers empty()
 	{
 		return new PlaybackModifiers(null, PlayerSkin.DEFAULT, PlayerAsEntity.DISABLED,
-				Offset.ZERO, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK);
+				Offset.ZERO, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK, Scale.NORMAL);
 	}
 
 	public PlaybackModifiers mergeWithParent(PlaybackModifiers parent)
@@ -67,18 +72,21 @@ public class PlaybackModifiers
 				offset.shift(parent.offset),
 				//startDelay.add(parent.startDelay), //TODO: fix how delaying start works?
 				startDelay,
-				entityFilter);
+				entityFilter,
+				scale.mergeWithParent(parent.scale));
 	}
 
 	public PlaybackModifiers copy()
 	{
-		return new PlaybackModifiers(playerName, playerSkin, playerAsEntity, offset, startDelay, entityFilter);
+		return new PlaybackModifiers(playerName, playerSkin, playerAsEntity, offset, startDelay, entityFilter, scale);
 	}
 
 	public boolean areDefault()
 	{
+		//TODO: include entityFilter
 		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
-				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO;
+				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO
+				&& scale.isNormal();
 	}
 
 	public void addToJson(JsonObject json)
@@ -95,6 +103,9 @@ public class PlaybackModifiers
 
 		JsonObject playerAsEntityJson = playerAsEntity.toJson();
 		if (playerAsEntityJson != null) { json.add("player_as_entity", playerAsEntityJson); }
+
+		JsonObject scaleJson = scale.toJson();
+		if (scaleJson != null) { json.add("scale", scaleJson); }
 	}
 
 	public void list(CommandOutput commandOutput)
@@ -129,6 +140,12 @@ public class PlaybackModifiers
 
 		if (!playerAsEntity.isEnabled()) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
 		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", playerAsEntity.entityId); }
+
+		if (scale.playerScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.normal"); }
+		else { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.custom", scale.playerScale); }
+
+		if (scale.sceneScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.scale.scene_scale.normal"); }
+		else { commandOutput.sendSuccess("scenes.element_info.scale.scene_scale.custom", scale.sceneScale); }
 	}
 
 	public boolean modify(CommandInfo commandInfo, String propertyName, int propertyNodePosition) throws CommandSyntaxException
@@ -173,6 +190,16 @@ public class PlaybackModifiers
 					return true;
 				}
 				break;
+
+			case "scale":
+				String scaleType = commandInfo.getNode(propertyNodePosition + 1);
+				if (scaleType == null) { break; }
+
+				double scaleVal = commandInfo.getDouble("scale");
+				if (scaleType.equals("of_player")) { scale = scale.ofPlayer(scaleVal); }
+				else if (scaleType.equals("of_scene")) { scale = scale.ofScene(scaleVal); }
+				else { break; }
+				return true;
 		}
 		return false;
 	}

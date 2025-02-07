@@ -2,12 +2,13 @@ package com.mt1006.mocap.mocap.actions;
 
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
+import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class BreakBlock implements BlockAction
 {
@@ -39,14 +40,26 @@ public class BreakBlock implements BlockAction
 		writer.addBlockPos(blockPos);
 	}
 
-	@Override public void preExecute(Entity entity, Vec3i blockOffset)
+	@Override public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos)
 	{
-		previousBlockState.placeSilently(entity, blockPos.offset(blockOffset));
+		previousBlockState.placeSilently(entity, blockPos.offset(modifiers.offset.blockOffset),
+				startPos, modifiers.scale.sceneScale);
 	}
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.level.destroyBlock(ctx.shiftBlockPos(blockPos), Settings.DROP_FROM_BLOCKS.val);
+		double scale = ctx.modifiers.scale.sceneScale;
+		BlockPos shiftedBlockPos = ctx.shiftBlockPos(blockPos);
+
+		if (scale == 1.0)
+		{
+			ctx.level.destroyBlock(shiftedBlockPos, Settings.DROP_FROM_BLOCKS.val);
+		}
+		else if (scale == (int)scale)
+		{
+			BlockStateData.scaledOperation(ctx.entity, shiftedBlockPos, ctx.startPos, scale,
+					(entity, pos) -> ctx.level.destroyBlock(pos, Settings.DROP_FROM_BLOCKS.val));
+		}
 		return Result.OK;
 	}
 }

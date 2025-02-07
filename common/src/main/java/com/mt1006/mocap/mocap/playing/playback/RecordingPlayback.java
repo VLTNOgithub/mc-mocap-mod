@@ -21,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -82,8 +83,9 @@ public class RecordingPlayback extends Playback
 
 			EntityData.PLAYER_SKIN_PARTS.set(fakePlayer, (byte)0b01111111);
 			fakePlayer.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
-			recording.initEntityPosition(fakePlayer, modifiers.offset);
-			recording.preExecute(fakePlayer, modifiers.offset.blockOffset);
+			Vec3 startPos = recording.initEntityPosition(fakePlayer, modifiers.offset);
+			recording.preExecute(fakePlayer, modifiers, startPos);
+			modifiers.scale.applyToPlayer(fakePlayer);
 
 			packetTargets.broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, fakePlayer));
 			level.addNewPlayer(fakePlayer);
@@ -109,14 +111,15 @@ public class RecordingPlayback extends Playback
 				throw new StartException();
 			}
 
-			recording.initEntityPosition(entity, modifiers.offset);
+			Vec3 startPos = recording.initEntityPosition(entity, modifiers.offset);
 			entity.setDeltaMovement(0.0, 0.0, 0.0);
 			entity.setInvulnerable(true);
 			entity.setNoGravity(true);
 			if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
+			modifiers.scale.applyToPlayer(entity);
 
 			level.addFreshEntity(entity);
-			recording.preExecute(entity, modifiers.offset.blockOffset);
+			recording.preExecute(entity, modifiers, startPos);
 
 			if (Settings.ALLOW_GHOSTS.val)
 			{
@@ -127,7 +130,7 @@ public class RecordingPlayback extends Playback
 			}
 		}
 
-		this.ctx = new ActionContext(owner, packetTargets, entity, modifiers, ghost);
+		this.ctx = new ActionContext(owner, packetTargets, entity, modifiers, ghost, recording.startPos);
 	}
 
 	@Override public boolean tick()

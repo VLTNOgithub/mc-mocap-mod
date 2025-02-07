@@ -186,6 +186,7 @@ public class EntityUpdate implements Action
 		entity.setInvulnerable(true);
 		entity.addTag(Playing.MOCAP_ENTITY_TAG);
 		if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
+		ctx.modifiers.scale.applyToEntity(entity);
 
 		ctx.level.addFreshEntity(entity);
 		ctx.entityDataMap.put(id, new ActionContext.EntityData(entity));
