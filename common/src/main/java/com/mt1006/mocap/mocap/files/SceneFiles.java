@@ -1,5 +1,6 @@
 package com.mt1006.mocap.mocap.files;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -340,6 +341,11 @@ public class SceneFiles
 		{
 			if (object != null) { json.add(name, object.json); }
 		}
+
+		public void addArray(String name, @Nullable JsonArray array)
+		{
+			if (array != null) { json.add(name, array); }
+		}
 	}
 
 	public record Reader(JsonObject json)
@@ -360,6 +366,12 @@ public class SceneFiles
 		{
 			JsonElement element = json.get(name);
 			return element != null ? new Reader(element.getAsJsonObject()) : null;
+		}
+
+		public @Nullable JsonArray readArray(String name)
+		{
+			JsonElement element = json.get(name);
+			return element != null ? element.getAsJsonArray() : null;
 		}
 	}
 }

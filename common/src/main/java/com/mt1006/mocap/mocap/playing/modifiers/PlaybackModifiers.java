@@ -38,7 +38,7 @@ public class PlaybackModifiers
 	public PlaybackModifiers(SceneFiles.Reader reader)
 	{
 		startDelay = StartDelay.fromSeconds(reader.readDouble("start_delay", 0.0));
-		offset = new Offset(reader.readDouble("offset_x", 0.0), reader.readDouble("offset_y", 0.0), reader.readDouble("offset_z", 0.0));
+		offset = Offset.fromArray(reader.readArray("offset"));
 
 		playerName = reader.readString("player_name");
 		playerSkin = new PlayerSkin(reader.readObject("player_skin"));
@@ -82,9 +82,7 @@ public class PlaybackModifiers
 	public void save(SceneFiles.Writer writer)
 	{
 		writer.addDouble("start_delay", startDelay.seconds, 0.0);
-		writer.addDouble("offset_x", offset.x, 0.0);
-		writer.addDouble("offset_y", offset.y, 0.0);
-		writer.addDouble("offset_z", offset.z, 0.0);
+		writer.addArray("offset", offset.toArray());
 		writer.addString("player_name", playerName);
 		writer.addObject("player_skin", playerSkin.save());
 		writer.addObject("player_as_entity", playerAsEntity.save());
