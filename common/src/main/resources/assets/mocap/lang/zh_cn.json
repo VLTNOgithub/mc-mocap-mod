@@ -101,7 +101,6 @@
   "mocap.scenes.remove.success": "场景已成功移除",
 
   "mocap.scenes.add_to.error": "§l错误：§r无法向场景中加入元素！",
-  "mocap.scenes.add_to.failed": "Failed to add element to scene!",
   "mocap.scenes.add_to.success": "成功向场景中加入元素",
 
   "mocap.scenes.remove_from.error": "§l错误：§r无法将元素从场景中移除！",
@@ -110,7 +109,6 @@
   "mocap.scenes.modify.error": "§lError:§r unable to modify scene element!",
   "mocap.scenes.modify.success": "Element successfully modified",
 
-  "mocap.scenes.element_info.failed": "Failed to get scene element information!",
   "mocap.scenes.element_info.info": "§l[SCENE ELEMENT INFORMATION]§r",
   "mocap.scenes.element_info.id": "§lScene/Position:§r %s / %d",
   "mocap.scenes.element_info.name": "§lName:§r %s",
@@ -137,10 +135,10 @@
 
   "mocap.scenes.list": "§l场景：§r%s",
 
-  "mocap.scenes.error.file_not_exists": "不存在以此为名的场景",
-  "mocap.scenes.error.wrong_element_pos": "不存在给定编号的元素",
-  "mocap.scenes.error.wrong_element_pos.tip": "使用\"/mocap scenes list <scene>\"来获取元素编号",
-  "mocap.scenes.error.wrong_subscene_name": "Name of the subscene on given position doesn't match expected name!",
+  "mocap.scenes.failure.file_not_exists": "不存在以此为名的场景",
+  "mocap.scenes.failure.wrong_element_pos": "不存在给定编号的元素",
+  "mocap.scenes.failure.wrong_element_pos.tip": "使用\"/mocap scenes list <scene>\"来获取元素编号",
+  "mocap.scenes.failure.wrong_subscene_name": "Name of the subscene on given position doesn't match expected name!",
 
 
   "mocap.playback.start.error": "§l错误：§r无法开启场景！",

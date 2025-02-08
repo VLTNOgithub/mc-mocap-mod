@@ -58,7 +58,7 @@ public class Files
 		initialized = false;
 	}
 
-	public static boolean check(CommandOutput commandOutput,  String name)
+	public static boolean check(CommandOutput commandOutput, String name)
 	{
 		return checkIfInitialized(commandOutput) && checkIfProperName(commandOutput, name);
 	}

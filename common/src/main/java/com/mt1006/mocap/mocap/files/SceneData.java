@@ -59,7 +59,12 @@ public class SceneData
 
 	public boolean load(CommandOutput commandOutput, String name)
 	{
-		byte[] data = Files.loadFile(Files.getSceneFile(commandOutput, name));
+		return load(commandOutput, Files.getSceneFile(commandOutput, name));
+	}
+
+	public boolean load(CommandOutput commandOutput, File file)
+	{
+		byte[] data = Files.loadFile(file);
 		return data != null && load(commandOutput, data);
 	}
 

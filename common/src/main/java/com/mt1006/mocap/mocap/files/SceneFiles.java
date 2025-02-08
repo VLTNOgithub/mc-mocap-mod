@@ -112,16 +112,8 @@ public class SceneFiles
 	public static boolean addElement(CommandOutput commandOutput, String name, SceneData.Subscene subscene)
 	{
 		File file = Files.getSceneFile(commandOutput, name);
-		if (file == null) { return false; }
-		if (!file.exists())
-		{
-			commandOutput.sendFailure("scenes.add_to.failed");
-			commandOutput.sendFailure("scenes.error.file_not_exists"); //TODO: make it a failure
-			return false;
-		}
-
-		SceneData sceneData = new SceneData();
-		if (!sceneData.load(commandOutput, name)) { return false; }
+		SceneData sceneData = loadSceneData(commandOutput, file);
+		if (sceneData == null) { return false; }
 
 		sceneData.subscenes.add(subscene);
 		return sceneData.save(commandOutput, file, name, "scenes.add_to.success", "scenes.add_to.error");
@@ -134,30 +126,9 @@ public class SceneFiles
 		String expectedName = posPair.getSecond();
 
 		File file = Files.getSceneFile(commandOutput, name);
-		if (file == null) { return false; }
-		if (!file.exists())
-		{
-			commandOutput.sendFailure("scenes.remove_from.error");
-			commandOutput.sendFailure("scenes.error.file_not_exists");
-			return false;
-		}
-
-		SceneData sceneData = new SceneData();
-		if (!sceneData.load(commandOutput, name)) { return false; }
-		if (sceneData.subscenes.size() < pos || pos < 1)
-		{
-			commandOutput.sendFailure("scenes.remove_from.error");
-			commandOutput.sendFailureWithTip("scenes.error.wrong_element_pos");
-			return false;
-		}
-
-		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
-		if (expectedName != null && !expectedName.equals(subscene.name))
-		{
-			commandOutput.sendFailure("scenes.remove_from.error");
-			commandOutput.sendFailure("scenes.error.wrong_subscene_name");
-			return false;
-		}
+		SceneData sceneData = loadSceneData(commandOutput, file);
+		SceneData.Subscene subscene = loadSubscene(commandOutput, sceneData, pos, expectedName);
+		if (subscene == null) { return false; }
 
 		sceneData.subscenes.remove(pos - 1);
 		return sceneData.save(commandOutput, file, name, "scenes.remove_from.success", "scenes.remove_from.error");
@@ -166,30 +137,9 @@ public class SceneFiles
 	public static boolean modify(CommandInfo commandInfo, String name, int pos, @Nullable String expectedName)
 	{
 		File file = Files.getSceneFile(commandInfo, name);
-		if (file == null) { return false; }
-		if (!file.exists())
-		{
-			commandInfo.sendFailure("scenes.modify.error");
-			commandInfo.sendFailure("scenes.error.file_not_exists");
-			return false;
-		}
-
-		SceneData sceneData = new SceneData();
-		if (!sceneData.load(commandInfo, name)) { return false; }
-		if (sceneData.subscenes.size() < pos || pos < 1)
-		{
-			commandInfo.sendFailure("scenes.modify.error");
-			commandInfo.sendFailureWithTip("scenes.error.wrong_element_pos");
-			return false;
-		}
-
-		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
-		if (expectedName != null && !expectedName.equals(subscene.name))
-		{
-			commandInfo.sendFailure("scenes.modify.error");
-			commandInfo.sendFailure("scenes.error.wrong_subscene_name");
-			return false;
-		}
+		SceneData sceneData = loadSceneData(commandInfo, file);
+		SceneData.Subscene subscene = loadSubscene(commandInfo, sceneData, pos, expectedName);
+		if (subscene == null) { return false; }
 
 		SceneData.Subscene newSubscene = modifySubscene(commandInfo, subscene);
 		if (newSubscene == null)
@@ -228,13 +178,11 @@ public class SceneFiles
 				return subscene;
 			}
 
-			boolean success = subscene.modifiers.modify(commandInfo, propertyName, 5);
-			if (!success)
+			if (!subscene.modifiers.modify(commandInfo, propertyName, 5))
 			{
 				rootCommandInfo.sendFailure("error.generic");
 				return null;
 			}
-
 			return subscene;
 		}
 		catch (Exception e)
@@ -250,33 +198,10 @@ public class SceneFiles
 		int pos = posPair.getFirst();
 		String expectedName = posPair.getSecond();
 
-		File sceneFile = Files.getSceneFile(commandOutput, name);
-		if (sceneFile == null) { return false; }
-
-		if (!sceneFile.exists())
-		{
-			commandOutput.sendFailure("scenes.element_info.failed");
-			commandOutput.sendFailure("scenes.error.file_not_exists");
-			return false;
-		}
-
-		SceneData sceneData = new SceneData();
-		if (!sceneData.load(commandOutput, name)) { return false; }
-
-		if (sceneData.subscenes.size() < pos || pos < 1)
-		{
-			commandOutput.sendFailure("scenes.element_info.failed");
-			commandOutput.sendFailureWithTip("scenes.error.wrong_element_pos");
-			return false;
-		}
-
-		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
-		if (expectedName != null && !expectedName.equals(subscene.name))
-		{
-			commandOutput.sendFailure("scenes.remove_from.error");
-			commandOutput.sendFailure("scenes.error.wrong_subscene_name");
-			return false;
-		}
+		File file = Files.getSceneFile(commandOutput, name);
+		SceneData sceneData = loadSceneData(commandOutput, file);
+		SceneData.Subscene subscene = loadSubscene(commandOutput, sceneData, pos, expectedName);
+		if (subscene == null) { return false; }
 
 		commandOutput.sendSuccess("scenes.element_info.info");
 		commandOutput.sendSuccess("scenes.element_info.id", name, pos);
@@ -288,8 +213,8 @@ public class SceneFiles
 
 	public static boolean listElements(CommandOutput commandOutput, String name)
 	{
-		SceneData sceneData = new SceneData();
-		if (!sceneData.load(commandOutput, name)) { return false; }
+		SceneData sceneData = loadSceneData(commandOutput, Files.getSceneFile(commandOutput, name));
+		if (sceneData == null) { return false; }
 
 		commandOutput.sendSuccess("scenes.list_elements");
 
@@ -307,7 +232,6 @@ public class SceneFiles
 	public static boolean info(CommandOutput commandOutput, String name)
 	{
 		SceneData sceneData = new SceneData();
-
 		if (!sceneData.load(commandOutput, name) && sceneData.version <= VERSION)
 		{
 			commandOutput.sendFailure("scenes.info.failed");
@@ -342,6 +266,38 @@ public class SceneFiles
 	private static String nameWithDot(String name)
 	{
 		return name.charAt(0) == '.' ? name : ("." + name);
+	}
+
+	private static @Nullable SceneData loadSceneData(CommandOutput commandOutput, @Nullable File file)
+	{
+		if (file == null) { return null; }
+		if (!file.exists())
+		{
+			commandOutput.sendFailure("scenes.failure.file_not_exists");
+			return null;
+		}
+
+		SceneData sceneData = new SceneData();
+		return sceneData.load(commandOutput, file) ? sceneData : null;
+	}
+
+	private static @Nullable SceneData.Subscene loadSubscene(CommandOutput commandOutput, @Nullable SceneData sceneData, int pos, @Nullable String expectedName)
+	{
+		if (sceneData == null) { return null; }
+
+		if (sceneData.subscenes.size() < pos || pos < 1)
+		{
+			commandOutput.sendFailureWithTip("scenes.failure.wrong_element_pos");
+			return null;
+		}
+
+		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
+		if (expectedName != null && !expectedName.equals(subscene.name))
+		{
+			commandOutput.sendFailure("scenes.failure.wrong_subscene_name");
+			return null;
+		}
+		return subscene;
 	}
 
 	public record Writer(JsonObject json)

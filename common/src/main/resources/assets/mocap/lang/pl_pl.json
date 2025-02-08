@@ -101,7 +101,6 @@
   "mocap.scenes.remove.success": "Scena pomyślnie usunięta",
 
   "mocap.scenes.add_to.error": "§lBłąd:§r nie udało się dodać elementu do sceny!",
-  "mocap.scenes.add_to.failed": "Nie udało się dodać elementu do sceny!",
   "mocap.scenes.add_to.success": "Element pomyślnie dodany do sceny",
 
   "mocap.scenes.remove_from.error": "§lBłąd:§r nie udało się usunąć elementu ze sceny!",
@@ -110,7 +109,6 @@
   "mocap.scenes.modify.error": "§lError:§r unable to modify scene element!",
   "mocap.scenes.modify.success": "Element successfully modified",
 
-  "mocap.scenes.element_info.failed": "Nie udało się uzyskać informacji o elemencie sceny!",
   "mocap.scenes.element_info.info": "§l[INFORMACJE O ELEMENCIE SCENY]§r",
   "mocap.scenes.element_info.id": "§lScena/Pozycja:§r %s / %d",
   "mocap.scenes.element_info.name": "§lNazwa:§r %s",
@@ -137,10 +135,10 @@
 
   "mocap.scenes.list": "§lSceny:§r%s",
 
-  "mocap.scenes.error.file_not_exists": "Scena o tej nazwie nie istnieje",
-  "mocap.scenes.error.wrong_element_pos": "Element o podanym numerze nie istnieje",
-  "mocap.scenes.error.wrong_element_pos.tip": "Użyj \"/mocap scenes list <scena>\" aby uzyskać numery poszczególnych elementów",
-  "mocap.scenes.error.wrong_subscene_name": "Nazwa elementu sceny na danej pozycji nie pasuje do oczekiwanej nazwy!",
+  "mocap.scenes.failure.file_not_exists": "Scena o tej nazwie nie istnieje",
+  "mocap.scenes.failure.wrong_element_pos": "Element o podanym numerze nie istnieje",
+  "mocap.scenes.failure.wrong_element_pos.tip": "Użyj \"/mocap scenes list <scena>\" aby uzyskać numery poszczególnych elementów",
+  "mocap.scenes.failure.wrong_subscene_name": "Nazwa elementu sceny na danej pozycji nie pasuje do oczekiwanej nazwy!",
 
 
   "mocap.playback.start.error": "§lBłąd:§r nie udało się rozpocząć odtwarzania sceny!",

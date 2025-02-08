@@ -101,7 +101,6 @@
   "mocap.scenes.remove.success": "場景已成功移除",
 
   "mocap.scenes.add_to.error": "§l錯誤：§r 無法將元素新增至場景！",
-  "mocap.scenes.add_to.failed": "無法將元素新增至場景！",
   "mocap.scenes.add_to.success": "元素已成功新增至場景",
 
   "mocap.scenes.remove_from.error": "§l錯誤：§r 無法從場景中移除元素！",
@@ -110,7 +109,6 @@
   "mocap.scenes.modify.error": "§l錯誤：§r 無法修改場景元素！",
   "mocap.scenes.modify.success": "元素已成功修改",
 
-  "mocap.scenes.element_info.failed": "無法取得場景元素資訊！",
   "mocap.scenes.element_info.info": "§l[場景元素資訊]§r",
   "mocap.scenes.element_info.id": "§l場景/位置：§r %s / %d",
   "mocap.scenes.element_info.name": "§l名稱：§r %s",
@@ -137,10 +135,10 @@
 
   "mocap.scenes.list": "§l場景：§r%s",
 
-  "mocap.scenes.error.file_not_exists": "沒有這個名稱的場景",
-  "mocap.scenes.error.wrong_element_pos": "沒有給定編號的元素",
-  "mocap.scenes.error.wrong_element_pos.tip": "使用「/mocap scenes list <場景>」取得元素編號",
-  "mocap.scenes.error.wrong_subscene_name": "給定位置的子場景名稱與預期名稱不符！",
+  "mocap.scenes.failure.file_not_exists": "沒有這個名稱的場景",
+  "mocap.scenes.failure.wrong_element_pos": "沒有給定編號的元素",
+  "mocap.scenes.failure.wrong_element_pos.tip": "使用「/mocap scenes list <場景>」取得元素編號",
+  "mocap.scenes.failure.wrong_subscene_name": "給定位置的子場景名稱與預期名稱不符！",
 
 
   "mocap.playback.start.error": "§l錯誤：§r 無法開始場景！",
