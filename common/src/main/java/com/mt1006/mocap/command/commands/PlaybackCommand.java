@@ -2,6 +2,7 @@ package com.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.CommandsContext;
@@ -70,12 +71,8 @@ public class PlaybackCommand
 	{
 		try
 		{
-			String idStr = commandInfo.getString("id");
-			int dashPos = idStr.indexOf('-');
-			int id = Integer.parseInt(dashPos != -1 ? idStr.substring(0, dashPos) : idStr);
-			String expectedName = dashPos != -1 ? idStr.substring(dashPos + 1) : null;
-
-			Playing.stop(commandInfo, id, expectedName);
+			Pair<Integer, String> idPair = CommandUtils.splitIdStr(commandInfo.getString("id"));
+			Playing.stop(commandInfo, idPair.getFirst(), idPair.getSecond());
 			return true;
 		}
 		catch (IllegalArgumentException e)

@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.io.CommandInfo;
@@ -37,13 +38,13 @@ public class ScenesCommand
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
 			then(CommandUtils.playerArguments(buildContext, COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
-			then(CommandUtils.withInputAndIntArgument(SceneFiles::removeElement, CommandSuggestions::sceneSuggestions, "scene_name", "to_remove")));
+			then(CommandUtils.withTwoInputArguments(SceneFiles::removeElement, CommandSuggestions::sceneSuggestions, CommandSuggestions::sceneElementSuggestion, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
 			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
 			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", StringArgumentType.string()).
 				suggests(CommandSuggestions::sceneElementSuggestion), CommandUtils.command(ScenesCommand::modify), true))));
-		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name")).
-			then(CommandUtils.withInputAndIntArgument(SceneFiles::elementInfo, CommandSuggestions::sceneSuggestions, "scene_name", "element_pos")));
+		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name").suggests(CommandSuggestions::sceneSuggestions)).
+			then(CommandUtils.withTwoInputArguments(SceneFiles::elementInfo, CommandSuggestions::sceneSuggestions, CommandSuggestions::sceneElementSuggestion, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
 			then(CommandUtils.withInputArgument(SceneFiles::listElements, CommandSuggestions::sceneSuggestions, "scene_name")));
 
@@ -83,13 +84,8 @@ public class ScenesCommand
 		try
 		{
 			String name = commandInfo.getString("scene_name");
-
-			String posStr = commandInfo.getString("to_modify");
-			int dashPos = posStr.indexOf('-');
-			int pos = Integer.parseInt(dashPos != -1 ? posStr.substring(0, dashPos) : posStr);
-			String expectedName = dashPos != -1 ? posStr.substring(dashPos + 1) : null;
-
-			return SceneFiles.modify(commandInfo, name, pos, expectedName);
+			Pair<Integer, String> posPair = CommandUtils.splitIdStr(commandInfo.getString("to_modify"));
+			return SceneFiles.modify(commandInfo, name, posPair.getFirst(), posPair.getSecond());
 		}
 		catch (IllegalArgumentException e)
 		{

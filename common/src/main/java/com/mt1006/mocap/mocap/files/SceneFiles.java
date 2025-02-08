@@ -4,8 +4,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.CommandSuggestions;
+import com.mt1006.mocap.command.CommandUtils;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
 import org.apache.commons.io.FileUtils;
@@ -125,8 +127,12 @@ public class SceneFiles
 		return sceneData.save(commandOutput, file, name, "scenes.add_to.success", "scenes.add_to.error");
 	}
 
-	public static boolean removeElement(CommandOutput commandOutput, String name, int pos)
+	public static boolean removeElement(CommandOutput commandOutput, String name, String posStr)
 	{
+		Pair<Integer, String> posPair = CommandUtils.splitIdStr(posStr);
+		int pos = posPair.getFirst();
+		String expectedName = posPair.getSecond();
+
 		File file = Files.getSceneFile(commandOutput, name);
 		if (file == null) { return false; }
 		if (!file.exists())
@@ -142,6 +148,14 @@ public class SceneFiles
 		{
 			commandOutput.sendFailure("scenes.remove_from.error");
 			commandOutput.sendFailureWithTip("scenes.error.wrong_element_pos");
+			return false;
+		}
+
+		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
+		if (expectedName != null && !expectedName.equals(subscene.name))
+		{
+			commandOutput.sendFailure("scenes.remove_from.error");
+			commandOutput.sendFailure("scenes.error.wrong_subscene_name");
 			return false;
 		}
 
@@ -230,8 +244,12 @@ public class SceneFiles
 		}
 	}
 
-	public static boolean elementInfo(CommandOutput commandOutput, String name, int pos)
+	public static boolean elementInfo(CommandOutput commandOutput, String name, String posStr)
 	{
+		Pair<Integer, String> posPair = CommandUtils.splitIdStr(posStr);
+		int pos = posPair.getFirst();
+		String expectedName = posPair.getSecond();
+
 		File sceneFile = Files.getSceneFile(commandOutput, name);
 		if (sceneFile == null) { return false; }
 
@@ -253,6 +271,12 @@ public class SceneFiles
 		}
 
 		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
+		if (expectedName != null && !expectedName.equals(subscene.name))
+		{
+			commandOutput.sendFailure("scenes.remove_from.error");
+			commandOutput.sendFailure("scenes.error.wrong_subscene_name");
+			return false;
+		}
 
 		commandOutput.sendSuccess("scenes.element_info.info");
 		commandOutput.sendSuccess("scenes.element_info.id", name, pos);

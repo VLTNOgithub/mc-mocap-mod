@@ -9,6 +9,7 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.datafixers.util.Pair;
 import com.mt1006.mocap.command.io.CommandInfo;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -103,13 +104,16 @@ public class CommandUtils
 				.executes((ctx) -> twoStringCommand(function, ctx, arg1, arg2)));
 	}
 
-	public static RequiredArgumentBuilder<CommandSourceStack, String> withInputAndIntArgument(TriFunction<CommandInfo, String, Integer, Boolean> function,
-																							  SuggestionProvider<CommandSourceStack> suggestions, String arg1, String arg2)
+	public static RequiredArgumentBuilder<CommandSourceStack, String> withTwoInputArguments(TriFunction<CommandInfo, String, String, Boolean> function,
+																							SuggestionProvider<CommandSourceStack> suggestions1,
+																							SuggestionProvider<CommandSourceStack> suggestions2,
+																							String arg1, String arg2)
 	{
 		return Commands.argument(arg1, StringArgumentType.string())
-				.suggests(suggestions)
-				.then(Commands.argument(arg2, IntegerArgumentType.integer())
-				.executes((ctx) -> stringAndIntCommand(function, ctx, arg1, arg2)));
+				.suggests(suggestions1)
+				.then(Commands.argument(arg2, StringArgumentType.string())
+				.suggests(suggestions2)
+				.executes((ctx) -> twoStringCommand(function, ctx, arg1, arg2)));
 	}
 
 	private static int stringCommand(BiFunction<CommandInfo, String, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg, boolean nullable)
@@ -134,22 +138,6 @@ public class CommandUtils
 		}
 	}
 
-	private static int stringAndIntCommand(TriFunction<CommandInfo, String, Integer, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg1, String arg2)
-	{
-		CommandInfo commandInfo = new CommandInfo(ctx);
-		try
-		{
-			String str = commandInfo.getString(arg1);
-			int intVal = commandInfo.getInteger(arg2);
-			return function.apply(commandInfo, str, intVal) ? 1 : 0;
-		}
-		catch (IllegalArgumentException e)
-		{
-			commandInfo.sendException(e, "error.unable_to_get_argument");
-			return 0;
-		}
-	}
-
 	private static int twoStringCommand(TriFunction<CommandInfo, String, String, Boolean> function, CommandContext<CommandSourceStack> ctx, String arg1, String arg2)
 	{
 		CommandInfo commandInfo = new CommandInfo(ctx);
@@ -164,6 +152,14 @@ public class CommandUtils
 			commandInfo.sendException(e, "error.unable_to_get_argument");
 			return 0;
 		}
+	}
+
+	public static Pair<Integer, @Nullable String> splitIdStr(String str)
+	{
+		int dashPos = str.indexOf('-');
+		int pos = Integer.parseInt(dashPos != -1 ? str.substring(0, dashPos) : str);
+		String expectedName = dashPos != -1 ? str.substring(dashPos + 1) : null;
+		return Pair.of(pos, expectedName);
 	}
 
 	public static @Nullable String getNode(List<? extends ParsedCommandNode<?>> nodes, int pos)
