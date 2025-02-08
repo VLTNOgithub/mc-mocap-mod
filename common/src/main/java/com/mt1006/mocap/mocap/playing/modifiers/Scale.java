@@ -1,8 +1,6 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.mt1006.mocap.mocap.files.SceneFiles;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -19,20 +17,17 @@ public class Scale
 	public final double playerScale;
 	public final double sceneScale;
 
-	public Scale(@Nullable JsonObject json)
+	public Scale(@Nullable SceneFiles.Reader reader)
 	{
-		if (json == null)
+		if (reader == null)
 		{
 			playerScale = 1.0;
 			sceneScale = 1.0;
 			return;
 		}
 
-		JsonElement playerScaleElement = json.get("player_scale");
-		playerScale = playerScaleElement != null ? playerScaleElement.getAsDouble() : 1.0;
-
-		JsonElement sceneScaleElement = json.get("scene_scale");
-		sceneScale = sceneScaleElement != null ? sceneScaleElement.getAsDouble() : 1.0;
+		playerScale = reader.readDouble("player_scale", 1.0);
+		sceneScale = reader.readDouble("scene_scale", 1.0);
 	}
 
 	private Scale(double playerScale, double sceneScale)
@@ -51,15 +46,15 @@ public class Scale
 		return new Scale(playerScale, scale);
 	}
 
-	public @Nullable JsonObject toJson()
+	public @Nullable SceneFiles.Writer save()
 	{
 		if (isNormal()) { return null; }
 
-		JsonObject json = new JsonObject();
-		if (playerScale != 1.0) { json.add("player_scale", new JsonPrimitive(playerScale)); }
-		if (sceneScale != 1.0) { json.add("scene_scale", new JsonPrimitive(sceneScale)); }
+		SceneFiles.Writer writer = new SceneFiles.Writer();
+		writer.addDouble("player_scale", playerScale, 1.0);
+		writer.addDouble("scene_scale", sceneScale, 1.0);
 
-		return json;
+		return writer;
 	}
 
 	public boolean isNormal()

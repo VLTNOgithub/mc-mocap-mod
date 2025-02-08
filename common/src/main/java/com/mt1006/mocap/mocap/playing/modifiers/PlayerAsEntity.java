@@ -1,9 +1,7 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -30,36 +28,32 @@ public class PlayerAsEntity
 		this.compoundTag = prepareCompoundTag(entityId, entityNbt);
 	}
 
-	public PlayerAsEntity(@Nullable JsonObject json)
+	public PlayerAsEntity(@Nullable SceneFiles.Reader reader)
 	{
-		if (json == null)
+		if (reader == null)
 		{
-			this.entityId = null;
-			this.entityNbt = null;
-			this.entityType = null;
-			this.compoundTag = null;
+			entityId = null;
+			entityNbt = null;
+			entityType = null;
+			compoundTag = null;
 			return;
 		}
 
-		JsonElement idElement = json.get("id");
-		this.entityId = idElement != null ? idElement.getAsString() : null;
-
-		JsonElement nbtElement = json.get("nbt");
-		this.entityNbt = nbtElement != null ? nbtElement.getAsString() : null;
-
+		entityId = reader.readString("id");
+		entityNbt = reader.readString("nbt");
 		this.entityType = prepareEntityType(entityId, entityNbt);
 		this.compoundTag = prepareCompoundTag(entityId, entityNbt);
 	}
 
-	public @Nullable JsonObject toJson()
+	public @Nullable SceneFiles.Writer save()
 	{
 		if (!isEnabled()) { return null; }
 
-		JsonObject json = new JsonObject();
-		if (entityId != null) { json.add("id", new JsonPrimitive(entityId)); }
-		if (entityNbt != null) { json.add("nbt", new JsonPrimitive(entityNbt)); }
+		SceneFiles.Writer writer = new SceneFiles.Writer();
+		writer.addString("id", entityId);
+		writer.addString("nbt", entityNbt);
 
-		return json;
+		return writer;
 	}
 
 	public boolean isEnabled()

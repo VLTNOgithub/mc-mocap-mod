@@ -1,5 +1,8 @@
 package com.mt1006.mocap.mocap.files;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mt1006.mocap.MocapMod;
 import com.mt1006.mocap.command.CommandSuggestions;
 import com.mt1006.mocap.command.io.CommandInfo;
@@ -314,5 +317,49 @@ public class SceneFiles
 	private static String nameWithDot(String name)
 	{
 		return name.charAt(0) == '.' ? name : ("." + name);
+	}
+
+	public record Writer(JsonObject json)
+	{
+		public Writer()
+		{
+			this(new JsonObject());
+		}
+
+		public void addDouble(String name, double val, double def)
+		{
+			if (val != def) { json.add(name, new JsonPrimitive(val)); }
+		}
+
+		public void addString(String name, @Nullable String val)
+		{
+			if (val != null) { json.add(name, new JsonPrimitive(val)); }
+		}
+
+		public void addObject(String name, @Nullable Writer object)
+		{
+			if (object != null) { json.add(name, object.json); }
+		}
+	}
+
+	public record Reader(JsonObject json)
+	{
+		public double readDouble(String name, double def)
+		{
+			JsonElement element = json.get(name);
+			return element != null ? element.getAsDouble() : def;
+		}
+
+		public @Nullable String readString(String name)
+		{
+			JsonElement element = json.get(name);
+			return element != null ? element.getAsString() : null;
+		}
+
+		public @Nullable Reader readObject(String name)
+		{
+			JsonElement element = json.get(name);
+			return element != null ? new Reader(element.getAsJsonObject()) : null;
+		}
 	}
 }

@@ -1,17 +1,14 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import com.mt1006.mocap.command.io.CommandInfo;
+import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import com.mt1006.mocap.mocap.settings.Settings;
 import com.mt1006.mocap.utils.Fields;
 import com.mt1006.mocap.utils.ProfileUtils;
-import com.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -25,50 +22,49 @@ public class PlayerSkin
 	public static final PlayerSkin DEFAULT = new PlayerSkin();
 	private static final String MINESKIN_API_URL = "https://api.mineskin.org/get/uuid/";
 	public final SkinSource skinSource;
-	public final String skinPath;
+	public final @Nullable String skinPath;
 
 	private PlayerSkin()
 	{
 		this.skinSource = SkinSource.DEFAULT;
-		this.skinPath = Utils.NULL_STR;
+		this.skinPath = null;
 	}
 
 	public PlayerSkin(SkinSource skinSource, @Nullable String skinPath)
 	{
 		this.skinSource = skinSource;
-		this.skinPath = Utils.toNotNullStr(skinPath);
+		this.skinPath = skinPath;
 	}
 
-	public PlayerSkin(@Nullable JsonObject json)
+	public PlayerSkin(@Nullable SceneFiles.Reader reader)
 	{
-		if (json == null)
+		if (reader == null)
 		{
-			this.skinSource = SkinSource.DEFAULT;
-			this.skinPath = Utils.NULL_STR;
+			skinSource = SkinSource.DEFAULT;
+			skinPath = null;
 			return;
 		}
 
-		JsonElement skinSourceElement = json.get("skin_source");
-		this.skinSource = skinSourceElement != null ? SkinSource.fromName(skinSourceElement.getAsString()) : SkinSource.DEFAULT;
-
-		JsonElement skinPathElement = json.get("skin_path");
-		this.skinPath = skinPathElement != null ? skinPathElement.getAsString() : Utils.NULL_STR;
+		skinSource = SkinSource.fromName(reader.readString("skin_source"));
+		skinPath = reader.readString("skin_path");
 	}
 
-	public @Nullable JsonObject toJson()
+	public @Nullable SceneFiles.Writer save()
 	{
 		if (skinSource == SkinSource.DEFAULT) { return null; }
 
-		JsonObject json = new JsonObject();
-		json.add("skin_source", new JsonPrimitive(skinSource.getName()));
-		if (!skinPath.equals(Utils.NULL_STR)) { json.add("skin_path", new JsonPrimitive(skinPath)); }
+		SceneFiles.Writer writer = new SceneFiles.Writer();
+		writer.addString("skin_source", skinSource.getName());
+		writer.addString("skin_path", skinPath);
 
-		return json;
+		return writer;
 	}
 
 	public void addSkinToPropertyMap(CommandInfo commandInfo, PropertyMap propertyMap)
 			throws IllegalArgumentException, IllegalAccessException
 	{
+		if (skinPath == null) { return; }
+
 		switch (skinSource)
 		{
 			case FROM_PLAYER:
@@ -171,8 +167,10 @@ public class PlayerSkin
 			return name().toLowerCase();
 		}
 
-		public static SkinSource fromName(String name)
+		public static SkinSource fromName(@Nullable String name)
 		{
+			if (name == null) { return DEFAULT; }
+
 			try
 			{
 				return valueOf(name.toUpperCase());

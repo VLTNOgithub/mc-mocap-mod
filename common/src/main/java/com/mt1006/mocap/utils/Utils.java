@@ -17,18 +17,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class Utils
 {
-	public static final String NULL_STR = "[null]";
-
-	public static @Nullable String toNullableStr(String str)
-	{
-		return !str.equals(NULL_STR) ? str : null;
-	}
-
-	public static String toNotNullStr(@Nullable String str)
-	{
-		return str != null ? str : NULL_STR;
-	}
-
 	public static void exception(Exception exception, String str)
 	{
 		MocapMod.LOGGER.error(str);

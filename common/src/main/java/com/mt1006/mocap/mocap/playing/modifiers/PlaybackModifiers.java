@@ -1,11 +1,9 @@
 package com.mt1006.mocap.mocap.playing.modifiers;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mt1006.mocap.command.io.CommandInfo;
 import com.mt1006.mocap.command.io.CommandOutput;
+import com.mt1006.mocap.mocap.files.SceneFiles;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.commands.arguments.NbtTagArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
@@ -37,24 +35,16 @@ public class PlaybackModifiers
 		this.scale = scale;
 	}
 
-	public PlaybackModifiers(JsonObject json)
+	public PlaybackModifiers(SceneFiles.Reader reader)
 	{
-		startDelay = StartDelay.fromSeconds(getJsonDouble(json, "start_delay"));
-		offset = new Offset(getJsonDouble(json, "offset_x"), getJsonDouble(json, "offset_y"), getJsonDouble(json, "offset_z"));
+		startDelay = StartDelay.fromSeconds(reader.readDouble("start_delay", 0.0));
+		offset = new Offset(reader.readDouble("offset_x", 0.0), reader.readDouble("offset_y", 0.0), reader.readDouble("offset_z", 0.0));
 
-		JsonElement playerNameElement = json.get("player_name");
-		playerName = playerNameElement != null ? playerNameElement.getAsString() : null;
-
-		JsonElement playerSkinElement = json.get("player_skin");
-		playerSkin = new PlayerSkin(playerSkinElement != null ? playerSkinElement.getAsJsonObject() : null);
-
-		JsonElement playerAsEntityElement = json.get("player_as_entity");
-		playerAsEntity = new PlayerAsEntity(playerAsEntityElement != null ? playerAsEntityElement.getAsJsonObject() : null);
-
+		playerName = reader.readString("player_name");
+		playerSkin = new PlayerSkin(reader.readObject("player_skin"));
+		playerAsEntity = new PlayerAsEntity(reader.readObject("player_as_entity"));
 		entityFilter = EntityFilter.FOR_PLAYBACK;
-
-		JsonElement scaleElement = json.get("scale");
-		scale = new Scale(scaleElement != null ? scaleElement.getAsJsonObject() : null);
+		scale = new Scale(reader.readObject("scale"));
 	}
 
 	public static PlaybackModifiers empty()
@@ -89,23 +79,16 @@ public class PlaybackModifiers
 				&& scale.isNormal();
 	}
 
-	public void addToJson(JsonObject json)
+	public void save(SceneFiles.Writer writer)
 	{
-		addJsonDouble(json, "start_delay", startDelay.seconds);
-		addJsonDouble(json, "offset_x", offset.x);
-		addJsonDouble(json, "offset_y", offset.y);
-		addJsonDouble(json, "offset_z", offset.z);
-
-		if (playerName != null) { json.add("player_name", new JsonPrimitive(playerName)); }
-
-		JsonObject playerDataJson = playerSkin.toJson();
-		if (playerDataJson != null) { json.add("player_skin", playerDataJson); }
-
-		JsonObject playerAsEntityJson = playerAsEntity.toJson();
-		if (playerAsEntityJson != null) { json.add("player_as_entity", playerAsEntityJson); }
-
-		JsonObject scaleJson = scale.toJson();
-		if (scaleJson != null) { json.add("scale", scaleJson); }
+		writer.addDouble("start_delay", startDelay.seconds, 0.0);
+		writer.addDouble("offset_x", offset.x, 0.0);
+		writer.addDouble("offset_y", offset.y, 0.0);
+		writer.addDouble("offset_z", offset.z, 0.0);
+		writer.addString("player_name", playerName);
+		writer.addObject("player_skin", playerSkin.save());
+		writer.addObject("player_as_entity", playerAsEntity.save());
+		writer.addObject("scale", scale.save());
 	}
 
 	public void list(CommandOutput commandOutput)
@@ -222,16 +205,5 @@ public class PlaybackModifiers
 			return false;
 		}
 		return true;
-	}
-
-	private static double getJsonDouble(JsonObject json, String name)
-	{
-		JsonElement element = json.get(name);
-		return element != null ? element.getAsDouble() : 0.0;
-	}
-
-	private static void addJsonDouble(JsonObject json, String name, double val)
-	{
-		if (val != 0.0) { json.add(name, new JsonPrimitive(val)); }
 	}
 }

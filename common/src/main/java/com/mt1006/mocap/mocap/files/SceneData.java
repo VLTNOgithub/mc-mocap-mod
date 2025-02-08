@@ -143,14 +143,14 @@ public class SceneData
 			if (nameElement == null) { throw new Exception("JSON \"name\" element not found!"); }
 
 			name = nameElement.getAsString();
-			modifiers = new PlaybackModifiers(json);
+			modifiers = new PlaybackModifiers(new SceneFiles.Reader(json));
 		}
 
 		public JsonObject toJson()
 		{
 			JsonObject json = new JsonObject();
 			json.add("name", new JsonPrimitive(name));
-			modifiers.addToJson(json);
+			modifiers.save(new SceneFiles.Writer(json));
 			return json;
 		}
 
