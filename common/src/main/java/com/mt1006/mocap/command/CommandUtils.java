@@ -2,7 +2,6 @@ package com.mt1006.mocap.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
@@ -30,22 +29,23 @@ public class CommandUtils
 		return Commands.argument("player_name", StringArgumentType.string()).executes(command);
 	}
 
-	public static ArgumentBuilder<CommandSourceStack, ?> playerArguments(CommandBuildContext buildContext,
-																		 Command<CommandSourceStack> command)
+	public static ArgumentBuilder<CommandSourceStack, ?> playerArguments(CommandBuildContext buildContext, Command<CommandSourceStack> command)
 	{
-		return withModelArguments(buildContext, playerNameArgument(command), command);
+		return withModelArguments(buildContext, playerNameArgument(command), command, true);
 	}
 
-	public static ArgumentBuilder<CommandSourceStack, ?> withModelArguments(CommandBuildContext buildContext,
-																			ArgumentBuilder<CommandSourceStack, ?> builder,
-																			Command<CommandSourceStack> command)
+	public static ArgumentBuilder<CommandSourceStack, ?> withModelArguments(CommandBuildContext buildContext, ArgumentBuilder<CommandSourceStack, ?> builder,
+																			Command<CommandSourceStack> command, boolean addPlayerAsEntity)
 	{
 		builder.then(Commands.literal("skin_from_player").then(Commands.argument("skin_player_name", StringArgumentType.greedyString()).executes(command)));
 		builder.then(Commands.literal("skin_from_file").then(Commands.argument("skin_filename", StringArgumentType.greedyString()).executes(command)));
 		builder.then(Commands.literal("skin_from_mineskin").then(Commands.argument("mineskin_url", StringArgumentType.greedyString()).executes(command)));
-		builder.then(Commands.literal("player_as_entity").
+		if (addPlayerAsEntity)
+		{
+			builder.then(Commands.literal("player_as_entity").
 				then(Commands.argument("entity", ResourceArgument.resource(buildContext, Registries.ENTITY_TYPE)).executes(command).
 				then(Commands.argument("nbt", NbtTagArgument.nbtTag()).executes(command))));
+		}
 		return builder;
 	}
 
@@ -59,7 +59,7 @@ public class CommandUtils
 			then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
 			then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(command)))));
 		builder.then(Commands.literal("player_name").then(playerNameArgument(command)));
-		builder.then(withModelArguments(buildContext, Commands.literal("player_skin"), command));
+		builder.then(withModelArguments(buildContext, Commands.literal("player_skin"), command, false));
 		builder.then(Commands.literal("player_as_entity").
 			then(Commands.literal("disabled").executes(command)).
 			then(Commands.literal("enabled").
