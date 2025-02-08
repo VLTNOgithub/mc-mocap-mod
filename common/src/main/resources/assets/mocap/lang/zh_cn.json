@@ -1,101 +1,29 @@
 {
-  "mocap.recording.start.already_recording": "You are already recording this player!",
-  "mocap.recording.start.already_recording.tip": "Enter this command again to start anyway or use \"recording stop\" to stop recording",
-  "mocap.recording.start.waiting_for_decision": "Your recording of this player is waiting for decision!",
-  "mocap.recording.start.waiting_for_decision.tip": "Enter this command again to start anyway",
   "mocap.recording.start.player_not_found": "§l错误：§r未找到玩家！",
   "mocap.recording.start.player_not_specified": "§l错误：§r未指定玩家！",
   "mocap.recording.start.player_not_specified.tip": "为命令添加玩家名或作为玩家执行",
   "mocap.recording.start.waiting_for_action": "执行任何操作或再次使用\"/mocap recording start\"以开始录制……",
   "mocap.recording.start.recording_started": "录制开始……",
-  "mocap.recording.start.error": "§lError:§r failed to start recording!",
 
   "mocap.recording.stop.stopped": "录制停止——等待选择中……",
   "mocap.recording.stop.stopped.tip_stop": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording stop\"来舍弃此段录像。",
   "mocap.recording.stop.stopped.tip_discard": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording discard\"来舍弃此段录像。",
-  "mocap.recording.stop.canceled": "Recording canceled - no longer waiting for action",
-  "mocap.recording.stop.quick_discard.disabled": "Recording already stopped!",
-  "mocap.recording.stop.quick_discard.disabled.tip": "Use \"/mocap recording discard\" to discard it\nor change quick discard mode in the settings.",
 
   "mocap.recording.discard.discarded": "此段录像已被舍弃",
-  "mocap.recording.discard.not_stopped": "Recording wasn't stopped, but you're trying to discard it!",
-  "mocap.recording.discard.quick_discard_tip": "Quick discard is enabled or in safe mode - you could reuse \"stop\" command instead!",
 
   "mocap.recording.save.saved": "录像已成功保存",
-  "mocap.recording.save.not_stopped": "Recording wasn't stopped, but you're trying to save it!",
-  "mocap.recording.save.already_exists": "Recording with this name already exists!",
-  "mocap.recording.save.already_exists.alternative": "Try \"%s\" instead",
-  "mocap.recording.save.multiple.saved": "Saved %s as %s",
-  "mocap.recording.save.multiple.failed": "Failed to save %s as %s!",
-  "mocap.recording.save.multiple.unknown_state": "Tried to save %s as %s, but ended up with an unknown state (%s)!",
-  "mocap.recording.save.multiple.already_exists": "Cannot save because recording with name %s already exists!",
-  "mocap.recording.save.multiple.error": "§lError:§r something went wrong when trying to save one or more of the recordings!",
-  "mocap.recording.save.error": "§lError:§r failed to save recording!",
 
-  "mocap.recording.list.state": "§lState of %s:§r %s",
-  "mocap.recording.list.list": "§lList of %s:§r",
-  "mocap.recording.list.waiting_for_action": "§lWaiting for action:§r %s",
-  "mocap.recording.list.waiting_for_action.none": "§lWaiting for action:§r §7§o[none]§r",
-  "mocap.recording.list.recording": "§lRecording:§r %s",
-  "mocap.recording.list.recording.none": "§lRecording:§r §7§o[none]§r",
-  "mocap.recording.list.waiting_for_decision": "§lWaiting for decision:§r %s",
-  "mocap.recording.list.waiting_for_decision.none": "§lWaiting for decision:§r §7§o[none]§r",
-  "mocap.recording.list.unknown_state": "§lUnknown state:§r %s",
-  "mocap.recording.list.unknown_state.error": "§lError:§r at least one of the recordings from the list had an unknown state!",
-
-  "mocap.recording.resolve.multiple_recordings": "More than one of your recordings is active or is waiting for decision!",
-  "mocap.recording.resolve.multiple_recordings.tip": "Specify exact recording id or use \"_\" to stop all of them",
   "mocap.recording.resolve.server_not_recording": "服务器现在没有录制任何内容！",
-  "mocap.recording.resolve.player_not_recording": "You are not recording anything now!",
-  "mocap.recording.resolve.player_not_recording.tip": "If you want to stop another player's recording, specify its id",
-  "mocap.recording.resolve.improper_structure": "Improper id structure!",
-  "mocap.recording.resolve.improper_group_structure": "Improper group id structure!",
-  "mocap.recording.resolve.improper_group_structure.tip": "Proper group id structures: \"_\", \"recorded_player._\", \"_._\", \"player.recorded_player._\", \"player._._\", \"_.recorded_player._\", \"_._._\"",
-  "mocap.recording.resolve.not_found": "Failed to find currently recorded recording with this id!",
-  "mocap.recording.resolve.list_tip": "Use \"/mocap recording list\" to get list of all currently recorded recordings",
 
-  "mocap.recording.multiple.results": "Results:",
-  "mocap.recording.multiple.results.none": "Results: §7§o[none]§r",
-  "mocap.recording.multiple.results.stopped": " -stopped: %d",
-  "mocap.recording.multiple.results.canceled": " -canceled: %d",
-  "mocap.recording.multiple.results.discarded": " -discarded: %d",
-  "mocap.recording.multiple.results.still_waiting": " -still waiting: %d",
-  "mocap.recording.multiple.results.still_recording": " -still recording: %d",
-  "mocap.recording.multiple.results.error": " -error/unknown state: %d",
-  "mocap.recording.multiple.undefined_state": "§lError:§r at least one of recordings finished with error or unknown state!",
-
-  "mocap.recording.undefined_state": "§lError:§r undefined state: %s",
-
-
-  "mocap.recordings.copy.failed": "Failed to copy recording!",
-  "mocap.recordings.copy.success": "Recording successfully copied",
-
-  "mocap.recordings.rename.failed": "Failed to rename recording!",
-  "mocap.recordings.rename.success": "Recording successfully renamed",
 
   "mocap.recordings.remove.failed": "无法移除录像！",
   "mocap.recordings.remove.success": "录像已成功移除",
 
-  "mocap.recordings.info.failed": "Failed to get recording information!",
-  "mocap.recordings.info.info": "§l[RECORDING INFORMATION]§r",
-  "mocap.recordings.info.length": "§lLength:§r %s s (%d ticks)",
-  "mocap.recordings.info.size": "§lSize:§r %s KB (%d operations)",
-  "mocap.recordings.info.start_pos": "§lStart position:§r %s",
-  "mocap.recordings.info.dies.yes": "§lEnds with death:§r Yes",
-  "mocap.recordings.info.dies.no": "§lEnds with death:§r No",
-
   "mocap.recordings.list": "§l录像：§r%s",
 
 
-  "mocap.scenes.add.already_exists": "Scene with this name already exists!",
   "mocap.scenes.add.error": "§l错误：§r无法增加场景！",
   "mocap.scenes.add.success": "场景已成功增加",
-
-  "mocap.scenes.copy.failed": "Failed to copy scene!",
-  "mocap.scenes.copy.success": "Scene successfully copied",
-
-  "mocap.scenes.rename.failed": "Failed to rename scene!",
-  "mocap.scenes.rename.success": "Scene successfully renamed",
 
   "mocap.scenes.remove.failed": "无法移除场景！",
   "mocap.scenes.remove.success": "场景已成功移除",
@@ -106,73 +34,28 @@
   "mocap.scenes.remove_from.error": "§l错误：§r无法将元素从场景中移除！",
   "mocap.scenes.remove_from.success": "成功将元素从场景中移除",
 
-  "mocap.scenes.modify.error": "§lError:§r unable to modify scene element!",
-  "mocap.scenes.modify.success": "Element successfully modified",
-
-  "mocap.scenes.element_info.info": "§l[SCENE ELEMENT INFORMATION]§r",
-  "mocap.scenes.element_info.id": "§lScene/Position:§r %s / %d",
-  "mocap.scenes.element_info.name": "§lName:§r %s",
-  "mocap.scenes.element_info.player_name.default": "§lPlayer name:§r §7§o[default]§r",
-  "mocap.scenes.element_info.player_name.custom": "§lPlayer name:§r %s",
-  "mocap.scenes.element_info.skin.default": "§lSkin:§r §7§o[default]§r",
-  "mocap.scenes.element_info.skin.profile": "§lSkin:§r from player - %s",
-  "mocap.scenes.element_info.skin.file": "§lSkin:§r from file - %s",
-  "mocap.scenes.element_info.skin.mineskin": "§lSkin:§r from mineskin.org:",
-  "mocap.scenes.element_info.start_delay": "§lStart delay:§r %s s (%d ticks)",
-  "mocap.scenes.element_info.offset": "§lPosition offset:§r [%f; %f; %f]",
-  "mocap.scenes.element_info.player_as_entity.disabled": "§lPlayer as entity:§r §7§o[disabled]§r",
-  "mocap.scenes.element_info.player_as_entity.enabled": "§lPlayer as entity:§r %s",
-  "mocap.scenes.element_info.scale.player_scale.normal": "§lPlayer scale:§r 1.0 §7§o[normal]§r",
-  "mocap.scenes.element_info.scale.player_scale.custom": "§lPlayer scale:§r %f",
-  "mocap.scenes.element_info.scale.scene_scale.normal": "§lScene scale:§r 1.0 §7§o[normal]§r",
-  "mocap.scenes.element_info.scale.scene_scale.custom": "§lScene scale:§r %f",
-
   "mocap.scenes.list_elements": "§l场景元素列表：§r",
-
-  "mocap.scenes.info.failed": "Failed to get scene information!",
-  "mocap.scenes.info.info": "§l[SCENE INFORMATION]§r",
-  "mocap.scenes.info.size": "§lSize:§r %s KB (%d elements)",
 
   "mocap.scenes.list": "§l场景：§r%s",
 
   "mocap.scenes.failure.file_not_exists": "不存在以此为名的场景",
   "mocap.scenes.failure.wrong_element_pos": "不存在给定编号的元素",
   "mocap.scenes.failure.wrong_element_pos.tip": "使用\"/mocap scenes list <scene>\"来获取元素编号",
-  "mocap.scenes.failure.wrong_subscene_name": "Name of the subscene on given position doesn't match expected name!",
 
 
   "mocap.playback.start.error": "§l错误：§r无法开启场景！",
   "mocap.playback.start.error.loop": "场景或子场景包含自身！",
   "mocap.playback.start.error.load": "无法加载所有资源！",
   "mocap.playback.start.error.load.path": "资源路径：%s",
-  "mocap.playback.start.error.empty_scene": "Root scene is empty!",
-  "mocap.playback.start.error.empty_scene.tip": "Use \"/mocap scenes add_to\" to add elements to the scene",
   "mocap.playback.start.error.load_header": "§l错误：§r无法加载录像页头！",
   "mocap.playback.start.error.profile": "§l错误：§r无法加载玩家资料！",
-  "mocap.playback.start.warning.unknown_entity": "Trying to use unknown entity as player - %s",
-  "mocap.playback.start.warning.skin.profile": "Failed to load skin from player profile",
-  "mocap.playback.start.warning.skin.file": "Failed to load skin from file",
-  "mocap.playback.start.warning.skin.mineskin": "Failed to load skin from mineskin.org",
   "mocap.playback.start.success": "播放开始……",
   "mocap.playback.start.success.modifiers": "播放开始... (with modifiers)",
   "mocap.playback.start.success.sync": "播放开始... (with synchronization)",
   "mocap.playback.start.success.modifiers.sync": "播放开始... (with modifiers and synchronization)",
 
-  "mocap.playback.stop.unable_to_find_playback": "Could not find a playback with given id!",
   "mocap.playback.stop.unable_to_find_playback.tip": "使用\"/mocap playback list\"来获取所有当前播放中场景的列表",
-  "mocap.playback.stop.wrong_playback_name": "Name of the playback with given id doesn't match expected name!",
   "mocap.playback.stop.success": "播放停止",
-
-  "mocap.playback.stop_all.own.all": "All playbacks stopped",
-  "mocap.playback.stop_all.own.not_all": "All of your playbacks have been stopped, but there are still other playbacks",
-  "mocap.playback.stop_all.own.empty": "You don't have any playbacks to stop, but there are other playbacks",
-  "mocap.playback.stop_all.own.tip": "Use \"/mocap playback stop_all including_others\" to stop them",
-  "mocap.playback.stop_all.all": "All playbacks on server stopped",
-  "mocap.playback.stop_all.empty": "There are no playbacks to stop",
-
-  "mocap.playback.modifiers.set": "Playback modifier successfully changed",
-  "mocap.playback.modifiers.list": "§l[PLAYBACK MODIFIERS]§r",
-  "mocap.playback.modifiers.reset": "Playback modifiers reset",
 
   "mocap.playback.list": "§l当前播放：§r",
 
@@ -186,91 +69,25 @@
   "mocap.settings.info.name": "§l名称：§r %s",
   "mocap.settings.info.about": "§l关于：§r %s",
 
-  "mocap.settings.info.about.track_vehicle_entities": "Enables tracking (recording) of vehicle entities (like boats or horses)",
-  "mocap.settings.info.about.track_projectile_entities": "Enables tracking (recording) of projectiles (like arrows or snowballs)",
-  "mocap.settings.info.about.track_item_entities": "Enables tracking (recording) of item entities",
-  "mocap.settings.info.about.track_other_entities": "Enables tracking (recording) of entities other than vehicles and items",
-  "mocap.settings.info.about.prevent_tracking_played_entities": "Prevents tracking (recording) entities that are currently played",
-  "mocap.settings.info.about.entity_tracking_distance": "Limits the entity tracking distance (>0 - tracking radius in blocks; 0 - disable tracking; -1 - distance not limited)",
-  "mocap.settings.info.about.record_player_death": "Enables recording player death and stops recording at that moment",
-
   "mocap.settings.info.about.playback_speed": "允许你更改播放录像或场景的速度",
-  "mocap.settings.info.about.play_vehicle_entities": "Enables playback of vehicle entities (like boats or horses)",
-  "mocap.settings.info.about.play_projectile_entities": "Enables playback of projectiles (like arrows or snowballs)",
-  "mocap.settings.info.about.play_item_entities": "Enables playback of item entities",
-  "mocap.settings.info.about.play_other_entities": "Enables playback of entities other than vehicles and items",
-  "mocap.settings.info.about.can_push_entities": "Makes fake players push other entities",
-  "mocap.settings.info.about.entities_after_playback": "Determines what will happen with entities after playback (-1 - release it as a normal entity; 0 - left untouched; 1 - remove; 2 - kill with animation)",
-  "mocap.settings.info.about.block_actions_playback": "Plays back placing, destroying, and interacting with blocks",
-  "mocap.settings.info.about.block_initialization": "At the playback start sets block states to those before the start of recording",
-  "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
-
-  "mocap.settings.info.about.fluent_movements": "Sets distance to played entity for player to receive additional packets for more fluent movements (>0 - distance in blocks; 0 - disable fluent movements; -1 - no limit)",
-  "mocap.settings.info.about.movement_precision": "Sets precision of recording player movement - absolute value of difference between desired position offset and calculated offset won't be higher than 1/val",
-  "mocap.settings.info.about.precise_rotation_recording": "Increases recorded head rotation precision",
-  "mocap.settings.info.about.precise_rotation_playback": "Increases played head rotation precision (recordings also need to be recorded with higher precision for it to make take affect)",
-  "mocap.settings.info.about.allow_mineskin_requests": "Allows HTTPS requests to mineskin.org in order to load skins",
-  "mocap.settings.info.about.prevent_saving_entities": "Prevents game from saving played entities in case of for example leaving game",
-  "mocap.settings.info.about.use_creative_game_mode": "Sets fake players game mode to creative (monsters will ignore them)",
-  "mocap.settings.info.about.allow_ghosts": "Allows usage of ghosts (invisible, server-side only players) when using \"player_as_entity\" modifier. They're created in order to perform actions that can't be done by a non-player entity.",
-  "mocap.settings.info.about.experimental_release_warning": "Warns players when a server is using experimental (alpha or beta) release of Motion Capture mod.",
-  "mocap.settings.info.about.pretty_scene_files": "Makes scene JSON files look pretty, at cost of slightly bigger file size (scene files are very small anyway, so it shouldn't be a problem unless you're using punch cards for storing them).",
 
   "mocap.settings.info.current_value": "§l当前值：§r %s",
   "mocap.settings.info.default_value": "§l默认值：§r %s",
   "mocap.settings.info.string_value": "%s %s",
-  "mocap.settings.info.copy_button": "§7[copy]",
-  "mocap.settings.info.copy_button_info": "Copy value to the clipboard",
 
   "mocap.settings.set.success.changed": "值已从 %s 变为 %s",
-  "mocap.settings.set.success.not_changed": "Value remained unchanged - %s",
-  "mocap.settings.set.invalid_value": "Value you're trying to change to is invalid!",
   "mocap.settings.set.error": "§l错误：§r无法读取输入的值！",
-
-
-  "mocap.misc.sync.enable.changed": "Synchronization enabled",
-  "mocap.misc.sync.enable.not_changed": "Synchronization has already been enabled",
-  "mocap.misc.sync.disable.changed": "Synchronization disabled",
-  "mocap.misc.sync.disable.not_changed": "Synchronization has already been disabled",
-
-  "mocap.misc.clear_cache.cleared": "Cache cleared",
-
-
-  "mocap.help": "%s - §lHelp§r\n  /mocap recording [...] - Recording player movements\n  /mocap recordings [...] - Managing recording files\n  /mocap scenes [...] - Creating and modifying scenes\n  /mocap playback [...] - Playback of scenes and recordings\n  /mocap settings [...] - Shows and modifies settings\n  /mocap info - Displays information about mod\n  /mocap help - Displays this message\n§lHow to use:§r\n- First, you need to start recording using \"/mocap recording start\". It will record all your movements or movements of a player given as an argument. \n- Then, you can stop recording using \"/mocap recording stop\" and save it with \"/mocap recording save <name>\".\n- Use \"/mocap playback start <name>\" to play recording.\n- You can also create scenes to which you can add multiple recordings or other scenes, with parameters like player name, position offset, or start delay.\n- To create scene use \"/mocap scenes add <scene_name>\". Then, add your recording using \"/mocap scenes add_to <scene_name> <recording_name> [player_name] [skin_source_type] [skin_source]\" (you can skip arguments in square brackets if you want).\n- To play scene use \"/mocap playback start .<scene_name>\" - you need to put a dot before the scene name.\n- By putting a dot before name, when using \"/mocap scenes add_to ...\", you can also add scenes to other scenes.",
 
 
   "mocap.list.empty": "§7§o[空]§r",
   "mocap.list.error": "§c§o[错误]§r",
 
 
-  "mocap.file.info.name": "§lName:§r %s",
-  "mocap.file.info.version.current": "§lFormat version:§r %d §7§o[current]§r",
-  "mocap.file.info.version.old": "§lFormat version:§r %d §7§o[old]§r",
-  "mocap.file.info.version.not_supported": "§lFormat version:§r %d §7§o[not supported]§r",
-  "mocap.file.info.version.undefined": "§lFormat version:§r %d §7§o[undefined]§r",
-  "mocap.file.info.version.current.experimental": "§lFormat version:§r %d-exp §7§o[current; experimental]§r",
-  "mocap.file.info.version.old.experimental": "§lFormat version:§r %d-exp §7§o[old; experimental]§r",
-  "mocap.file.info.version.not_supported.experimental": "§lFormat version:§r %d-exp §7§o[not supported; experimental]§r",
-
-
-  "mocap.failure.improper_filename": "Improper filename!",
   "mocap.failure.improper_filename.character": "你只能使用小写字母、数字、下划线、短划线或点",
   "mocap.failure.improper_filename.dot_first": "不能使用点作为第一个字符",
-  "mocap.failure.improper_filename.dash_first": "You can't use a dash as the first character",
-  "mocap.failure.improper_player_name": "Improper player name!",
   "mocap.failure.improper_player_name.too_long": "玩家名的最大长度为16",
   "mocap.failure.improper_player_name.contains_spaces": "玩家名不能包含空格",
-  "mocap.failure.resolve_player": "Failed to resolve player - this command needs to be invoked by player!",
 
-  "mocap.warning.custom_skin_cache_limit": "§lWarning:§r custom skin cache size reached limit!",
-  "mocap.warning.custom_skin_cache_limit.tip": "Rejoin the world to clear it",
-  "mocap.warning.experimental": "§lWARNING!§r\nYou're using experimental version of Motion Capture mod!\nYou need to know that:\n -it probably has a lot of issues\n -a lot of new features are partially complete and are subject to change\n -it should not be used in public modpacks\n -future releases MAY NOT BE COMPATIBLE with recordings and scenes from this version!\nIf you're planning on running a longer project, or if you're expecting stability from this mod, ",
-  "mocap.warning.experimental.stable_download": "§ndownload a stable release§r!\n",
-  "mocap.warning.experimental.disable_message": "§n[Disable this message]",
-
-  "mocap.error.generic": "§lError:§r something went wrong!",
-  "mocap.error.playback_error": "§lError:§r something went wrong during playback!",
-  "mocap.error.failed_to_remove_fake_player": "§lError:§r failed to remove fake player!",
   "mocap.error.failed_to_init_directories": "§l错误：§r无法初始化文件夹！",
   "mocap.error.unable_to_get_argument": "§l错误：§r无法获取参数！",
   "mocap.error.failed_to_load_scene": "§l错误：§r无法加载场景文件！",
