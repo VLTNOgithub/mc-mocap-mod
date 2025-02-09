@@ -31,6 +31,7 @@ public class Playing
 	public static boolean start(CommandInfo commandInfo, String name, PlaybackModifiers modifiers, boolean defaultModifiers)
 	{
 		if (name.charAt(0) == '-') { return startCurrentlyRecorded(commandInfo, name, modifiers, defaultModifiers); }
+
 		Playback.Root playback = Playback.start(commandInfo, name, modifiers, getMaxId() + 1);
 		if (playback == null) { return false; }
 		addPlayback(playback);
@@ -46,7 +47,15 @@ public class Playing
 		int successes = 0;
 		for (RecordingContext ctx : contexts)
 		{
-			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, modifiers, getMaxId() + 1);
+			PlaybackModifiers modifiersToApply = modifiers;
+			if (Settings.START_AS_RECORDED.val)
+			{
+				PlaybackModifiers playerNameModifier = PlaybackModifiers.empty();
+				playerNameModifier.playerName = ctx.recordedPlayer.getName().getString();
+				modifiersToApply = modifiers.mergeWithParent(playerNameModifier);
+			}
+
+			Playback.Root playback = Playback.start(commandInfo, ctx.data, ctx.id.str, modifiersToApply, getMaxId() + 1);
 			if (playback == null) { continue; }
 			addPlayback(playback);
 			successes++;

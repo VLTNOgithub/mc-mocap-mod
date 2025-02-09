@@ -204,6 +204,7 @@
   "mocap.settings.info.about.block_actions_playback": "Plays back placing, destroying, and interacting with blocks",
   "mocap.settings.info.about.block_initialization": "At the playback start sets block states to those before the start of recording",
   "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
+  "mocap.settings.info.about.start_as_recorded": "Makes playback of currently recorded player start as this player, rather than player starting this playback.",
 
   "mocap.settings.info.about.fluent_movements": "Sets distance to played entity for player to receive additional packets for more fluent movements (>0 - distance in blocks; 0 - disable fluent movements; -1 - no limit)",
   "mocap.settings.info.about.movement_precision": "Sets precision of recording player movement - absolute value of difference between desired position offset and calculated offset won't be higher than 1/val",

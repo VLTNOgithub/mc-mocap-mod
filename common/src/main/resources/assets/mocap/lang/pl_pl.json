@@ -204,6 +204,7 @@
   "mocap.settings.info.about.block_actions_playback": "Odtwarza stawianie, niszczenie i interakcje z blokami",
   "mocap.settings.info.about.block_initialization": "Na początku odtwarzania ustawia stany bloków na te przed rozpoczęciem nagrywania",
   "mocap.settings.info.about.drop_from_blocks": "Włącza łup z niszczonych bloków (zalecane przy wyłączonym \"playItemEntities\" w celu zapobiegnięcia duplikatom)",
+  "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie obecnie nagrywanego gracza rozpoczyna się jako ten gracz, zamiast jako gracz który rozpoczął odtwarzanie.",
 
   "mocap.settings.info.about.fluent_movements": "Określa dystans od odtwarzanego bytu do gracza, aby ten otrzymywał dodatkowe pakiety w celu uzyskania płynniejszych ruchów (>0 - dystans w blokach; 0 - wyłącz płynne ruchy; -1 - bez limitu)",
   "mocap.settings.info.about.movement_precision": "Ustawia precyzję nagrywania ruchów gracza - wartość bezwzględna z różnicy między pożądanym przesunięciem pozycji, a obliczonym przesunięciem nie będzie wyższa niż 1/wartość",

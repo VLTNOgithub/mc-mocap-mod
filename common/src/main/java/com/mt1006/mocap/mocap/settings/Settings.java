@@ -27,6 +27,7 @@ public class Settings
 	public static final SettingFields.BooleanField BLOCK_ACTIONS_PLAYBACK = PLAYBACK.add(fields.add("block_actions_playback", true));
 	public static final SettingFields.BooleanField BLOCK_INITIALIZATION = PLAYBACK.add(fields.add("block_initialization", true));
 	public static final SettingFields.BooleanField DROP_FROM_BLOCKS = PLAYBACK.add(fields.add("drop_from_blocks", false));
+	public static final SettingFields.BooleanField START_AS_RECORDED = PLAYBACK.add(fields.add("start_as_recorded", false));
 
 	public static final SettingFields.DoubleField FLUENT_MOVEMENTS = ADVANCED.add(fields.add("fluent_movements", 32.0));
 	//public static final SettingFields.DoubleField MOVEMENT_PRECISION = ADVANCED.add(fields.add("movement_precision", 4096.0));

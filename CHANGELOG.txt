@@ -9,6 +9,7 @@
 -Added "scale" playback modifier (thanks to netcore10 for suggestion).
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
+-Added setting "start_as_recorded" which makes playback of currently recorded player start as this player (false by default) (thanks to damiendier for suggestions).
 -Settings are now divided into 3 categories - recording, playback and advanced.
 -Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
 -Split "player_info" modifier into "player_name" and "player_skin".
