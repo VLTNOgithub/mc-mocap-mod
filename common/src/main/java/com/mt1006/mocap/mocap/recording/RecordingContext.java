@@ -2,6 +2,7 @@ package com.mt1006.mocap.mocap.recording;
 
 import com.mt1006.mocap.command.io.CommandOutput;
 import com.mt1006.mocap.mocap.actions.Action;
+import com.mt1006.mocap.mocap.actions.BlockAction;
 import com.mt1006.mocap.mocap.actions.NextTick;
 import com.mt1006.mocap.mocap.actions.SkipTicks;
 import com.mt1006.mocap.mocap.files.RecordingData;
@@ -128,6 +129,7 @@ public class RecordingContext
 	public void addAction(Action action)
 	{
 		data.actions.add(action);
+		if (action instanceof BlockAction) { data.blockActions.add((BlockAction)action); }
 	}
 
 	public void addTickAction()
