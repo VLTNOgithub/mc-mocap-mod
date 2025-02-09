@@ -39,10 +39,10 @@ public class PlaybackModifiers
 	{
 		startDelay = StartDelay.fromSeconds(reader.readDouble("start_delay", 0.0));
 		offset = Offset.fromArray(reader.readArray("offset"));
-
 		playerName = reader.readString("player_name");
 		playerSkin = new PlayerSkin(reader.readObject("player_skin"));
 		playerAsEntity = new PlayerAsEntity(reader.readObject("player_as_entity"));
+		//entityFilter = EntityFilter.forSubscene(reader.readString("entity_filter"));
 		entityFilter = EntityFilter.FOR_PLAYBACK;
 		scale = new Scale(reader.readObject("scale"));
 	}
@@ -76,7 +76,7 @@ public class PlaybackModifiers
 		//TODO: include entityFilter
 		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
 				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO
-				&& scale.isNormal();
+				&& entityFilter.isDefaultForPlayback() && scale.isNormal();
 	}
 
 	public void save(SceneFiles.Writer writer)
@@ -86,6 +86,7 @@ public class PlaybackModifiers
 		writer.addString("player_name", playerName);
 		writer.addObject("player_skin", playerSkin.save());
 		writer.addObject("player_as_entity", playerAsEntity.save());
+		//TODO: add "entity_filter"
 		writer.addObject("scale", scale.save());
 	}
 
