@@ -259,7 +259,7 @@ public class Playing
 		for (Playback.Root playback : toRemove)
 		{
 			ServerPlayer owner = playback.instance.owner;
-			playbacksByOwner.remove(owner != null ? owner.getName().getString() : null, playback);
+			playbacksByOwner.remove(owner != null ? owner.getName().getString() : "", playback);
 		}
 	}
 
