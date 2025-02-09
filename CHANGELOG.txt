@@ -47,6 +47,7 @@
 -Fixed directories with a proper name showing up on a list of recordings or scenes.
 -Fixed server crashing when trying to start playback with player name longer than 16 characters (thanks to SPY for reporting).
 -Fixed fake players with empty name having tiny gray bar above their head.
+-Fixed blocks not initializing for playback of currently recorded recording (thanks to Robobuilder for reporting).
 -Minor spelling improvements.
 -Minor improvements to error detection.
 -Added Chinese [traditional] translation (thanks to dirtTW).
