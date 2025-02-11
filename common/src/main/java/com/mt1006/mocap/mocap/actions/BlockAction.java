@@ -3,6 +3,7 @@ package com.mt1006.mocap.mocap.actions;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
+import com.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -55,13 +56,13 @@ public interface BlockAction extends Action
 		public void place(Entity entity, BlockPos blockPos, Vec3 startPos, double scale)
 		{
 			if (scale == 1.0) { placeReal(entity, blockPos); }
-			else if (scale == (int)scale) { scaledOperation(entity, blockPos, startPos, scale, this::placeReal); }
+			else if (allowScaled(scale)) { scaledOperation(entity, blockPos, startPos, scale, this::placeReal); }
 		}
 
 		public void placeSilently(Entity entity, BlockPos blockPos, Vec3 startPos, double scale)
 		{
 			if (scale == 1.0) { placeRealSilently(entity, blockPos); }
-			else if (scale == (int)scale) { scaledOperation(entity, blockPos, startPos, scale, this::placeRealSilently); }
+			else if (allowScaled(scale)) { scaledOperation(entity, blockPos, startPos, scale, this::placeRealSilently); }
 		}
 
 		private void placeReal(Entity entity, BlockPos blockPos)
@@ -107,6 +108,11 @@ public interface BlockAction extends Action
 					}
 				}
 			}
+		}
+
+		public static boolean allowScaled(double scale)
+		{
+			return (scale == (int)scale && Settings.BLOCK_ALLOW_SCALED.val);
 		}
 	}
 }

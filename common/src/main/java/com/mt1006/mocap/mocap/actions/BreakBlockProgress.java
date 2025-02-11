@@ -43,7 +43,7 @@ public class BreakBlockProgress implements BlockAction
 		{
 			ctx.level.destroyBlockProgress(ctx.entity.getId(), shiftedBlockPos, progress);
 		}
-		else if (scale == (int)scale)
+		else if (BlockStateData.allowScaled(scale))
 		{
 			BlockStateData.scaledOperation(ctx.entity, shiftedBlockPos, ctx.startPos, scale,
 					(entity, pos) -> ctx.level.destroyBlockProgress(entity.getId(), pos, progress));

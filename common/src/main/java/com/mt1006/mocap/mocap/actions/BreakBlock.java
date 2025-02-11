@@ -55,7 +55,7 @@ public class BreakBlock implements BlockAction
 		{
 			ctx.level.destroyBlock(shiftedBlockPos, Settings.DROP_FROM_BLOCKS.val);
 		}
-		else if (scale == (int)scale)
+		else if (BlockStateData.allowScaled(scale))
 		{
 			BlockStateData.scaledOperation(ctx.entity, shiftedBlockPos, ctx.startPos, scale,
 					(entity, pos) -> ctx.level.destroyBlock(pos, Settings.DROP_FROM_BLOCKS.val));

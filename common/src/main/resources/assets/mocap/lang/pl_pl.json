@@ -203,6 +203,7 @@
   "mocap.settings.info.about.entities_after_playback": "Określa co się stanie z bytami po odtwarzaniu (-1 - uwolnij jako normalne byty; 0 - zostaw bez zmian; 1 - usuń; 2 - zabij z animacją)",
   "mocap.settings.info.about.block_actions_playback": "Odtwarza stawianie, niszczenie i interakcje z blokami",
   "mocap.settings.info.about.block_initialization": "Na początku odtwarzania ustawia stany bloków na te przed rozpoczęciem nagrywania",
+  "mocap.settings.info.about.block_allow_scaled": "Pozwala na odtwarzanie akcji związanych z blokami, gdy scena przeskalowana jest przez liczbę naturalną. Miej na uwadze fakt, że może to spowodować znacznie zniszczenia terenu, zaleca się więc utworzenie kopii zapasowej świata przed użyciem tej funkcji.",
   "mocap.settings.info.about.drop_from_blocks": "Włącza łup z niszczonych bloków (zalecane przy wyłączonym \"playItemEntities\" w celu zapobiegnięcia duplikatom)",
   "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie obecnie nagrywanego gracza rozpoczyna się jako ten gracz, zamiast jako gracz który rozpoczął odtwarzanie.",
 

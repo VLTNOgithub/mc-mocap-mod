@@ -203,6 +203,7 @@
   "mocap.settings.info.about.entities_after_playback": "Determines what will happen with entities after playback (-1 - release it as a normal entity; 0 - left untouched; 1 - remove; 2 - kill with animation)",
   "mocap.settings.info.about.block_actions_playback": "Plays back placing, destroying, and interacting with blocks",
   "mocap.settings.info.about.block_initialization": "At the playback start sets block states to those before the start of recording",
+  "mocap.settings.info.about.block_allow_scaled": "Allows playback of block actions with scene scaled by natural number. Note that it may cause major destruction of the terrain, so it's recommended to backup your world before using it.",
   "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
   "mocap.settings.info.about.start_as_recorded": "Makes playback of currently recorded player start as this player, rather than player starting this playback.",
 
