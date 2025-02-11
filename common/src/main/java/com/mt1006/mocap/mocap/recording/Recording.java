@@ -34,6 +34,11 @@ public class Recording
 			//TODO: test if ends with death
 			return this == SAFE || this == ALLOW;
 		}
+
+		public boolean canBeUsed(RecordingContext ctx, @Nullable ServerPlayer source)
+		{
+			return allowsSingle(ctx) && source != null && getContextsBySource(source).size() == 1;
+		}
 	}
 
 	private static final QuickDiscard quickDiscard = QuickDiscard.SAFE;
@@ -126,17 +131,17 @@ public class Recording
 		return success;
 	}
 
-	private static boolean stopSingle(CommandOutput commandOutput, RecordingContext ctx)
+	private static boolean stopSingle(CommandInfo commandInfo, RecordingContext ctx)
 	{
 		if (ctx.state == RecordingContext.State.WAITING_FOR_DECISION)
 		{
 			if (!quickDiscard.allowsSingle(ctx))
 			{
 				//TODO: proper message when blocked by death
-				commandOutput.sendFailureWithTip("recording.stop.quick_discard.disabled");
+				commandInfo.sendFailureWithTip("recording.stop.quick_discard.disabled");
 				return false;
 			}
-			return discardSingle(commandOutput, ctx);
+			return discardSingle(commandInfo, ctx);
 		}
 
 		ctx.stop();
@@ -144,17 +149,18 @@ public class Recording
 		switch (ctx.state)
 		{
 			case WAITING_FOR_DECISION:
-				commandOutput.sendSuccess("recording.stop.stopped");
-				if (quickDiscard.allowsSingle(ctx)) { commandOutput.sendSuccess("recording.stop.stopped.tip_stop"); }
-				else { commandOutput.sendSuccess("recording.stop.stopped.tip_discard"); }
+				commandInfo.sendSuccess("recording.stop.stopped");
+				commandInfo.sendSuccess(quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer)
+						? "recording.stop.stopped.tip_stop"
+						: "recording.stop.stopped.tip_discard");
 				return true;
 
 			case CANCELED:
-				commandOutput.sendSuccess("recording.stop.canceled");
+				commandInfo.sendSuccess("recording.stop.canceled");
 				return true;
 
 			default:
-				commandOutput.sendFailure("recording.undefined_state", ctx.state.name());
+				commandInfo.sendFailure("recording.undefined_state", ctx.state.name());
 				return false;
 		}
 	}
@@ -233,9 +239,10 @@ public class Recording
 		if (resolvedContexts.isSingle)
 		{
 			RecordingContext ctx = resolvedContexts.list.iterator().next();
+			boolean showQuickDiscardTip = quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer);
 			boolean success = discardSingle(commandInfo, ctx);
 
-			if (success && ctx.state == RecordingContext.State.DISCARDED && quickDiscard.allowsSingle(ctx))
+			if (success && ctx.state == RecordingContext.State.DISCARDED && showQuickDiscardTip)
 			{
 				commandInfo.sendSuccess("recording.discard.quick_discard_tip");
 			}
