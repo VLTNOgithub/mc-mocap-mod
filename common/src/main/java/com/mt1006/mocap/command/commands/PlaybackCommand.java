@@ -21,11 +21,11 @@ public class PlaybackCommand
 
 		commandBuilder.then(Commands.literal("start").
 			then(Commands.argument("name", StringArgumentType.string()).
-				suggests(CommandSuggestions::playableArgument).executes(CommandUtils.command(PlaybackCommand::start)).
+				suggests(CommandSuggestions::playable).executes(CommandUtils.command(PlaybackCommand::start)).
 			then(CommandUtils.playerArguments(buildContext, CommandUtils.command(PlaybackCommand::start)))));
 		commandBuilder.then(Commands.literal("stop").
 			then(Commands.argument("id", StringArgumentType.string()).
-				suggests(CommandSuggestions::playbackIdSuggestions).executes(CommandUtils.command(PlaybackCommand::stop))));
+				suggests(CommandSuggestions::playbackId).executes(CommandUtils.command(PlaybackCommand::stop))));
 		commandBuilder.then(Commands.literal("stop_all").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false))).
 			then(Commands.literal("including_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, true)))).
 			then(Commands.literal("excluding_others").executes(CommandUtils.command((info) -> PlaybackCommand.stopAll(info, false)))));
@@ -34,8 +34,8 @@ public class PlaybackCommand
 			then(Commands.literal("list").executes(CommandUtils.command(Playing::modifiersList))).
 			then(Commands.literal("reset").executes(CommandUtils.command(Playing::modifiersReset))).
 			then(Commands.literal("add_to").
-				then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
-				then(Commands.argument("to_add", StringArgumentType.string()).suggests(CommandSuggestions::playableArgument).
+				then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::scene).
+				then(Commands.argument("to_add", StringArgumentType.string()).suggests(CommandSuggestions::playable).
 					executes(CommandUtils.command(PlaybackCommand::modifiersAddTo))))));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(Playing::list)));
 

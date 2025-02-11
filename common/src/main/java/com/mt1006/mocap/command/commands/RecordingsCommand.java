@@ -17,10 +17,10 @@ public class RecordingsCommand
 	{
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("recordings");
 
-		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(RecordingFiles::copy, CommandSuggestions::recordingSuggestions, "src_name", "dest_name")));
-		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(RecordingFiles::rename, CommandSuggestions::recordingSuggestions, "old_name", "new_name")));
-		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(RecordingFiles::remove, CommandSuggestions::recordingSuggestions, "name")));
-		commandBuilder.then(Commands.literal("info").then(CommandUtils.withInputArgument(RecordingFiles::info, CommandSuggestions::recordingSuggestions, "name")));
+		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(RecordingFiles::copy, CommandSuggestions::recording, "src_name", "dest_name")));
+		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(RecordingFiles::rename, CommandSuggestions::recording, "old_name", "new_name")));
+		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(RecordingFiles::remove, CommandSuggestions::recording, "name")));
+		commandBuilder.then(Commands.literal("info").then(CommandUtils.withInputArgument(RecordingFiles::info, CommandSuggestions::recording, "name")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(RecordingsCommand::list)));
 
 		return commandBuilder;

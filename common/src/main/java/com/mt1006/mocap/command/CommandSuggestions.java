@@ -45,27 +45,27 @@ public class CommandSuggestions
 		return builder.buildFuture();
 	}
 
-	public static CompletableFuture<Suggestions> recordingSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> recording(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		return inputSuggestions(builder, RECORDINGS, false);
 	}
 
-	public static CompletableFuture<Suggestions> sceneSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> scene(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		return inputSuggestions(builder, SCENES, true);
 	}
 
-	public static CompletableFuture<Suggestions> currentlyRecordedSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> currentlyRecorded(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		return inputSuggestions(builder, CURRENTLY_RECORDED, true);
 	}
 
-	public static CompletableFuture<Suggestions> playableArgument(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> playable(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		return inputSuggestions(builder, PLAYABLE, false);
 	}
 
-	public static CompletableFuture<Suggestions> playbackIdSuggestions(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> playbackId(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		String remaining = builder.getRemaining();
 		for (Playback.Root playback : Playing.playbacks)
@@ -76,7 +76,7 @@ public class CommandSuggestions
 		return builder.buildFuture();
 	}
 
-	public static CompletableFuture<Suggestions> sceneElementSuggestion(CommandContext<?> ctx, SuggestionsBuilder builder)
+	public static CompletableFuture<Suggestions> sceneElement(CommandContext<?> ctx, SuggestionsBuilder builder)
 	{
 		String sceneName = StringArgumentType.getString(ctx, "scene_name");
 		if (sceneName.isEmpty()) { return builder.buildFuture(); }

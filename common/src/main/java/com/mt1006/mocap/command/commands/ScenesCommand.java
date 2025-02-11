@@ -29,24 +29,24 @@ public class ScenesCommand
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("scenes");
 
 		commandBuilder.then(Commands.literal("add").then(CommandUtils.withStringArgument(SceneFiles::add, "name")));
-		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(SceneFiles::copy, CommandSuggestions::sceneSuggestions, "src_name", "dest_name")));
-		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(SceneFiles::rename, CommandSuggestions::sceneSuggestions, "old_name", "new_name")));
-		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(SceneFiles::remove, CommandSuggestions::sceneSuggestions, "name")));
+		commandBuilder.then(Commands.literal("copy").then(CommandUtils.withInputAndStringArgument(SceneFiles::copy, CommandSuggestions::scene, "src_name", "dest_name")));
+		commandBuilder.then(Commands.literal("rename").then(CommandUtils.withInputAndStringArgument(SceneFiles::rename, CommandSuggestions::scene, "old_name", "new_name")));
+		commandBuilder.then(Commands.literal("remove").then(CommandUtils.withInputArgument(SceneFiles::remove, CommandSuggestions::scene, "name")));
 		commandBuilder.then(Commands.literal("add_to").
-			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
-			then(Commands.argument("to_add", StringArgumentType.string()).suggests(CommandSuggestions::playableArgument).executes(COMMAND_ADD_TO).
+			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::scene).
+			then(Commands.argument("to_add", StringArgumentType.string()).suggests(CommandSuggestions::playable).executes(COMMAND_ADD_TO).
 			then(Commands.argument("start_delay", DoubleArgumentType.doubleArg(0.0)).executes(COMMAND_ADD_TO).
 			then(CommandUtils.playerArguments(buildContext, COMMAND_ADD_TO))))));
 		commandBuilder.then(Commands.literal("remove_from").
-			then(CommandUtils.withTwoInputArguments(SceneFiles::removeElement, CommandSuggestions::sceneSuggestions, CommandSuggestions::sceneElementSuggestion, "scene_name", "to_remove")));
+			then(CommandUtils.withTwoInputArguments(SceneFiles::removeElement, CommandSuggestions::scene, CommandSuggestions::sceneElement, "scene_name", "to_remove")));
 		commandBuilder.then(Commands.literal("modify").
-			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::sceneSuggestions).
+			then(Commands.argument("scene_name", StringArgumentType.string()).suggests(CommandSuggestions::scene).
 			then(CommandUtils.withModifiers(buildContext, Commands.argument("to_modify", StringArgumentType.string()).
-				suggests(CommandSuggestions::sceneElementSuggestion), CommandUtils.command(ScenesCommand::modify), true))));
-		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name").suggests(CommandSuggestions::sceneSuggestions)).
-			then(CommandUtils.withTwoInputArguments(SceneFiles::elementInfo, CommandSuggestions::sceneSuggestions, CommandSuggestions::sceneElementSuggestion, "scene_name", "element_pos")));
+				suggests(CommandSuggestions::sceneElement), CommandUtils.command(ScenesCommand::modify), true))));
+		commandBuilder.then(Commands.literal("info").then(CommandUtils.withStringArgument(SceneFiles::info, "scene_name").suggests(CommandSuggestions::scene)).
+			then(CommandUtils.withTwoInputArguments(SceneFiles::elementInfo, CommandSuggestions::scene, CommandSuggestions::sceneElement, "scene_name", "element_pos")));
 		commandBuilder.then(Commands.literal("list").executes(CommandUtils.command(ScenesCommand::list)).
-			then(CommandUtils.withInputArgument(SceneFiles::listElements, CommandSuggestions::sceneSuggestions, "scene_name")));
+			then(CommandUtils.withInputArgument(SceneFiles::listElements, CommandSuggestions::scene, "scene_name")));
 
 		return commandBuilder;
 	}
