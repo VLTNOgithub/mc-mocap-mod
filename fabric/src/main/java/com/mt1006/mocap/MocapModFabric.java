@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -40,6 +41,7 @@ public class MocapModFabric implements ModInitializer, MocapModLoaderInterface
 		ServerLifecycleEvents.SERVER_STOPPING.register(WorldLoadFabricEvent::onServerWorldUnload);
 		ServerPlayConnectionEvents.JOIN.register(PlayerConnectionFabricEvent::onPlayerJoin);
 		ServerPlayConnectionEvents.DISCONNECT.register(PlayerConnectionFabricEvent::onPlayerLeave);
+		EntitySleepEvents.START_SLEEPING.register((aaa, bbb) -> {});
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> MocapCommand.register(dispatcher, registryAccess));
 		PacketHandler.register();

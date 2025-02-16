@@ -8,7 +8,6 @@ public interface CommandOutput
 	CommandOutput LOGS = new LogsCommandOutput();
 
 	void sendSuccess(String component, Object... args);
-	void sendSuccessWithTip(String component, Object... args);
 	void sendSuccessLiteral(String format, Object... args);
 	void sendSuccessComponent(Component component);
 	void sendFailure(String component, Object... args);

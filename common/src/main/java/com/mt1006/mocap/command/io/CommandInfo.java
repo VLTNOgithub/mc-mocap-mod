@@ -52,12 +52,6 @@ public class CommandInfo implements CommandOutput
 		source.sendSuccess(() -> getTranslatableComponent(component, args), false);
 	}
 
-	@Override public void sendSuccessWithTip(String component, Object... args)
-	{
-		source.sendSuccess(() -> getTranslatableComponent(component, args), false);
-		source.sendSuccess(() -> getTranslatableComponent(component + ".tip", args), false);
-	}
-
 	@Override public void sendSuccessLiteral(String format, Object... args)
 	{
 		source.sendSuccess(() -> Component.literal(String.format(format, args)), false);

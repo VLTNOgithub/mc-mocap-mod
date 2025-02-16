@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 class LogsCommandOutput implements CommandOutput
 {
 	@Override public void sendSuccess(String component, Object... args) {}
-	@Override public void sendSuccessWithTip(String component, Object... args) {}
 	@Override public void sendSuccessLiteral(String format, Object... args) {}
 	@Override public void sendSuccessComponent(Component component) {}
 
