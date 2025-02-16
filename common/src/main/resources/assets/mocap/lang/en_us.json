@@ -6,7 +6,8 @@
   "mocap.recording.start.player_not_found": "§lError:§r player not found!",
   "mocap.recording.start.player_not_specified": "§lError:§r player wasn't specified!",
   "mocap.recording.start.player_not_specified.tip": "Add nickname to command or execute it as a player",
-  "mocap.recording.start.waiting_for_action": "Take any action or use \"/mocap recording start\" again to start recording...",
+  "mocap.recording.start.waiting_for_action.self": "Take any action or use \"/mocap recording start\" again to start recording...",
+  "mocap.recording.start.waiting_for_action.another_player": "Waiting for player action. Use \"/mocap recording start\" again to start recording right now...",
   "mocap.recording.start.recording_started": "Recording started...",
   "mocap.recording.start.error": "§lError:§r failed to start recording!",
 

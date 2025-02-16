@@ -51,8 +51,16 @@ public class Recording
 		if (!checkDoubleStart(commandInfo, recordedPlayer)) { return false; }
 
 		boolean success = addContext(recordedPlayer, commandInfo.sourcePlayer);
-		if (success) { commandInfo.sendSuccess("recording.start.waiting_for_action"); }
-		else { commandInfo.sendFailure("recording.start.error"); }
+		if (success)
+		{
+			commandInfo.sendSuccess(recordedPlayer.equals(commandInfo.sourcePlayer)
+					? "recording.start.waiting_for_action.self"
+					: "recording.start.waiting_for_action.another_player");
+		}
+		else
+		{
+			commandInfo.sendFailure("recording.start.error");
+		}
 
 		return success;
 	}

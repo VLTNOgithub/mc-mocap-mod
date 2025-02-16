@@ -2,7 +2,7 @@
   "mocap.recording.start.player_not_found": "§l错误：§r未找到玩家！",
   "mocap.recording.start.player_not_specified": "§l错误：§r未指定玩家！",
   "mocap.recording.start.player_not_specified.tip": "为命令添加玩家名或作为玩家执行",
-  "mocap.recording.start.waiting_for_action": "执行任何操作或再次使用\"/mocap recording start\"以开始录制……",
+  "mocap.recording.start.waiting_for_action.self": "执行任何操作或再次使用\"/mocap recording start\"以开始录制……",
   "mocap.recording.start.recording_started": "录制开始……",
 
   "mocap.recording.stop.stopped": "录制停止——等待选择中……",

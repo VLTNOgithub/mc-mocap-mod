@@ -6,7 +6,8 @@
   "mocap.recording.start.player_not_found": "§lBłąd:§r nie znaleziono gracza!",
   "mocap.recording.start.player_not_specified": "§lBłąd:§r nie określono gracza!",
   "mocap.recording.start.player_not_specified.tip": "Dodaj nazwę gracza do polecenia lub wykonaj ją jako gracz",
-  "mocap.recording.start.waiting_for_action": "Wykonaj jakąkolwiek akcję lub użyj \"/mocap recording start\" ponownie, aby zacząć nagrywanie...",
+  "mocap.recording.start.waiting_for_action.self": "Wykonaj jakąkolwiek akcję lub użyj \"/mocap recording start\" ponownie, aby zacząć nagrywanie...",
+  "mocap.recording.start.waiting_for_action.another_player": "Czekanie na akcję gracza. Użyj \"/mocap recording start\" ponownie, aby zacząć nagrywanie już teraz...",
   "mocap.recording.start.recording_started": "Nagrywanie rozpoczęte...",
   "mocap.recording.start.error": "§lBłąd:§r nie udało się rozpocząć nagrywania!",
 

@@ -34,6 +34,7 @@
 -Improvements to recording format.
 -Improvements to recording information command output.
 -Improvements to error messages.
+-General command output improvements.
 -Improved output of trying to change setting value with "/mocap settings" command, when value remained unchanged.
 -Renamed "settings.mcmocap_conf" to "settings.txt".
 -Removed argument value limits that existed for some settings in "/mocap settings" command.

@@ -6,7 +6,7 @@
   "mocap.recording.start.player_not_found": "§l錯誤：§r 找不到玩家！",
   "mocap.recording.start.player_not_specified": "§l錯誤：§r 未指定玩家！",
   "mocap.recording.start.player_not_specified.tip": "將暱稱加入指令中，或以玩家身分執行指令",
-  "mocap.recording.start.waiting_for_action": "採取任何動作或再次使用「/mocap recording start」開始錄製...",
+  "mocap.recording.start.waiting_for_action.self": "採取任何動作或再次使用「/mocap recording start」開始錄製...",
   "mocap.recording.start.recording_started": "錄製已開始...",
   "mocap.recording.start.error": "§l錯誤：§r 無法開始錄製！",
 
