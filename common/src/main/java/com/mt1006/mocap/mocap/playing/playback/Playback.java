@@ -94,7 +94,7 @@ public abstract class Playback
 			CommandsContext commandsContext = CommandsContext.get(owner);
 			if (!commandsContext.getSync()) { return true; }
 
-			for (RecordingContext ctx : Recording.getContextsBySource(owner))
+			for (RecordingContext ctx : Recording.bySourcePlayer(owner))
 			{
 				if (ctx.state == RecordingContext.State.RECORDING) { return true; }
 			}

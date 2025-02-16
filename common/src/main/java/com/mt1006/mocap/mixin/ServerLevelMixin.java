@@ -17,7 +17,7 @@ public class ServerLevelMixin
 	{
 		if (Recording.isActive())
 		{
-			Recording.fromRecordedPlayer(id).forEach((ctx) -> ctx.addAction(new BreakBlockProgress(blockPos, progress)));
+			Recording.byRecordedPlayer(id).forEach((ctx) -> ctx.addAction(new BreakBlockProgress(blockPos, progress)));
 		}
 	}
 }

@@ -13,7 +13,7 @@ public class EntityEvent
 	{
 		if (Recording.isActive() && entity.level() instanceof ServerLevel)
 		{
-			Recording.fromRecordedPlayer(entity).forEach((ctx) -> ctx.addAction(new Hurt()));
+			Recording.byRecordedPlayer(entity).forEach((ctx) -> ctx.addAction(new Hurt()));
 			Recording.listTrackedEntities(entity).forEach(EntityTracker.TrackedEntity::onHurt);
 		}
 	}

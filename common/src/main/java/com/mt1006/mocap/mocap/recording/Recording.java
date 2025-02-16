@@ -37,7 +37,7 @@ public class Recording
 
 		public boolean canBeUsed(RecordingContext ctx, @Nullable ServerPlayer source)
 		{
-			return allowsSingle(ctx) && source != null && getContextsBySource(source).size() == 1;
+			return allowsSingle(ctx) && source != null && bySourcePlayer(source).size() == 1;
 		}
 	}
 
@@ -226,7 +226,7 @@ public class Recording
 		for (ServerPlayer player : players)
 		{
 			boolean stillRecording = false;
-			for (RecordingContext ctx : getContextsBySource(player))
+			for (RecordingContext ctx : bySourcePlayer(player))
 			{
 				if (ctx.state == RecordingContext.State.RECORDING)
 				{
@@ -499,7 +499,7 @@ public class Recording
 		return !contexts.isEmpty();
 	}
 
-	public static List<RecordingContext> fromRecordedPlayer(int id)
+	public static List<RecordingContext> byRecordedPlayer(int id)
 	{
 		List<RecordingContext> list = new ArrayList<>(1);
 		for (RecordingContext ctx : contexts)
@@ -509,7 +509,7 @@ public class Recording
 		return list;
 	}
 
-	public static List<RecordingContext> fromRecordedPlayer(Entity entity)
+	public static List<RecordingContext> byRecordedPlayer(Entity entity)
 	{
 		if (!(entity instanceof Player)) { return List.of(); }
 
@@ -519,11 +519,6 @@ public class Recording
 			if (ctx.recordedPlayer == entity) { list.add(ctx); }
 		}
 		return list;
-	}
-
-	public static Collection<RecordingContext> getContexts()
-	{
-		return contexts;
 	}
 
 	public static @Nullable Collection<RecordingContext> resolveContexts(CommandInfo commandInfo, String id)
@@ -555,7 +550,7 @@ public class Recording
 		return true;
 	}
 
-	public static Collection<RecordingContext> getContextsBySource(ServerPlayer player)
+	public static Collection<RecordingContext> bySourcePlayer(ServerPlayer player)
 	{
 		return contextsBySource.get(player.getName().getString());
 	}
@@ -630,7 +625,7 @@ public class Recording
 				return null;
 			}
 
-			Collection<RecordingContext> sourceContexts = getContextsBySource(source);
+			Collection<RecordingContext> sourceContexts = bySourcePlayer(source);
 
 			if (sourceContexts.size() > 1)
 			{

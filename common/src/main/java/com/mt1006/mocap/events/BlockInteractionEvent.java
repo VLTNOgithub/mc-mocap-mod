@@ -17,7 +17,7 @@ public class BlockInteractionEvent
 	{
 		if (Recording.isActive())
 		{
-			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new BreakBlock(blockState, pos)));
+			Recording.byRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new BreakBlock(blockState, pos)));
 		}
 	}
 
@@ -25,7 +25,7 @@ public class BlockInteractionEvent
 	{
 		if (Recording.isActive())
 		{
-			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlock(replacedBlock, placedBlock, blockPos)));
+			Recording.byRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlock(replacedBlock, placedBlock, blockPos)));
 		}
 	}
 
@@ -33,7 +33,7 @@ public class BlockInteractionEvent
 	{
 		if (Recording.isActive())
 		{
-			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlockSilently(replacedBlock, placedBlock, blockPos)));
+			Recording.byRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new PlaceBlockSilently(replacedBlock, placedBlock, blockPos)));
 		}
 	}
 
@@ -42,7 +42,7 @@ public class BlockInteractionEvent
 		if (Recording.isActive() && !usedOnShift(player, doesSneakBypassUse))
 		{
 			boolean isOffHand = (hand == InteractionHand.OFF_HAND);
-			Recording.fromRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new RightClickBlock(hitResult, isOffHand)));
+			Recording.byRecordedPlayer(player).forEach((ctx) -> ctx.addAction(new RightClickBlock(hitResult, isOffHand)));
 		}
 	}
 
