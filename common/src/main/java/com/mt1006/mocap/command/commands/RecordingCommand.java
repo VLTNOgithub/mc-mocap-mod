@@ -62,7 +62,8 @@ public class RecordingCommand
 
 			if (!(entity instanceof ServerPlayer))
 			{
-				commandInfo.sendFailureWithTip("recording.start.player_not_specified");
+				// It contains tip but uses single message to fit in command blocks "previous output" box
+				commandInfo.sendFailure("recording.start.player_not_specified");
 				return false;
 			}
 
