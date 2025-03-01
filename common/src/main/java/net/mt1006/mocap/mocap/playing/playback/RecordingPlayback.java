@@ -64,7 +64,7 @@ public class RecordingPlayback extends Playback
 		GameProfile newProfile = new GameProfile(UUID.randomUUID(), profile.getName());
 		try
 		{
-			PropertyMap oldPropertyMap = (PropertyMap) Fields.gameProfileProperties.get(profile);
+			PropertyMap oldPropertyMap = (PropertyMap)Fields.gameProfileProperties.get(profile);
 			PropertyMap newPropertyMap = (PropertyMap)Fields.gameProfileProperties.get(newProfile);
 
 			newPropertyMap.putAll(oldPropertyMap);
