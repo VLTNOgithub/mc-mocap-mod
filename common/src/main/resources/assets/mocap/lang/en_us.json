@@ -16,6 +16,8 @@
   "mocap.recording.stop.canceled": "Recording canceled - no longer waiting for action",
   "mocap.recording.stop.quick_discard.disabled": "Recording already stopped!",
   "mocap.recording.stop.quick_discard.disabled.tip": "Use \"/mocap recording discard\" to discard it\nor change quick discard mode in the settings.",
+  "mocap.recording.stop.split": "Recording split - previous recording is waiting for decision",
+  "mocap.recording.stop.split.error": "§lError:§r something went wrong when trying to split recording!",
 
   "mocap.recording.discard.discarded": "Recording discarded",
   "mocap.recording.discard.not_stopped": "Recording wasn't stopped, but you're trying to discard it!",

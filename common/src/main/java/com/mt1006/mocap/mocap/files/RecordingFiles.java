@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -237,6 +238,14 @@ public class RecordingFiles
 			recording.add((byte)0);
 		}
 
+		//TODO: use it
+		public void addVec3(Vec3 vec)
+		{
+			addDouble(vec.x);
+			addDouble(vec.y);
+			addDouble(vec.z);
+		}
+
 		public void addBlockPos(BlockPos blockPos)
 		{
 			addInt(blockPos.getX());
@@ -289,6 +298,7 @@ public class RecordingFiles
 		void shift(int val);
 		@Nullable RecordingData getParent();
 
+		default Vec3 readVec3() { return new Vec3(readDouble(), readDouble(), readDouble()); } //TODO: use it
 		default BlockPos readBlockPos()
 		{
 			return new BlockPos(readInt(), readInt(), readInt());

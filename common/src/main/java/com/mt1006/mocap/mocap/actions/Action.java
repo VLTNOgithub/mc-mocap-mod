@@ -61,7 +61,9 @@ public interface Action
 		VEHICLE_DATA(19, VehicleData::new, VehicleData::new),
 		BREAK_BLOCK_PROGRESS(20, (FromReaderOnly)BreakBlockProgress::new),
 		MOVEMENT(21, Movement::new),
-		SKIP_TICKS(22, SkipTicks::new);
+		SKIP_TICKS(22, SkipTicks::new),
+		DIE(23, Die::new),
+		RESPAWN(24, Respawn::new);
 
 		public final byte id;
 		public final FromReader fromReader;

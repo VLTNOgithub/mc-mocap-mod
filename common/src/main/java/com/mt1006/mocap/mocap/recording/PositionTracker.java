@@ -12,7 +12,8 @@ import java.util.List;
 
 public class PositionTracker
 {
-	private final Entity entity;
+	private final Vec3 FAR_AWAY = new Vec3(0.0, 1000000.0, 0.0);
+	private Entity entity;
 	private final double[] position = new double[3];
 	private final float[] rotation = new float[2];
 	private float headRot;
@@ -36,6 +37,11 @@ public class PositionTracker
 		forceNonPosDataFlag = initRotAndGround;
 	}
 
+	public void setEntity(Entity entity)
+	{
+		this.entity = entity;
+	}
+
 	public void onTick(List<Action> actionList, @Nullable Integer entityId)
 	{
 		Movement movement = getDelta(true, forceNonPosDataFlag);
@@ -43,6 +49,19 @@ public class PositionTracker
 
 		if (movement == null) { return; }
 		actionList.add(entityId != null ? new EntityAction(entityId, movement) : movement);
+	}
+
+	public void teleportFarAway(List<Action> actionList)
+	{
+		//TODO: replace pos arrays with Vec3
+		Movement movement = Movement.teleportToPos(FAR_AWAY, false);
+		actionList.add(movement);
+
+		movement.applyToPosition(position);
+		rotation[0] = 0.0f;
+		rotation[1] = 0.0f;
+		headRot = 0.0f;
+		isOnGround = false;
 	}
 
 	public @Nullable Movement getDelta()

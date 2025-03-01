@@ -9,14 +9,18 @@ import com.mt1006.mocap.network.MocapPacketS2C;
 import com.mt1006.mocap.utils.FakePlayer;
 import com.mt1006.mocap.utils.Utils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +36,7 @@ public class ActionContext
 	private final PlayerList packetTargets;
 	private final EntityData mainEntityData;
 	public final Map<Integer, EntityData> entityDataMap = new HashMap<>();
-	public final Level level;
+	public final ServerLevel level;
 	public final PlaybackModifiers modifiers;
 	public final @Nullable FakePlayer ghostPlayer;
 	public final Vec3 startPos;
@@ -44,10 +48,12 @@ public class ActionContext
 	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity,
 						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, double[] startPos)
 	{
+		if (!(entity.level() instanceof ServerLevel)) { throw new RuntimeException("Failed to get ServerLevel for ActionContext!"); }
+
 		this.owner = owner;
 		this.packetTargets = packetTargets;
 		this.mainEntityData = new EntityData(entity);
-		this.level = entity.level();
+		this.level = (ServerLevel)entity.level();
 		this.modifiers = modifiers;
 		this.ghostPlayer = ghostPlayer;
 		this.startPos = modifiers.offset.add(startPos[0], startPos[1], startPos[2]);
@@ -164,6 +170,29 @@ public class ActionContext
 
 		entity.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX);
 		if (ghostPlayer != null) { ghostPlayer.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX); }
+	}
+
+	public void changePosition(double x, double y, double z, float rotY, float rotX, @Nullable ResourceLocation dimensionId)
+	{
+		ServerLevel newLevel = dimensionId != null
+				? level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dimensionId))
+				: null;
+
+		if (newLevel == level || newLevel == null)
+		{
+			changePosition(x, y, z, rotY, rotX, false, false);
+			return;
+		}
+
+		position[0] = modifiers.offset.x + x;
+		position[1] = modifiers.offset.y + y;
+		position[2] = modifiers.offset.z + z;
+
+		DimensionTransition dimensionTransition = new DimensionTransition(
+				newLevel, new Vec3(position[0], position[1], position[2]), Vec3.ZERO, rotY, rotX, (ctx) -> {});
+
+		entity.changeDimension(dimensionTransition);
+		if (ghostPlayer != null) { ghostPlayer.changeDimension(dimensionTransition); }
 	}
 
 	private static void removeEntity(Entity entity)

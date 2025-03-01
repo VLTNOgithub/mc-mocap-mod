@@ -16,6 +16,8 @@
   "mocap.recording.stop.canceled": "Nagranie anulowane - koniec czekania na akcję",
   "mocap.recording.stop.quick_discard.disabled": "Nagrywanie już zatrzymane!",
   "mocap.recording.stop.quick_discard.disabled.tip": "Użyj \"/mocap recording discard\" aby je odrzucić\nlub zmień tryb szybkiego odrzucania w ustawieniach.",
+  "mocap.recording.stop.split": "Nagranie podzielone - poprzednie nagranie czeka na decyzję",
+  "mocap.recording.stop.split.error": "§lBłąd:§r coś poszło nie tak przy próbie podzielenia nagrania!",
 
   "mocap.recording.discard.discarded": "Nagranie odrzucone",
   "mocap.recording.discard.not_stopped": "Nagrywanie nie zostało zatrzymane, ale próbujesz je odrzucić!",

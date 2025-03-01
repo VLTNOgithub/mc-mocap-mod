@@ -11,7 +11,7 @@ public class MocapMod
 {
 	public static final String MOD_ID = "mocap";
 	public static final String FOR_VERSION = "1.21.1";
-	public static final boolean EXPERIMENTAL = true;
+	public static final boolean EXPERIMENTAL = true; //TODO: change it to false
 
 	public static final byte RECORDING_FORMAT_VERSION = 5;
 	public static final byte SCENE_FORMAT_VERSION = 4;

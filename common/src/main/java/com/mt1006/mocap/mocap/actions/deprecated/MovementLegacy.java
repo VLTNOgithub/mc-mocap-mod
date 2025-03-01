@@ -25,16 +25,6 @@ public class MovementLegacy implements Action
 		isOnGround = reader.readBoolean();
 	}
 
-	public void writeAsHeader(RecordingFiles.Writer writer)
-	{
-		writer.addDouble(position[0]);
-		writer.addDouble(position[1]);
-		writer.addDouble(position[2]);
-
-		writer.addFloat(rotation[1]);
-		writer.addFloat(rotation[0]);
-	}
-
 	@Override public void write(RecordingFiles.Writer writer)
 	{
 		throw new RuntimeException("Trying to save deprecated action!");

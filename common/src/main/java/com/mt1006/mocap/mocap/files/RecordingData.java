@@ -40,16 +40,19 @@ public class RecordingData
 	private static final byte FLAGS1_ENDS_WITH_DEATH =           0b00000001;
 	private static final byte FLAGS1_NULL_TERMINATED_STRINGS =   0b00000010;
 	private static final byte FLAGS1_HAS_ID_MAPS =               0b00000100;
+	private static final byte FLAGS1_START_DIMENSION_SPECIFIED = 0b00001000;
 
 	public long fileSize = 0;
 	public byte version = 0;
 	public boolean experimentalVersion = false;
 	public final double[] startPos = new double[3];
 	public final float[] startRot = new float[2];
-	public boolean endsWithDeath = false;
+	public boolean endsWithDeath = false; // deprecated
 	private boolean usesIdMaps = true;
+	public boolean startDimensionSpecified = false; //TODO: use it
 	public final ItemIdMap itemIdMap = new ItemIdMap(this);
 	public final BlockStateIdMap blockStateIdMap = new BlockStateIdMap(this);
+	public @Nullable String startDimension = null; //TODO: use it
 	public final List<Action> actions = new ArrayList<>();
 	public final List<BlockAction> blockActions = new ArrayList<>();
 	public long tickCount = 0;
@@ -114,6 +117,7 @@ public class RecordingData
 	private void saveHeader(RecordingFiles.Writer writer)
 	{
 		boolean hasIdMaps = usesIdMaps && (itemIdMap.size() != 0 || blockStateIdMap.size() != 0);
+		boolean hasStartDimension = startDimensionSpecified && (startDimension != null);
 
 		writer.addDouble(startPos[0]);
 		writer.addDouble(startPos[1]);
@@ -125,6 +129,7 @@ public class RecordingData
 		flags1 |= endsWithDeath ? FLAGS1_ENDS_WITH_DEATH : 0;
 		flags1 |= FLAGS1_NULL_TERMINATED_STRINGS;
 		flags1 |= hasIdMaps ? FLAGS1_HAS_ID_MAPS : 0;
+		flags1 |= hasStartDimension ? FLAGS1_START_DIMENSION_SPECIFIED : 0;
 		writer.addByte(flags1);
 
 		if (hasIdMaps)
@@ -132,6 +137,8 @@ public class RecordingData
 			itemIdMap.save(writer);
 			blockStateIdMap.save(writer);
 		}
+
+		if (hasStartDimension) { writer.addString(startDimension); }
 	}
 
 	private void loadHeader(RecordingFiles.FileReader reader, boolean legacyHeader)
@@ -147,12 +154,15 @@ public class RecordingData
 		endsWithDeath = (flags1 & FLAGS1_ENDS_WITH_DEATH) != 0;
 		reader.setStringMode((flags1 & FLAGS1_NULL_TERMINATED_STRINGS) == 0);
 		usesIdMaps = (flags1 & FLAGS1_HAS_ID_MAPS) != 0;
+		startDimensionSpecified = (flags1 & FLAGS1_START_DIMENSION_SPECIFIED) != 0;
 
 		if (usesIdMaps)
 		{
 			itemIdMap.load(reader);
 			blockStateIdMap.load(reader);
 		}
+
+		if (startDimensionSpecified) { startDimension = reader.readString(); }
 	}
 
 	public Vec3 initEntityPosition(Entity entity, Vec3 posOffset)

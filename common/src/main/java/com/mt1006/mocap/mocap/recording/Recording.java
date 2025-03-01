@@ -45,12 +45,13 @@ public class Recording
 
 	private static final Multimap<String, RecordingContext> contextsBySource = HashMultimap.create();
 	private static final Collection<RecordingContext> contexts = contextsBySource.values();
+	public static final BiMultimap<ServerPlayer, RecordingContext> waitingForRespawn = new BiMultimap<>();
 
 	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer)
 	{
 		if (!checkDoubleStart(commandInfo, recordedPlayer)) { return false; }
 
-		boolean success = addContext(recordedPlayer, commandInfo.sourcePlayer);
+		boolean success = start(recordedPlayer, commandInfo.sourcePlayer, false);
 		if (success)
 		{
 			commandInfo.sendSuccess(recordedPlayer.equals(commandInfo.sourcePlayer)
@@ -63,6 +64,19 @@ public class Recording
 		}
 
 		return success;
+	}
+
+	public static boolean start(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer, boolean startNow)
+	{
+		RecordingId id = new RecordingId(contexts, recordedPlayer, sourcePlayer);
+		if (!id.isProper()) { return false; }
+
+		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
+		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
+		CommandSuggestions.inputSet.add(id.str);
+
+		if(startNow) { ctx.start(false); }
+		return true;
 	}
 
 	private static boolean checkDoubleStart(CommandInfo commandInfo, ServerPlayer recordedPlayer)
@@ -94,7 +108,7 @@ public class Recording
 		switch (ctx.state)
 		{
 			case WAITING_FOR_ACTION:
-				ctx.start();
+				ctx.start(true);
 				break;
 
 			case RECORDING:
@@ -538,18 +552,6 @@ public class Recording
 		return list;
 	}
 
-	private static boolean addContext(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
-	{
-		RecordingId id = new RecordingId(contexts, recordedPlayer, sourcePlayer);
-		if (!id.isProper()) { return false; }
-
-		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
-		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
-
-		CommandSuggestions.inputSet.add(id.str);
-		return true;
-	}
-
 	public static Collection<RecordingContext> bySourcePlayer(ServerPlayer player)
 	{
 		return contextsBySource.get(player.getName().getString());
@@ -557,13 +559,50 @@ public class Recording
 
 	public static void removeContext(RecordingContext ctx)
 	{
+		waitingForRespawn.removeByValue(ctx);
 		contextsBySource.remove(ctx.sourcePlayer != null ? ctx.sourcePlayer.getName().getString() : "", ctx);
 		CommandSuggestions.inputSet.remove(ctx.id.str);
 	}
 
 	public static void onServerStop()
 	{
+		waitingForRespawn.clear();
 		contextsBySource.clear();
+	}
+
+	public static class BiMultimap<A, B>
+	{
+		public final Multimap<A, B> byKey = HashMultimap.create();
+		public final Multimap<B, A> byValue = HashMultimap.create();
+
+		public void put(A key, B val)
+		{
+			byKey.put(key, val);
+			byValue.put(val, key);
+		}
+
+		public void removeByKey(A key)
+		{
+			Collection<B> values = byKey.removeAll(key);
+			values.forEach((v) -> byValue.remove(v, key));
+		}
+
+		public void removeByValue(B val)
+		{
+			Collection<A> keys = byValue.removeAll(val);
+			keys.forEach((k) -> byKey.remove(k, val));
+		}
+
+		public void clear()
+		{
+			byKey.clear();
+			byValue.clear();
+		}
+
+		public boolean isEmpty()
+		{
+			return byKey.isEmpty() && byValue.isEmpty();
+		}
 	}
 
 	private record ResolvedContexts(Collection<RecordingContext> list, boolean isSingle, RecordingId fullId)

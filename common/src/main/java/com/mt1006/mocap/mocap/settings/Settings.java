@@ -18,7 +18,9 @@ public class Settings
 	public static final SettingFields.StringField TRACK_ENTITIES = RECORDING.add(fields.add("track_entities", "@vehicles;@projectiles;@items", EntityFilter::onTrackEntitiesSet, EntityFilterInstance::test));
 	public static final SettingFields.BooleanField PREVENT_TRACKING_PLAYED_ENTITIES = RECORDING.add(fields.add("prevent_tracking_played_entities", true));
 	public static final SettingFields.DoubleField ENTITY_TRACKING_DISTANCE = RECORDING.add(fields.add("entity_tracking_distance", 128.0));
-	public static final SettingFields.BooleanField RECORD_PLAYER_DEATH = RECORDING.add(fields.add("record_player_death", true));
+	public static final SettingFields.BooleanField ASSIGN_DIMENSIONS = RECORDING.add(fields.add("assign_dimensions", true));
+	public static final SettingFields.IntegerField ON_DEATH = RECORDING.add(fields.add("on_death", 0));
+	//public static final SettingFields.IntegerField ON_CHANGE_DIMENSION = RECORDING.add(fields.add("on_change_dimension", 2));
 
 	public static final SettingFields.DoubleField PLAYBACK_SPEED = PLAYBACK.add(fields.add("playback_speed", 1.0));
 	public static final SettingFields.StringField PLAY_ENTITIES = PLAYBACK.add(fields.add("play_entities", "*", EntityFilter::onPlaybackEntitiesSet, EntityFilterInstance::test));

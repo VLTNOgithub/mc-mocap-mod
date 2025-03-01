@@ -12,4 +12,5 @@ public interface EntityMixin
 {
 	@Accessor static @Nullable EntityDataAccessor<Byte> getDATA_SHARED_FLAGS_ID() { return null; }
 	@Invoker void callCheckInsideBlocks();
+	@Invoker void callUnsetRemoved();
 }

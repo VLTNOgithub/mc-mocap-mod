@@ -1,10 +1,7 @@
 package com.mt1006.mocap.mocap.recording;
 
 import com.mt1006.mocap.command.io.CommandOutput;
-import com.mt1006.mocap.mocap.actions.Action;
-import com.mt1006.mocap.mocap.actions.BlockAction;
-import com.mt1006.mocap.mocap.actions.NextTick;
-import com.mt1006.mocap.mocap.actions.SkipTicks;
+import com.mt1006.mocap.mocap.actions.*;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
@@ -18,8 +15,13 @@ import java.io.File;
 
 public class RecordingContext
 {
+	private static final int END_RECORDING = 0;
+	private static final int SPLIT_RECORDING = 1;
+	private static final int CONTINUE_SYNCED = 2;
+	private static final int CONTINUE_SKIP_TICKS = 3;
+
 	public final RecordingId id;
-	public final ServerPlayer recordedPlayer;
+	public ServerPlayer recordedPlayer;
 	public final @Nullable ServerPlayer sourcePlayer;
 	public final RecordingData data = RecordingData.forWriting();
 	public State state = State.WAITING_FOR_ACTION;
@@ -27,7 +29,8 @@ public class RecordingContext
 	private final PositionTracker positionTracker;
 	private final EntityTracker entityTracker = new EntityTracker(this);
 	public final EntityFilter entityFilter;
-	private int tick = 0;
+	private int tick = 0, diedOnTick = 0;
+	private boolean died = false;
 
 	public RecordingContext(RecordingId id, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
 	{
@@ -38,13 +41,19 @@ public class RecordingContext
 		this.entityFilter = EntityFilter.FOR_RECORDING;
 
 		this.positionTracker.writeToRecordingData(data);
+
+		if (Settings.ASSIGN_DIMENSIONS.val)
+		{
+			data.startDimensionSpecified = true;
+			data.startDimension = recordedPlayer.level().dimension().location().toString();
+		}
 	}
 
-	public void start()
+	public void start(boolean sendMessage)
 	{
 		entityState = null;
-		Utils.sendMessage(sourcePlayer, "recording.start.recording_started");
 		state = State.RECORDING;
+		if (sendMessage) { Utils.sendMessage(sourcePlayer, "recording.start.recording_started"); }
 	}
 
 	public void stop()
@@ -100,12 +109,31 @@ public class RecordingContext
 	{
 		RecordedEntityState newEntityState = new RecordedEntityState(recordedPlayer);
 
-		if (newEntityState.differs(entityState) || positionTracker.getDelta() != null) { start(); }
+		if (newEntityState.differs(entityState) || positionTracker.getDelta() != null) { start(true); }
 		else { entityState = newEntityState; }
 	}
 
+	//TODO: safe saving
 	private void onTickRecording()
 	{
+		tick++;
+		if (died)
+		{
+			int tickDiff = tick - diedOnTick;
+			if (Settings.ON_DEATH.val == CONTINUE_SYNCED || tickDiff < 20)
+			{
+				entityTracker.onTick();
+				addTickAction();
+			}
+
+			if (tickDiff == 20)
+			{
+				if (Settings.ON_DEATH.val == END_RECORDING) { stopRecording("recording.stop.stopped"); }
+				else if (Settings.ON_DEATH.val != SPLIT_RECORDING) positionTracker.teleportFarAway(data.actions);
+			}
+			return;
+		}
+
 		RecordedEntityState newEntityState = new RecordedEntityState(recordedPlayer);
 		newEntityState.saveDifference(data.actions, entityState);
 		entityState = newEntityState;
@@ -113,17 +141,47 @@ public class RecordingContext
 		positionTracker.onTick(data.actions, null);
 		entityTracker.onTick();
 
-		if (recordedPlayer.isDeadOrDying() && Settings.RECORD_PLAYER_DEATH.val)
+		if (recordedPlayer.isDeadOrDying())
 		{
-			//TODO: safe saving
-			data.endsWithDeath = true;
-			Utils.sendMessage(sourcePlayer, "recording.stop.stopped");
-			state = State.WAITING_FOR_DECISION;
-			return;
+			addAction(new Die());
+			died = true;
+			diedOnTick = tick;
+
+			if (Settings.ON_DEATH.val != END_RECORDING) { Recording.waitingForRespawn.put(recordedPlayer, this); }
+		}
+		else if (recordedPlayer.isRemoved())
+		{
+			stopRecording("recording.stop.stopped");
 		}
 
 		addTickAction();
-		tick++;
+	}
+
+	public void onRespawn(ServerPlayer newPlayer)
+	{
+		if (Settings.ON_DEATH.val == SPLIT_RECORDING)
+		{
+			splitRecording(newPlayer);
+			return;
+		}
+
+		died = false;
+		recordedPlayer = newPlayer;
+		positionTracker.setEntity(newPlayer);
+		addAction(new Respawn());
+	}
+
+	public void stopRecording(String message)
+	{
+		state = State.WAITING_FOR_DECISION;
+		Utils.sendMessage(sourcePlayer, message);
+	}
+
+	public void splitRecording(ServerPlayer newPlayer)
+	{
+		stopRecording("recording.stop.split");
+		boolean success = Recording.start(newPlayer, sourcePlayer, true);
+		if (!success) { Utils.sendMessage(sourcePlayer, "recording.stop.split.error"); }
 	}
 
 	public void addAction(Action action)
@@ -183,5 +241,12 @@ public class RecordingContext
 		{
 			this.removed = removed;
 		}
+	}
+
+	public enum Waiting
+	{
+		NOT_WAITING,
+		WAITING_COUNT_ALL_TICKS,
+		WAITING_COUNT_DYING_TICKS
 	}
 }

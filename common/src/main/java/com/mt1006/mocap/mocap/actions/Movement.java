@@ -200,6 +200,21 @@ public class Movement implements Action
 				: null;
 	}
 
+	public static Movement teleportToPos(Vec3 pos, boolean onGround)
+	{
+		byte flags = (byte)((onGround ? ON_GROUND : 0) | Y_DOUBLE | XZ_DOUBLE | ROT_0);
+		double[] posArray = new double[3];
+		posArray[0] = pos.x;
+		posArray[1] = pos.y;
+		posArray[2] = pos.z;
+
+		float[] rotArray = new float[2];
+		rotArray[0] = 0.0f;
+		rotArray[1] = 0.0f;
+
+		return new Movement(flags, posArray, rotArray, 0.0f);
+	}
+
 	private static boolean canUseDeltaFloat(double oldVal, double newVal)
 	{
 		return Math.abs(oldVal + (double)(float)(newVal - oldVal) - newVal) <= MAX_ERROR;

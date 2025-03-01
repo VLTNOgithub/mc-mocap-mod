@@ -26,6 +26,7 @@ dependencies
 mixin
 {
 	config "${mod_id}.mixins.json"
+	config "${mod_id}.forge.mixins.json"
 }
 
 tasks.named("jar", Jar).configure
