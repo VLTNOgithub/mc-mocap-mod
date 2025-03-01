@@ -242,11 +242,4 @@ public class RecordingContext
 			this.removed = removed;
 		}
 	}
-
-	public enum Waiting
-	{
-		NOT_WAITING,
-		WAITING_COUNT_ALL_TICKS,
-		WAITING_COUNT_DYING_TICKS
-	}
 }
