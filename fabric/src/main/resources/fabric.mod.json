@@ -19,7 +19,9 @@
 	"environment": "*",
 	"entrypoints":
 	{
-		"main": ["com.mt1006.mocap.MocapModFabric"]
+		"main": [
+			"net.mt1006.mocap.MocapModFabric"
+		]
 	},
 	"mixins": ["mocap.mixins.json", "mocap.fabric.mixins.json"],
 

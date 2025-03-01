@@ -1,0 +1,19 @@
+package net.mt1006.mocap.neoforge;
+
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.command.commands.MocapCommand;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.server.command.ConfigCommand;
+
+@EventBusSubscriber(modid = MocapMod.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+public class RegisterCommand
+{
+	@SubscribeEvent
+	public static void registerCommands(RegisterCommandsEvent event)
+	{
+		MocapCommand.register(event.getDispatcher(), event.getBuildContext());
+		ConfigCommand.register(event.getDispatcher());
+	}
+}
