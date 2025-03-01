@@ -1,6 +1,6 @@
 package com.mt1006.mocap.mocap.actions;
 
-import com.mt1006.mocap.mixin.fields.EntityMixin;
+import com.mt1006.mocap.mixin.fields.EntityFields;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
@@ -314,7 +314,7 @@ public class Movement implements Action
 		ctx.changePosition(position[0], position[1], position[2], rotY, rotX, isXzRelative(), isYRelative());
 		if (updateRot) { ctx.entity.setYHeadRot(headRot); }
 		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
-		((EntityMixin)ctx.entity).callCheckInsideBlocks();
+		((EntityFields)ctx.entity).callCheckInsideBlocks();
 
 		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity)); //TODO: try packet with higher precision
 		if (updateRot)

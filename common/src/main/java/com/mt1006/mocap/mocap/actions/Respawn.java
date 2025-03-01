@@ -1,6 +1,6 @@
 package com.mt1006.mocap.mocap.actions;
 
-import com.mt1006.mocap.mixin.fields.EntityMixin;
+import com.mt1006.mocap.mixin.fields.EntityFields;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.FakePlayer;
@@ -58,7 +58,7 @@ public class Respawn implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		((EntityMixin)ctx.entity).callUnsetRemoved();
+		((EntityFields)ctx.entity).callUnsetRemoved();
 		ctx.entity.setPose(Pose.STANDING);
 
 		if (ctx.entity instanceof LivingEntity)

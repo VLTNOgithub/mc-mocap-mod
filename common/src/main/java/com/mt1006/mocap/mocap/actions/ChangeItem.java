@@ -2,7 +2,7 @@ package com.mt1006.mocap.mocap.actions;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mt1006.mocap.MocapMod;
-import com.mt1006.mocap.mixin.fields.LivingEntityMixin;
+import com.mt1006.mocap.mixin.fields.LivingEntityFields;
 import com.mt1006.mocap.mocap.files.RecordingData;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
@@ -107,7 +107,7 @@ public class ChangeItem implements ComparableAction
 			}
 
 			// for non-player living entities it's detected in their "tick" method
-			if (entity instanceof Player) { ((LivingEntityMixin)entity).callDetectEquipmentUpdates(); }
+			if (entity instanceof Player) { ((LivingEntityFields)entity).callDetectEquipmentUpdates(); }
 		}
 	}
 

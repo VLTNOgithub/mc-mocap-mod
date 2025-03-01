@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Horse.class)
-public interface HorseMixin
+public interface HorseFields
 {
 	@Invoker void callSetTypeVariant(int val);
 	@Invoker int callGetTypeVariant();

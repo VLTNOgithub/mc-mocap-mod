@@ -1,6 +1,6 @@
 package com.mt1006.mocap.mocap.actions.deprecated;
 
-import com.mt1006.mocap.mixin.fields.EntityMixin;
+import com.mt1006.mocap.mixin.fields.EntityFields;
 import com.mt1006.mocap.mocap.actions.Action;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
@@ -35,7 +35,7 @@ public class MovementLegacy implements Action
 		ctx.changePosition(position[0], position[1], position[2], rotation[1], rotation[0], true, true);
 
 		ctx.entity.setOnGround(isOnGround);
-		((EntityMixin)ctx.entity).callCheckInsideBlocks();
+		((EntityFields)ctx.entity).callCheckInsideBlocks();
 		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity));
 		return Result.OK;
 	}

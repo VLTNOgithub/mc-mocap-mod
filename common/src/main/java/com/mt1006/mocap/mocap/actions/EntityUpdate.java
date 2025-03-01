@@ -1,6 +1,6 @@
 package com.mt1006.mocap.mocap.actions;
 
-import com.mt1006.mocap.mixin.fields.EntityIdMixin;
+import com.mt1006.mocap.mixin.fields.EntityIdFields;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.Playing;
 import com.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
@@ -90,7 +90,7 @@ public class EntityUpdate implements Action
 	{
 		CompoundTag compoundTag = new CompoundTag();
 
-		String id = ((EntityIdMixin)entity).callGetEncodeId();
+		String id = ((EntityIdFields)entity).callGetEncodeId();
 		compoundTag.putString("id", id != null ? id : "minecraft:cow");
 
 		entity.saveWithoutId(compoundTag);

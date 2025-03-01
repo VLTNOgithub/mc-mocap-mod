@@ -1,9 +1,9 @@
 package com.mt1006.mocap.mocap.actions;
 
-import com.mt1006.mocap.mixin.fields.AbstractHorseMixin;
-import com.mt1006.mocap.mixin.fields.BoatMixin;
-import com.mt1006.mocap.mixin.fields.HorseMixin;
-import com.mt1006.mocap.mixin.fields.PigMixin;
+import com.mt1006.mocap.mixin.fields.AbstractHorseFields;
+import com.mt1006.mocap.mixin.fields.BoatFields;
+import com.mt1006.mocap.mixin.fields.HorseFields;
+import com.mt1006.mocap.mixin.fields.PigFields;
 import com.mt1006.mocap.mocap.files.RecordingFiles;
 import com.mt1006.mocap.mocap.playing.playback.ActionContext;
 import com.mt1006.mocap.utils.EntityData;
@@ -54,7 +54,7 @@ public class VehicleData implements ComparableAction
 			if (abstractHorse.isStanding()) { flags |= 0x20; }
 			if ((EntityData.ABSTRACT_HORSE_FLAGS.valOrDef(entity, (byte)0) & 0x40) != 0) { flags |= 0x40; }
 
-			if (entity instanceof Horse) { int1 = ((HorseMixin)entity).callGetTypeVariant(); }
+			if (entity instanceof Horse) { int1 = ((HorseFields)entity).callGetTypeVariant(); }
 			else if (entity instanceof AbstractChestedHorse) { flag1 = ((AbstractChestedHorse)entity).hasChest(); }
 			else if (entity instanceof Camel) { flag1 = ((Camel)entity).isDashing(); }
 
@@ -70,7 +70,7 @@ public class VehicleData implements ComparableAction
 			flag2 = ((Boat)entity).getPaddleState(1);
 			int1 = ((Boat)entity).getHurtTime();
 			int2 = ((Boat)entity).getHurtDir();
-			int3 = ((BoatMixin)entity).callGetBubbleTime();
+			int3 = ((BoatFields)entity).callGetBubbleTime();
 			float1 = ((Boat)entity).getDamage();
 		}
 		else if (entity instanceof AbstractMinecart)
@@ -145,11 +145,11 @@ public class VehicleData implements ComparableAction
 			try
 			{
 				ItemStack itemStack = new ItemStack((flags & 0x04) != 0 ? Items.SADDLE : Items.AIR);
-				((AbstractHorseMixin)ctx.entity).getInventory().setItem(0, itemStack);
+				((AbstractHorseFields)ctx.entity).getInventory().setItem(0, itemStack);
 			}
 			catch (Exception ignore) {}
 
-			if (ctx.entity instanceof Horse) { ((HorseMixin)ctx.entity).callSetTypeVariant(int1); }
+			if (ctx.entity instanceof Horse) { ((HorseFields)ctx.entity).callSetTypeVariant(int1); }
 			else if (ctx.entity instanceof AbstractChestedHorse) { ((AbstractChestedHorse)ctx.entity).setChest(flag1); }
 			else if (ctx.entity instanceof Camel) { ((Camel)ctx.entity).setDashing(flag1); }
 
@@ -157,14 +157,14 @@ public class VehicleData implements ComparableAction
 		}
 		else if (ctx.entity instanceof Pig)
 		{
-			((PigMixin)ctx.entity).getSteering().setSaddle(flag1);
+			((PigFields)ctx.entity).getSteering().setSaddle(flag1);
 		}
 		else if (ctx.entity instanceof Boat)
 		{
 			((Boat)ctx.entity).setPaddleState(flag1, flag2);
 			((Boat)ctx.entity).setHurtTime(int1);
 			((Boat)ctx.entity).setHurtDir(int2);
-			((BoatMixin)ctx.entity).callSetBubbleTime(int3);
+			((BoatFields)ctx.entity).callSetBubbleTime(int3);
 			((Boat)ctx.entity).setDamage(float1);
 		}
 		else if (ctx.entity instanceof AbstractMinecart)

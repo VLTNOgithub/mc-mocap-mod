@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.List;
 
 @Mixin(LivingEntity.class)
-public interface LivingEntityMixin
+public interface LivingEntityFields
 {
 	@Accessor static @Nullable EntityDataAccessor<Byte> getDATA_LIVING_ENTITY_FLAGS() { return null; }
 	@Accessor static @Nullable EntityDataAccessor<List<ParticleOptions>> getDATA_EFFECT_PARTICLES() { return null; }

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(AbstractHorse.class)
-public interface AbstractHorseMixin
+public interface AbstractHorseFields
 {
 	@Accessor static @Nullable EntityDataAccessor<Byte> getDATA_ID_FLAGS() { return null; }
 	@Accessor SimpleContainer getInventory();

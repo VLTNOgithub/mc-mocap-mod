@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Entity.class)
-public interface EntityMixin
+public interface EntityFields
 {
 	@Accessor static @Nullable EntityDataAccessor<Byte> getDATA_SHARED_FLAGS_ID() { return null; }
 	@Invoker void callCheckInsideBlocks();

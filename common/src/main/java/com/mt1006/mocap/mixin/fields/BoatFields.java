@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Boat.class)
-public interface BoatMixin
+public interface BoatFields
 {
 	@Invoker void callSetBubbleTime(int val);
 	@Invoker int callGetBubbleTime();

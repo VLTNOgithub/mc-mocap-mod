@@ -8,15 +8,15 @@
 		"EntityMixin",
 		"LivingEntityMethodMixin",
 		"ServerLevelMixin",
-		"fields.AbstractHorseMixin",
-		"fields.BoatMixin",
-		"fields.EntityIdMixin",
-		"fields.EntityMixin",
-		"fields.HorseMixin",
-		"fields.LevelMixin",
-		"fields.LivingEntityMixin",
-		"fields.PigMixin",
-		"fields.PlayerMixin"
+		"fields.AbstractHorseFields",
+		"fields.BoatFields",
+		"fields.EntityIdFields",
+		"fields.EntityFields",
+		"fields.HorseFields",
+		"fields.LevelFields",
+		"fields.LivingEntityFields",
+		"fields.PigFields",
+		"fields.PlayerFields"
 	],
 	"client":
 	[

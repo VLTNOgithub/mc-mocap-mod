@@ -1,6 +1,6 @@
 package com.mt1006.mocap.mocap.recording;
 
-import com.mt1006.mocap.mixin.fields.LevelMixin;
+import com.mt1006.mocap.mixin.fields.LevelFields;
 import com.mt1006.mocap.mocap.actions.EntityUpdate;
 import com.mt1006.mocap.mocap.playing.Playing;
 import com.mt1006.mocap.mocap.settings.Settings;
@@ -47,7 +47,7 @@ public class EntityTracker
 		boolean limitDistance = entityTrackingDist >= 0.0;
 		double maxDistanceSqr = entityTrackingDist * entityTrackingDist;
 
-		for (Entity entity : ((LevelMixin)ctx.recordedPlayer.level()).callGetEntities().getAll())
+		for (Entity entity : ((LevelFields)ctx.recordedPlayer.level()).callGetEntities().getAll())
 		{
 			if ((limitDistance && ctx.recordedPlayer.distanceToSqr(entity) > maxDistanceSqr) || entity instanceof Player
 					|| (Settings.PREVENT_TRACKING_PLAYED_ENTITIES.val && entity.getTags().contains(Playing.MOCAP_ENTITY_TAG)))
