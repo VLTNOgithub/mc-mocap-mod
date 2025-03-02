@@ -18,19 +18,12 @@ public class EntityUpdate implements Action
 	private final UpdateType type;
 	private final int id;
 	private final @Nullable String nbtString;
-	private final double @Nullable[] position;
+	private final @Nullable Vec3 position;
 
 	public static EntityUpdate addEntity(int id, Entity entity)
 	{
 		String nbtString = serializeEntityNBT(entity).toString();
-
-		Vec3 entityPos = entity.position();
-		double[] position = new double[3];
-		position[0] = entityPos.x;
-		position[1] = entityPos.y;
-		position[2] = entityPos.z;
-
-		return new EntityUpdate(UpdateType.ADD, id, nbtString, position);
+		return new EntityUpdate(UpdateType.ADD, id, nbtString, entity.position());
 	}
 
 	public static EntityUpdate removeEntity(int id)
@@ -58,7 +51,7 @@ public class EntityUpdate implements Action
 		return new EntityUpdate(UpdateType.PLAYER_DISMOUNT, 0, null, null);
 	}
 
-	private EntityUpdate(UpdateType type, int id, @Nullable String nbtString, double @Nullable[] position)
+	private EntityUpdate(UpdateType type, int id, @Nullable String nbtString, @Nullable Vec3 position)
 	{
 		this.type = type;
 		this.id = id;
@@ -74,10 +67,7 @@ public class EntityUpdate implements Action
 		if (type == UpdateType.ADD)
 		{
 			nbtString = reader.readString();
-			position = new double[3];
-			position[0] = reader.readDouble();
-			position[1] = reader.readDouble();
-			position[2] = reader.readDouble();
+			position = reader.readVec3();
 		}
 		else
 		{
@@ -112,9 +102,7 @@ public class EntityUpdate implements Action
 			writer.addString(nbtString != null ? nbtString : "");
 			if (position != null)
 			{
-				writer.addDouble(position[0]);
-				writer.addDouble(position[1]);
-				writer.addDouble(position[2]);
+				writer.addVec3(position);
 			}
 		}
 	}
@@ -179,8 +167,7 @@ public class EntityUpdate implements Action
 		Entity entity = EntityType.create(nbt, ctx.level).orElse(null);
 		if (entity == null || !filter.isAllowed(entity)) { return Result.IGNORED; }
 
-		Vec3 offset = ctx.modifiers.offset;
-		entity.setPos(position[0] + offset.x, position[1] + offset.y, position[2] + offset.z);
+		entity.setPos(position.add(ctx.modifiers.offset));
 		entity.setDeltaMovement(0.0, 0.0, 0.0);
 		entity.setNoGravity(true);
 		entity.setInvulnerable(true);

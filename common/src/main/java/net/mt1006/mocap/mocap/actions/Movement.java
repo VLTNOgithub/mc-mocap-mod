@@ -56,11 +56,11 @@ public class Movement implements Action
 
 
 	private final byte flags;
-	private final double[] position;
+	private final Vec3 position;
 	private final float[] rotation; // [0]=xRot, [1]=yRot
 	private final float headRot;
 
-	private Movement(byte flags, double[] position, float[] rotation, float headRot)
+	private Movement(byte flags, Vec3 position, float[] rotation, float headRot)
 	{
 		this.flags = flags;
 		this.position = position;
@@ -71,10 +71,9 @@ public class Movement implements Action
 	public Movement(RecordingFiles.Reader reader)
 	{
 		flags = reader.readByte();
-		position = new double[3];
-		rotation = new float[2];
 
-		position[1] = switch (flags & MASK_Y)
+		double x, y, z;
+		y = switch (flags & MASK_Y)
 		{
 			case Y_SHORT -> ((flags & PACKED_Y) != 0)
 					? unpackValue(reader.readShort(), PACKED_Y_DIV)
@@ -84,17 +83,11 @@ public class Movement implements Action
 			default -> 0.0; // Y_0
 		};
 
-		for (int i = 0; i < 3; i += 2) // executes only for 0 and 2
-		{
-			position[i] = switch (flags & MASK_XZ)
-			{
-				case XZ_SHORT -> unpackValue(reader.readShort(), PACKED_XZ_DIV);
-				case XZ_FLOAT -> reader.readFloat();
-				case XZ_DOUBLE -> reader.readDouble();
-				default -> 0.0; // XZ_0
-			};
-		}
+		x = readXZ(reader);
+		z = readXZ(reader);
+		position = new Vec3(x, y, z);
 
+		rotation = new float[2];
 		if ((flags & MASK_ROT) != ROT_0)
 		{
 			rotation[0] = unpackRot(reader.readShort());
@@ -109,11 +102,22 @@ public class Movement implements Action
 		};
 	}
 
+	private double readXZ(RecordingFiles.Reader reader)
+	{
+		return switch (flags & MASK_XZ)
+		{
+			case XZ_SHORT -> unpackValue(reader.readShort(), PACKED_XZ_DIV);
+			case XZ_FLOAT -> reader.readFloat();
+			case XZ_DOUBLE -> reader.readDouble();
+			default -> 0.0; // XZ_0
+		};
+	}
+
 	public static @Nullable Movement delta(double[] oldPos, Vec3 newPos, float[] oldRot, float newRotX, float newRotY,
 										   float oldHeadRot, float newHeadRot, boolean oldOnGround, boolean onGround, boolean forceNonPosData)
 	{
 		byte flags = onGround ? ON_GROUND : 0;
-		double[] position = new double[3];
+		double x = 0.0, y = 0.0, z = 0.0;
 		float[] rotation = new float[2];
 		float headRot = 0.0f;
 
@@ -125,22 +129,22 @@ public class Movement implements Action
 			if (newY2 == (short)newY2)
 			{
 				flags |= Y_SHORT;
-				position[1] = newY;
+				y = newY;
 			}
 			else if (canBePacked(oldY, newY, PACKED_Y_DIV))
 			{
 				flags |= Y_SHORT | PACKED_Y;
-				position[1] = deltaY;
+				y = deltaY;
 			}
 			else if (canUseDeltaFloat(oldY, newY))
 			{
 				flags |= Y_FLOAT;
-				position[1] = deltaY;
+				y = deltaY;
 			}
 			else
 			{
 				flags |= Y_DOUBLE;
-				position[1] = newY;
+				y = newY;
 			}
 		}
 
@@ -153,20 +157,20 @@ public class Movement implements Action
 			if (canBePacked(oldX, newX, PACKED_XZ_DIV) && canBePacked(oldZ, newZ, PACKED_XZ_DIV))
 			{
 				flags |= XZ_SHORT;
-				position[0] = deltaX;
-				position[2] = deltaZ;
+				x = deltaX;
+				z = deltaZ;
 			}
 			else if (canUseDeltaFloat(oldX, newX) && canUseDeltaFloat(oldZ, newZ))
 			{
 				flags |= XZ_FLOAT;
-				position[0] = deltaX;
-				position[2] = deltaZ;
+				x = deltaX;
+				z = deltaZ;
 			}
 			else
 			{
 				flags |= XZ_DOUBLE;
-				position[0] = newX;
-				position[2] = newZ;
+				x = newX;
+				z = newZ;
 			}
 		}
 
@@ -196,23 +200,19 @@ public class Movement implements Action
 		}
 
 		return ((flags & ~ON_GROUND) != 0 || oldOnGround != onGround || forceNonPosData)
-				? new Movement(flags, position, rotation, headRot)
+				? new Movement(flags, new Vec3(x, y, z), rotation, headRot)
 				: null;
 	}
 
 	public static Movement teleportToPos(Vec3 pos, boolean onGround)
 	{
 		byte flags = (byte)((onGround ? ON_GROUND : 0) | Y_DOUBLE | XZ_DOUBLE | ROT_0);
-		double[] posArray = new double[3];
-		posArray[0] = pos.x;
-		posArray[1] = pos.y;
-		posArray[2] = pos.z;
 
 		float[] rotArray = new float[2];
 		rotArray[0] = 0.0f;
 		rotArray[1] = 0.0f;
 
-		return new Movement(flags, posArray, rotArray, 0.0f);
+		return new Movement(flags, pos, rotArray, 0.0f);
 	}
 
 	private static boolean canUseDeltaFloat(double oldVal, double newVal)
@@ -259,21 +259,14 @@ public class Movement implements Action
 		switch (flags & MASK_Y)
 		{
 			case Y_SHORT -> writer.addShort(((flags & PACKED_Y) != 0)
-					? packValue(position[1], PACKED_Y_DIV)
-					: (short)(position[1] * 2.0));
-			case Y_FLOAT -> writer.addFloat((float)position[1]);
-			case Y_DOUBLE -> writer.addDouble(position[1]);
+					? packValue(position.y, PACKED_Y_DIV)
+					: (short)(position.y * 2.0));
+			case Y_FLOAT -> writer.addFloat((float)position.y);
+			case Y_DOUBLE -> writer.addDouble(position.y);
 		}
 
-		for (int i = 0; i < 3; i += 2) // executes only for 0 and 2
-		{
-			switch (flags & MASK_XZ)
-			{
-				case XZ_SHORT -> writer.addShort(packValue(position[i], PACKED_XZ_DIV));
-				case XZ_FLOAT -> writer.addFloat((float)position[i]);
-				case XZ_DOUBLE -> writer.addDouble(position[i]);
-			}
-		}
+		writeXZ(writer, position.x);
+		writeXZ(writer, position.z);
 
 		if ((flags & MASK_ROT) != ROT_0)
 		{
@@ -282,6 +275,16 @@ public class Movement implements Action
 		}
 
 		if ((flags & MASK_ROT) == ROT_HEAD_DIFF) { writer.addShort(packRot(headRot)); }
+	}
+
+	private void writeXZ(RecordingFiles.Writer writer, double val)
+	{
+		switch (flags & MASK_XZ)
+		{
+			case XZ_SHORT -> writer.addShort(packValue(val, PACKED_XZ_DIV));
+			case XZ_FLOAT -> writer.addFloat((float)val);
+			case XZ_DOUBLE -> writer.addDouble(val);
+		}
 	}
 
 	private boolean isYRelative()
@@ -300,9 +303,9 @@ public class Movement implements Action
 	public void applyToPosition(double[] oldPos)
 	{
 		boolean xzRel = isXzRelative(), yRel = isYRelative();
-		oldPos[0] = xzRel ? (oldPos[0] + position[0]) : position[0];
-		oldPos[1] = yRel ? (oldPos[1] + position[1]) : position[1];
-		oldPos[2] = xzRel ? (oldPos[2] + position[2]) : position[2];
+		oldPos[0] = xzRel ? (oldPos[0] + position.x) : position.x;
+		oldPos[1] = yRel ? (oldPos[1] + position.y) : position.y;
+		oldPos[2] = xzRel ? (oldPos[2] + position.z) : position.z;
 	}
 
 	@Override public Result execute(ActionContext ctx)
@@ -311,7 +314,7 @@ public class Movement implements Action
 		float rotX = updateRot ? rotation[0] : ctx.entity.getXRot();
 		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
 
-		ctx.changePosition(position[0], position[1], position[2], rotY, rotX, isXzRelative(), isYRelative());
+		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative());
 		if (updateRot) { ctx.entity.setYHeadRot(headRot); }
 		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
 		((EntityFields)ctx.entity).callCheckInsideBlocks();

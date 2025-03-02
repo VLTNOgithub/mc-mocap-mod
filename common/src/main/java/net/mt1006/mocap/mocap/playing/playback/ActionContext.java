@@ -46,7 +46,7 @@ public class ActionContext
 	public int skippingTicks = 0;
 
 	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity,
-						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, double[] startPos)
+						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, Vec3 startPos)
 	{
 		if (!(entity.level() instanceof ServerLevel)) { throw new RuntimeException("Failed to get ServerLevel for ActionContext!"); }
 
@@ -56,7 +56,7 @@ public class ActionContext
 		this.level = (ServerLevel)entity.level();
 		this.modifiers = modifiers;
 		this.ghostPlayer = ghostPlayer;
-		this.startPos = modifiers.offset.add(startPos[0], startPos[1], startPos[2]);
+		this.startPos = modifiers.offset.add(startPos);
 
 		setMainContextEntity();
 	}
@@ -150,6 +150,11 @@ public class ActionContext
 		}
 		if (playerToRemove != ghostPlayer) { broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid))); }
 		playerToRemove.remove(Entity.RemovalReason.KILLED);
+	}
+
+	public void changePosition(Vec3 pos, float rotY, float rotX, boolean shiftXZ, boolean shiftY)
+	{
+		changePosition(pos.x, pos.y, pos.z, rotY, rotX, shiftXZ, shiftY);
 	}
 
 	public void changePosition(double x, double y, double z, float rotY, float rotX, boolean shiftXZ, boolean shiftY)

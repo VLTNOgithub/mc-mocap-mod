@@ -45,7 +45,7 @@ public class RecordingData
 	public long fileSize = 0;
 	public byte version = 0;
 	public boolean experimentalVersion = false;
-	public final double[] startPos = new double[3];
+	public Vec3 startPos = Vec3.ZERO;
 	public final float[] startRot = new float[2];
 	public boolean endsWithDeath = false; // deprecated
 	private boolean usesIdMaps = true;
@@ -119,9 +119,7 @@ public class RecordingData
 		boolean hasIdMaps = usesIdMaps && (itemIdMap.size() != 0 || blockStateIdMap.size() != 0);
 		boolean hasStartDimension = startDimensionSpecified && (startDimension != null);
 
-		writer.addDouble(startPos[0]);
-		writer.addDouble(startPos[1]);
-		writer.addDouble(startPos[2]);
+		writer.addVec3(startPos);
 		writer.addFloat(startRot[0]);
 		writer.addFloat(startRot[1]);
 
@@ -143,9 +141,7 @@ public class RecordingData
 
 	private void loadHeader(RecordingFiles.FileReader reader, boolean legacyHeader)
 	{
-		startPos[0] = reader.readDouble();
-		startPos[1] = reader.readDouble();
-		startPos[2] = reader.readDouble();
+		startPos = reader.readVec3();
 		startRot[0] = reader.readFloat();
 		startRot[1] = reader.readFloat();
 		if (legacyHeader) { return; }
@@ -167,14 +163,9 @@ public class RecordingData
 
 	public Vec3 initEntityPosition(Entity entity, Vec3 posOffset)
 	{
-		entity.moveTo(
-				startPos[0] + posOffset.x,
-				startPos[1] + posOffset.y,
-				startPos[2] + posOffset.z,
-				startRot[0],
-				startRot[1]);
+		entity.moveTo(startPos.add(posOffset), startRot[0], startRot[1]);
 		entity.setYHeadRot(startRot[0]);
-		return posOffset.add(startPos[0], startPos[1], startPos[2]);
+		return posOffset.add(startPos);
 	}
 
 	public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos)

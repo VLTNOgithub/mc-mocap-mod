@@ -124,9 +124,9 @@ public class RecordingFiles
 		commandOutput.sendSuccess("recordings.info.size",
 				String.format("%.2f", recording.fileSize / 1024.0), recording.actions.size() - recording.tickCount);
 
-		String xStr = String.format(Locale.US, "%.2f", recording.startPos[0]);
-		String yStr = String.format(Locale.US, "%.2f", recording.startPos[1]);
-		String zStr = String.format(Locale.US, "%.2f", recording.startPos[2]);
+		String xStr = String.format(Locale.US, "%.2f", recording.startPos.x);
+		String yStr = String.format(Locale.US, "%.2f", recording.startPos.y);
+		String zStr = String.format(Locale.US, "%.2f", recording.startPos.z);
 		MutableComponent tpSuggestionComponent = Utils.getEventComponent(ClickEvent.Action.SUGGEST_COMMAND,
 				String.format("/tp @p %s %s %s", xStr, yStr, zStr), String.format("%s %s %s", xStr, yStr, zStr));
 		tpSuggestionComponent.withStyle(Style.EMPTY.withUnderlined(true));
@@ -238,7 +238,6 @@ public class RecordingFiles
 			recording.add((byte)0);
 		}
 
-		//TODO: use it
 		public void addVec3(Vec3 vec)
 		{
 			addDouble(vec.x);
@@ -298,7 +297,7 @@ public class RecordingFiles
 		void shift(int val);
 		@Nullable RecordingData getParent();
 
-		default Vec3 readVec3() { return new Vec3(readDouble(), readDouble(), readDouble()); } //TODO: use it
+		default Vec3 readVec3() { return new Vec3(readDouble(), readDouble(), readDouble()); }
 		default BlockPos readBlockPos()
 		{
 			return new BlockPos(readInt(), readInt(), readInt());

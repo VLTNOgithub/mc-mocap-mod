@@ -28,7 +28,7 @@ public class RightClickBlock implements BlockAction
 
 	public RightClickBlock(RecordingFiles.Reader reader)
 	{
-		Vec3 pos = new Vec3(reader.readDouble(), reader.readDouble(), reader.readDouble());
+		Vec3 pos = reader.readVec3();
 		BlockPos blockPos = reader.readBlockPos();
 		Direction direction = directionFromByte(reader.readByte());
 		boolean inside = reader.readBoolean();
@@ -67,10 +67,7 @@ public class RightClickBlock implements BlockAction
 	{
 		writer.addByte(Type.RIGHT_CLICK_BLOCK.id);
 
-		writer.addDouble(blockHitResult.getLocation().x);
-		writer.addDouble(blockHitResult.getLocation().y);
-		writer.addDouble(blockHitResult.getLocation().z);
-
+		writer.addVec3(blockHitResult.getLocation());
 		writer.addBlockPos(blockHitResult.getBlockPos());
 
 		writer.addByte(directionToByte(blockHitResult.getDirection()));

@@ -91,9 +91,7 @@ public class PositionTracker
 
 	public void writeToRecordingData(RecordingData data)
 	{
-		data.startPos[0] = position[0];
-		data.startPos[1] = position[1];
-		data.startPos[2] = position[2];
+		data.startPos = new Vec3(position[0], position[1], position[2]);
 
 		// unlike in other places, file header has first rotY, than rotX
 		data.startRot[0] = rotation[1];
