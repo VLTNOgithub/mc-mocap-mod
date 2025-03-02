@@ -43,7 +43,6 @@
   "mocap.recording.list.unknown_state.error": "§l錯誤：§r 清單中至少有一個錄製處於未知狀態！",
 
   "mocap.recording.resolve.multiple_recordings": "你有多個錄製處於活動狀態或等待決定！",
-  "mocap.recording.resolve.multiple_recordings.tip": "指定確切的錄製 ID 或使用「_」停止所有錄製",
   "mocap.recording.resolve.server_not_recording": "伺服器目前沒有錄製任何內容！",
   "mocap.recording.resolve.player_not_recording": "你目前沒有錄製任何內容！",
   "mocap.recording.resolve.player_not_recording.tip": "如果要停止其他玩家的錄製，請指定其 ID",

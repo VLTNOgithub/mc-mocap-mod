@@ -47,7 +47,7 @@
   "mocap.recording.list.unknown_state.error": "§lBłąd:§r co najmniej jedno z nagrań z listy ma nieznany stan!",
 
   "mocap.recording.resolve.multiple_recordings": "Więcej niż jedno z twoich nagrań jest aktywne lub czeka na decyzję!",
-  "mocap.recording.resolve.multiple_recordings.tip": "Określ dokładne id nagrania lub użyj \"_\" aby zatrzymać je wszystkie",
+  "mocap.recording.resolve.multiple_recordings.tip": "Określ dokładne id nagrania lub użyj \"_\" aby dołączyć je wszystkie",
   "mocap.recording.resolve.server_not_recording": "Serwer nic teraz nie nagrywa!",
   "mocap.recording.resolve.player_not_recording": "Nic teraz nie nagrywasz!",
   "mocap.recording.resolve.player_not_recording.tip": "Jeśli chcesz zatrzymać nagranie innego gracza, określ jego id",

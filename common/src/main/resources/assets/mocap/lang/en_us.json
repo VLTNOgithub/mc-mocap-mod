@@ -47,7 +47,7 @@
   "mocap.recording.list.unknown_state.error": "§lError:§r at least one of the recordings from the list had an unknown state!",
 
   "mocap.recording.resolve.multiple_recordings": "More than one of your recordings is active or is waiting for decision!",
-  "mocap.recording.resolve.multiple_recordings.tip": "Specify exact recording id or use \"_\" to stop all of them",
+  "mocap.recording.resolve.multiple_recordings.tip": "Specify exact recording id or use \"_\" to include all of them",
   "mocap.recording.resolve.server_not_recording": "Server isn't recording anything now!",
   "mocap.recording.resolve.player_not_recording": "You are not recording anything now!",
   "mocap.recording.resolve.player_not_recording.tip": "If you want to stop another player's recording, specify its id",
