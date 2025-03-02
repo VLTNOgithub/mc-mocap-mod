@@ -186,6 +186,12 @@ public class RecordingContext
 
 	public void addAction(Action action)
 	{
+		if (state != State.RECORDING)
+		{
+			if (state == State.WAITING_FOR_ACTION) { start(true); }
+			else { return; }
+		}
+
 		data.actions.add(action);
 		if (action instanceof BlockAction) { data.blockActions.add((BlockAction)action); }
 	}
