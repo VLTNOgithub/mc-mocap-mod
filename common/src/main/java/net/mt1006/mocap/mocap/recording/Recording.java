@@ -403,6 +403,12 @@ public class Recording
 			if (ctx.state == RecordingContext.State.WAITING_FOR_DECISION) { stopped.add(ctx); }
 		}
 
+		if (stopped.isEmpty())
+		{
+			commandOutput.sendFailure("recording.save.multiple.nothing_to_save");
+			return false;
+		}
+
 		List<String> filenames = new ArrayList<>();
 		List<File> files = new ArrayList<>();
 		for (int i = 1; i <= stopped.size(); i++)

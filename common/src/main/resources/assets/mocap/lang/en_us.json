@@ -31,6 +31,7 @@
   "mocap.recording.save.multiple.failed": "Failed to save %s as %s!",
   "mocap.recording.save.multiple.unknown_state": "Tried to save %s as %s, but ended up with an unknown state (%s)!",
   "mocap.recording.save.multiple.already_exists": "Cannot save because recording with name %s already exists!",
+  "mocap.recording.save.multiple.nothing_to_save": "There is nothing to save!",
   "mocap.recording.save.multiple.error": "§lError:§r something went wrong when trying to save one or more of the recordings!",
   "mocap.recording.save.error": "§lError:§r failed to save recording!",
 

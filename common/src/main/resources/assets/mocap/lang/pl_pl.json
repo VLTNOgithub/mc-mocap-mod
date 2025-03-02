@@ -31,6 +31,7 @@
   "mocap.recording.save.multiple.failed": "Nie udało się zapisać %s jako %s!",
   "mocap.recording.save.multiple.unknown_state": "Próbowano zapisać %s jako %s, ale zakończono z nieznanym stanem (%s)!",
   "mocap.recording.save.multiple.already_exists": "Nie można zapisać ponieważ nagranie o nazwie %s już istnieje!",
+  "mocap.recording.save.multiple.nothing_to_save": "Nie ma nic do zapisania!",
   "mocap.recording.save.multiple.error": "§lBłąd:§r coś poszło nie tak przy próbie zapisania co najmniej jednego z nagrań!",
   "mocap.recording.save.error": "§lBłąd:§r nie udało się zapisać nagrania!",
 
