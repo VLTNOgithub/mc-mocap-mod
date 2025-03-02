@@ -1,5 +1,6 @@
 package net.mt1006.mocap.mocap.actions;
 
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
@@ -58,7 +59,6 @@ public class Respawn implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		((EntityFields)ctx.entity).callUnsetRemoved();
 		ctx.entity.setPose(Pose.STANDING);
 
 		if (ctx.entity instanceof LivingEntity)
@@ -72,12 +72,16 @@ public class Respawn implements Action
 		{
 			UUID uuid = ctx.entity.getUUID();
 			ctx.broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid)));
+			ctx.level.removePlayerImmediately((FakePlayer)ctx.entity, Entity.RemovalReason.KILLED);
+
+			((EntityFields)ctx.entity).callUnsetRemoved();
 			ctx.level.getServer().getPlayerList()
 					.broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, (FakePlayer)ctx.entity));
 			ctx.level.addNewPlayer((FakePlayer)ctx.entity);
 		}
 		else
 		{
+			((EntityFields)ctx.entity).callUnsetRemoved();
 			ctx.level.addFreshEntity(ctx.entity);
 		}
 		return Result.OK;
