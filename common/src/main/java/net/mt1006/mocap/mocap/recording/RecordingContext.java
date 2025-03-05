@@ -176,7 +176,7 @@ public class RecordingContext
 	public void splitRecording(ServerPlayer newPlayer)
 	{
 		stopRecording("recording.stop.split");
-		boolean success = Recording.start(newPlayer, sourcePlayer, true);
+		boolean success = Recording.start(newPlayer, sourcePlayer, true, false);
 		if (!success) { Utils.sendMessage(sourcePlayer, "recording.stop.split.error"); }
 	}
 

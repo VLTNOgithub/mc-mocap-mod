@@ -13,6 +13,7 @@ import net.mt1006.mocap.command.io.CommandOutput;
 import net.mt1006.mocap.mocap.files.Files;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.Playing;
+import net.mt1006.mocap.mocap.settings.Settings;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,15 +51,16 @@ public class Recording
 	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer)
 	{
 		if (!checkDoubleStart(commandInfo, recordedPlayer)) { return false; }
+		boolean startInstantly = Settings.START_INSTANTLY.val;
 
-		boolean success = start(recordedPlayer, commandInfo.sourcePlayer, false);
-		if (success)
+		boolean success = start(recordedPlayer, commandInfo.sourcePlayer, startInstantly, true);
+		if (success && !startInstantly)
 		{
 			commandInfo.sendSuccess(recordedPlayer.equals(commandInfo.sourcePlayer)
 					? "recording.start.waiting_for_action.self"
 					: "recording.start.waiting_for_action.another_player");
 		}
-		else
+		if (!success)
 		{
 			commandInfo.sendFailure("recording.start.error");
 		}
@@ -66,7 +68,7 @@ public class Recording
 		return success;
 	}
 
-	public static boolean start(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer, boolean startNow)
+	public static boolean start(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer, boolean startNow, boolean sendMessage)
 	{
 		RecordingId id = new RecordingId(contexts, recordedPlayer, sourcePlayer);
 		if (!id.isProper()) { return false; }
@@ -75,7 +77,7 @@ public class Recording
 		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
 		CommandSuggestions.inputSet.add(id.str);
 
-		if(startNow) { ctx.start(false); }
+		if (startNow) { ctx.start(sendMessage); }
 		return true;
 	}
 

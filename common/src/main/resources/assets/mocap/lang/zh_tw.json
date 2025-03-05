@@ -207,8 +207,8 @@
   "mocap.settings.info.about.prevent_saving_entities": "防止遊戲在例如離開遊戲時儲存播放的實體",
   "mocap.settings.info.about.use_creative_game_mode": "將假玩家的遊戲模式設定為創造模式 (怪物會忽略它們)",
   "mocap.settings.info.about.allow_ghosts": "允許在使用「player_as_entity」修改器時使用幽靈 (不可見、僅限伺服器端的玩家)。它們的建立是為了執行非玩家實體無法執行的動作。",
-  "mocap.settings.info.about.experimental_release_warning": "當伺服器使用 Motion Capture 模組的實驗性 (alpha 或 beta) 版本時警告玩家。",
-  "mocap.settings.info.about.pretty_scene_files": "使場景 JSON 檔案看起來更美觀，但會略微增加檔案大小 (場景檔案非常小，所以這應該不是問題，除非你使用打孔卡來儲存它們)。",
+  "mocap.settings.info.about.experimental_release_warning": "當伺服器使用 Motion Capture 模組的實驗性 (alpha 或 beta) 版本時警告玩家",
+  "mocap.settings.info.about.pretty_scene_files": "使場景 JSON 檔案看起來更美觀，但會略微增加檔案大小 (場景檔案非常小，所以這應該不是問題，除非你使用打孔卡來儲存它們)",
   
   "mocap.settings.info.current_value": "§l目前值：§r %s",
   "mocap.settings.info.default_value": "§l預設值：§r %s",

@@ -196,6 +196,7 @@
   "mocap.settings.info.about.prevent_tracking_played_entities": "Prevents tracking (recording) entities that are currently played",
   "mocap.settings.info.about.entity_tracking_distance": "Limits the entity tracking distance (>0 - tracking radius in blocks; 0 - disable tracking; -1 - distance not limited)",
   "mocap.settings.info.about.record_player_death": "Enables recording player death and stops recording at that moment",
+  "mocap.settings.info.about.start_instantly": "Makes recording start instantly instead of waiting for movement or second command",
 
   "mocap.settings.info.about.playback_speed": "Allows you to change speed of played recording or scene",
   "mocap.settings.info.about.play_vehicle_entities": "Enables playback of vehicle entities (like boats or horses)",
@@ -208,7 +209,7 @@
   "mocap.settings.info.about.block_initialization": "At the playback start sets block states to those before the start of recording",
   "mocap.settings.info.about.block_allow_scaled": "Allows playback of block actions with scene scaled by natural number. Note that it may cause major destruction of the terrain, so it's recommended to backup your world before using it.",
   "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
-  "mocap.settings.info.about.start_as_recorded": "Makes playback of currently recorded player start as this player, rather than player starting this playback.",
+  "mocap.settings.info.about.start_as_recorded": "Makes playback of currently recorded player start as this player, rather than player starting this playback",
 
   "mocap.settings.info.about.fluent_movements": "Sets distance to played entity for player to receive additional packets for more fluent movements (>0 - distance in blocks; 0 - disable fluent movements; -1 - no limit)",
   "mocap.settings.info.about.movement_precision": "Sets precision of recording player movement - absolute value of difference between desired position offset and calculated offset won't be higher than 1/val",
@@ -218,8 +219,8 @@
   "mocap.settings.info.about.prevent_saving_entities": "Prevents game from saving played entities in case of for example leaving game",
   "mocap.settings.info.about.use_creative_game_mode": "Sets fake players game mode to creative (monsters will ignore them)",
   "mocap.settings.info.about.allow_ghosts": "Allows usage of ghosts (invisible, server-side only players) when using \"player_as_entity\" modifier. They're created in order to perform actions that can't be done by a non-player entity.",
-  "mocap.settings.info.about.experimental_release_warning": "Warns players when a server is using experimental (alpha or beta) release of Motion Capture mod.",
-  "mocap.settings.info.about.pretty_scene_files": "Makes scene JSON files look pretty, at cost of slightly bigger file size (scene files are very small anyway, so it shouldn't be a problem unless you're using punch cards for storing them).",
+  "mocap.settings.info.about.experimental_release_warning": "Warns players when a server is using experimental (alpha or beta) release of Motion Capture mod",
+  "mocap.settings.info.about.pretty_scene_files": "Makes scene JSON files look pretty, at cost of slightly bigger file size (scene files are very small anyway, so it shouldn't be a problem unless you're using punch cards for storing them)",
 
   "mocap.settings.info.current_value": "§lCurrent value:§r %s",
   "mocap.settings.info.default_value": "§lDefault value:§r %s",
