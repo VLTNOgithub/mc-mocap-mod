@@ -1,9 +1,13 @@
 package net.mt1006.mocap.mocap.settings;
 
 import com.mojang.brigadier.arguments.*;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.commands.CommandSourceStack;
 import net.mt1006.mocap.command.io.CommandInfo;
 import net.mt1006.mocap.mocap.files.Files;
-import net.mt1006.mocap.mocap.playing.modifiers.EntityFilterInstance;
 import net.mt1006.mocap.utils.Utils;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -16,6 +20,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -23,12 +28,13 @@ public class SettingFields
 {
 	final Map<String, Field<?>> fieldMap = new HashMap<>();
 
-	public IntegerField add(String name, int val)
+	//TODO: remove?
+	/*public IntegerField add(String name, int val)
 	{
 		IntegerField field = new IntegerField(name, val);
 		addField(field, name);
 		return field;
-	}
+	}*/
 
 	public BooleanField add(String name, boolean val)
 	{
@@ -52,6 +58,13 @@ public class SettingFields
 		return field;
 	}
 
+	public <T extends Enum<T>> EnumField<T> add(String name, Enum<T> val)
+	{
+		EnumField<T> field = new EnumField<>(name, val);
+		addField(field, name);
+		return field;
+	}
+
 	private void addField(Field<?> field, String name)
 	{
 		if (fieldMap.put(name, field) != null) { throw new RuntimeException("Duplicate field names!"); };
@@ -67,8 +80,7 @@ public class SettingFields
 
 			for (Field<?> setting : fieldMap.values())
 			{
-				String str = setting.getString();
-				if (str != null) { printWriter.print(str); }
+				printWriter.print(setting.toFileLine());
 			}
 
 			printWriter.close();
@@ -143,21 +155,21 @@ public class SettingFields
 		public Component getInfo(CommandInfo commandInfo)
 		{
 			String key = val.equals(defVal) ? "settings.list.info_def" : "settings.list.info";
-			return commandInfo.getTranslatableComponent(key, name, val.toString());
+			return commandInfo.getTranslatableComponent(key, name, valToString());
 		}
 
 		public void printValues(CommandInfo commandInfo)
 		{
-			commandInfo.sendSuccess("settings.info.current_value", val.toString());
-			commandInfo.sendSuccess("settings.info.default_value", defVal.toString());
+			commandInfo.sendSuccess("settings.info.current_value", valToString());
+			commandInfo.sendSuccess("settings.info.default_value", valToString(defVal));
 		}
 
-		public String getString()
+		public final String toFileLine()
 		{
-			return name + "=" + val.toString() + "\n";
+			return name + "=" + valToString() + "\n";
 		}
 
-		public void fromString(String str)
+		public final void fromString(String str)
 		{
 			try
 			{
@@ -170,7 +182,7 @@ public class SettingFields
 			}
 		}
 
-		public boolean fromCommand(CommandInfo commandInfo)
+		public final boolean fromCommand(CommandInfo commandInfo)
 		{
 			try
 			{
@@ -192,12 +204,28 @@ public class SettingFields
 			}
 		}
 
+		public final String valToString()
+		{
+			return valToString(val);
+		}
+
+		protected String valToString(T val)
+		{
+			return val.toString();
+		}
+
+		public @Nullable SuggestionProvider<CommandSourceStack> getSuggestionProvider()
+		{
+			return null;
+		}
+
 		public abstract T parseFromString(String str);
 		public abstract @Nullable T parseFromCommand(CommandInfo commandInfo);
 		public abstract ArgumentType<?> getArgumentType();
 	}
 
-	public static class IntegerField extends Field<Integer>
+	//TODO: remove?
+	/*public static class IntegerField extends Field<Integer>
 	{
 		public IntegerField(String name, Integer val)
 		{
@@ -218,7 +246,7 @@ public class SettingFields
 		{
 			return IntegerArgumentType.integer();
 		}
-	}
+	}*/
 
 	public static class BooleanField extends Field<Boolean>
 	{
@@ -279,13 +307,13 @@ public class SettingFields
 
 		@Override public String parseFromString(String str)
 		{
-			return EntityFilterInstance.test(str) ? str : defVal;
+			return (testCommandInput == null || testCommandInput.apply(str)) ? str : defVal;
 		}
 
 		@Override public @Nullable String parseFromCommand(CommandInfo commandInfo)
 		{
 			String newValue = commandInfo.getString("new_value");
-			return (testCommandInput != null && testCommandInput.apply(newValue)) ? newValue : null;
+			return (testCommandInput == null || testCommandInput.apply(newValue)) ? newValue : null;
 		}
 
 		@Override public ArgumentType<?> getArgumentType()
@@ -314,6 +342,57 @@ public class SettingFields
 
 			return commandInfo.getTranslatableComponent("settings.info.copy_button")
 					.setStyle(Style.EMPTY.withClickEvent(clickEvent).withHoverEvent(hoverEvent));
+		}
+	}
+
+	public static class EnumField<T extends Enum<T>> extends Field<Enum<T>>
+	{
+		private final Class<T> enumClass;
+		private final T[] constants;
+
+		public EnumField(String name, Enum<T> val)
+		{
+			super(name, val, null);
+			enumClass = (Class<T>)val.getClass();
+			constants = enumClass.getEnumConstants();
+		}
+
+		@Override public Enum<T> parseFromString(String str)
+		{
+			return Enum.valueOf(enumClass, str.toUpperCase());
+		}
+
+		@Override public @Nullable Enum<T> parseFromCommand(CommandInfo commandInfo)
+		{
+			String newValue = commandInfo.getString("new_value");
+			try { return Enum.valueOf(enumClass, newValue.toUpperCase()); }
+			catch (Exception e) { return null; }
+		}
+
+		@Override public ArgumentType<?> getArgumentType()
+		{
+			return StringArgumentType.word();
+		}
+
+		@Override protected String valToString(Enum<T> val)
+		{
+			return val.toString().toLowerCase();
+		}
+
+		public SuggestionProvider<CommandSourceStack> getSuggestionProvider()
+		{
+			return this::suggestionProvider;
+		}
+
+		private CompletableFuture<Suggestions> suggestionProvider(CommandContext<?> ctx, SuggestionsBuilder builder)
+		{
+			String remaining = builder.getRemaining();
+			for (Enum<T> e : constants)
+			{
+				String str = e.name().toLowerCase();
+				if (str.startsWith(remaining)) { builder.suggest(str); }
+			}
+			return builder.buildFuture();
 		}
 	}
 }

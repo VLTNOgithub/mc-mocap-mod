@@ -5,6 +5,7 @@ import net.mt1006.mocap.events.PlayerConnectionEvent;
 import net.mt1006.mocap.mocap.playing.Playing;
 import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.settings.Settings;
+import net.mt1006.mocap.mocap.settings.enums.EntitiesAfterPlayback;
 import net.mt1006.mocap.network.MocapPacketS2C;
 import net.mt1006.mocap.utils.FakePlayer;
 import net.mt1006.mocap.utils.Utils;
@@ -204,23 +205,26 @@ public class ActionContext
 	{
 		switch (Settings.ENTITIES_AFTER_PLAYBACK.val)
 		{
-			case -1:
+			case EntitiesAfterPlayback.REMOVE:
+				entity.remove(Entity.RemovalReason.KILLED);
+
+			case EntitiesAfterPlayback.KILL:
+				entity.invulnerableTime = 0; // for sound effect
+				entity.kill();
+				break;
+
+			case EntitiesAfterPlayback.LEFT_UNTOUCHED:
+				break;
+
+			case EntitiesAfterPlayback.RELEASE_AS_NORMAL:
 				entity.setNoGravity(false);
 				entity.setInvulnerable(false);
 				entity.removeTag(Playing.MOCAP_ENTITY_TAG);
 				if (entity instanceof Mob) { ((Mob)entity).setNoAi(false); }
 				break;
 
-			case 0:
-				break;
-
-			case 2:
-				entity.invulnerableTime = 0; // for sound effect
-				entity.kill();
-				break;
-
-			default: // case 1
-				entity.remove(Entity.RemovalReason.KILLED);
+			default:
+				throw new IllegalStateException("Unexpected value: " + Settings.ENTITIES_AFTER_PLAYBACK.val);
 		}
 	}
 

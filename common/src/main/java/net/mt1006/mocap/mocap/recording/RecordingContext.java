@@ -6,6 +6,7 @@ import net.mt1006.mocap.mocap.files.RecordingData;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import net.mt1006.mocap.mocap.settings.Settings;
+import net.mt1006.mocap.mocap.settings.enums.OnDeath;
 import net.mt1006.mocap.utils.Utils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -15,11 +16,6 @@ import java.io.File;
 
 public class RecordingContext
 {
-	private static final int END_RECORDING = 0;
-	private static final int SPLIT_RECORDING = 1;
-	private static final int CONTINUE_SYNCED = 2;
-	private static final int CONTINUE_SKIP_TICKS = 3;
-
 	public final RecordingId id;
 	public ServerPlayer recordedPlayer;
 	public final @Nullable ServerPlayer sourcePlayer;
@@ -120,7 +116,7 @@ public class RecordingContext
 		if (died)
 		{
 			int tickDiff = tick - diedOnTick;
-			if (Settings.ON_DEATH.val == CONTINUE_SYNCED || tickDiff < 20)
+			if (Settings.ON_DEATH.val == OnDeath.CONTINUE_SYNCED || tickDiff < 20)
 			{
 				entityTracker.onTick();
 				addTickAction();
@@ -128,8 +124,8 @@ public class RecordingContext
 
 			if (tickDiff == 20)
 			{
-				if (Settings.ON_DEATH.val == END_RECORDING) { stopRecording("recording.stop.stopped"); }
-				else if (Settings.ON_DEATH.val != SPLIT_RECORDING) positionTracker.teleportFarAway(data.actions);
+				if (Settings.ON_DEATH.val == OnDeath.END_RECORDING) { stopRecording("recording.stop.stopped"); }
+				else if (Settings.ON_DEATH.val != OnDeath.SPLIT_RECORDING) { positionTracker.teleportFarAway(data.actions); }
 			}
 			return;
 		}
@@ -147,7 +143,7 @@ public class RecordingContext
 			died = true;
 			diedOnTick = tick;
 
-			if (Settings.ON_DEATH.val != END_RECORDING) { Recording.waitingForRespawn.put(recordedPlayer, this); }
+			if (Settings.ON_DEATH.val != OnDeath.END_RECORDING) { Recording.waitingForRespawn.put(recordedPlayer, this); }
 		}
 		else if (recordedPlayer.isRemoved())
 		{
@@ -159,7 +155,7 @@ public class RecordingContext
 
 	public void onRespawn(ServerPlayer newPlayer)
 	{
-		if (Settings.ON_DEATH.val == SPLIT_RECORDING)
+		if (Settings.ON_DEATH.val == OnDeath.SPLIT_RECORDING)
 		{
 			splitRecording(newPlayer);
 			return;

@@ -194,7 +194,7 @@
   "mocap.settings.info.about.play_item_entities": "啟用物品實體的播放",
   "mocap.settings.info.about.play_other_entities": "啟用載具和物品以外實體的播放",
   "mocap.settings.info.about.can_push_entities": "讓假玩家推動其他實體",
-  "mocap.settings.info.about.entities_after_playback": "決定播放後實體的處理方式 (-1 - 作為正常實體釋放；0 - 不做任何處理；1 - 移除；2 - 以動畫方式殺死)",
+  "mocap.settings.info.about.entities_after_playback": "決定播放後實體的處理方式 (remove - 移除；kill - 以動畫方式殺死；left_untouched - 不做任何處理；release_as_normal - 作為正常實體釋放)",
   "mocap.settings.info.about.block_actions_playback": "播放放置、破壞和與方塊互動的動作",
   "mocap.settings.info.about.block_initialization": "在播放開始時，將方塊狀態設定為錄製開始前的狀態",
   "mocap.settings.info.about.drop_from_blocks": "啟用破壞方塊的掉落物 (建議在停用「playItemEntities」時使用，以防止重複)",

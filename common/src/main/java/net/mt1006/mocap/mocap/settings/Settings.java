@@ -3,6 +3,8 @@ package net.mt1006.mocap.mocap.settings;
 import net.mt1006.mocap.command.io.CommandInfo;
 import net.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import net.mt1006.mocap.mocap.playing.modifiers.EntityFilterInstance;
+import net.mt1006.mocap.mocap.settings.enums.EntitiesAfterPlayback;
+import net.mt1006.mocap.mocap.settings.enums.OnDeath;
 
 import java.util.Collection;
 
@@ -19,13 +21,13 @@ public class Settings
 	public static final SettingFields.BooleanField PREVENT_TRACKING_PLAYED_ENTITIES = RECORDING.add(fields.add("prevent_tracking_played_entities", true));
 	public static final SettingFields.DoubleField ENTITY_TRACKING_DISTANCE = RECORDING.add(fields.add("entity_tracking_distance", 128.0));
 	public static final SettingFields.BooleanField ASSIGN_DIMENSIONS = RECORDING.add(fields.add("assign_dimensions", true));
-	public static final SettingFields.IntegerField ON_DEATH = RECORDING.add(fields.add("on_death", 0));
+	public static final SettingFields.EnumField<OnDeath> ON_DEATH = RECORDING.add(fields.add("on_death", OnDeath.END_RECORDING));
 	//public static final SettingFields.IntegerField ON_CHANGE_DIMENSION = RECORDING.add(fields.add("on_change_dimension", 2));
 
 	public static final SettingFields.DoubleField PLAYBACK_SPEED = PLAYBACK.add(fields.add("playback_speed", 1.0));
 	public static final SettingFields.StringField PLAY_ENTITIES = PLAYBACK.add(fields.add("play_entities", "*", EntityFilter::onPlaybackEntitiesSet, EntityFilterInstance::test));
 	public static final SettingFields.BooleanField CAN_PUSH_ENTITIES = PLAYBACK.add(fields.add("can_push_entities", true));
-	public static final SettingFields.IntegerField ENTITIES_AFTER_PLAYBACK = PLAYBACK.add(fields.add("entities_after_playback", 1));
+	public static final SettingFields.EnumField<EntitiesAfterPlayback> ENTITIES_AFTER_PLAYBACK = PLAYBACK.add(fields.add("entities_after_playback", EntitiesAfterPlayback.REMOVE));
 	public static final SettingFields.BooleanField BLOCK_ACTIONS_PLAYBACK = PLAYBACK.add(fields.add("block_actions_playback", true));
 	public static final SettingFields.BooleanField BLOCK_INITIALIZATION = PLAYBACK.add(fields.add("block_initialization", true));
 	public static final SettingFields.BooleanField BLOCK_ALLOW_SCALED = PLAYBACK.add(fields.add("block_allow_scaled", false));
@@ -121,10 +123,10 @@ public class Settings
 			return false;
 		}
 
-		String oldValue = field.val.toString();
+		String oldValue = field.valToString();
 		if (!field.fromCommand(commandInfo)) { return false; }
 
-		String newValue = field.val.toString();
+		String newValue = field.valToString();
 		oldValue = oldValue.isEmpty() ? "[empty]" : oldValue;
 		newValue = newValue.isEmpty() ? "[empty]" : newValue;
 
