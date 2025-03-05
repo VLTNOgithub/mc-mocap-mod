@@ -1,7 +1,7 @@
 package net.mt1006.mocap.mocap.recording;
 
-import net.mt1006.mocap.MocapMod;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.MocapMod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

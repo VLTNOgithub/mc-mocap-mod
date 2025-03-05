@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mixin.fabric;
 
-import net.mt1006.mocap.events.EntityEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.mt1006.mocap.events.EntityEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

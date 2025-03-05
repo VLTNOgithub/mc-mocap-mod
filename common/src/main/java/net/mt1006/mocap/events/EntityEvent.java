@@ -1,12 +1,12 @@
 package net.mt1006.mocap.events;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.mt1006.mocap.mocap.actions.Hurt;
 import net.mt1006.mocap.mocap.playing.Playing;
 import net.mt1006.mocap.mocap.recording.EntityTracker;
 import net.mt1006.mocap.mocap.recording.Recording;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.LivingEntity;
 
 public class EntityEvent
 {

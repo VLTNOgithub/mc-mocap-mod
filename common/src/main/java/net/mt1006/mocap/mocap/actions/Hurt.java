@@ -1,10 +1,10 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 
 public class Hurt implements Action
 {

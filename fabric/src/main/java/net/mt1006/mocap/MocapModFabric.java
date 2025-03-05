@@ -1,10 +1,5 @@
 package net.mt1006.mocap;
 
-import net.mt1006.mocap.command.commands.MocapCommand;
-import net.mt1006.mocap.fabric.PacketHandler;
-import net.mt1006.mocap.fabric.events.*;
-import net.mt1006.mocap.network.MocapPacketC2S;
-import net.mt1006.mocap.network.MocapPacketS2C;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -20,6 +15,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.command.commands.MocapCommand;
+import net.mt1006.mocap.fabric.PacketHandler;
+import net.mt1006.mocap.fabric.events.*;
+import net.mt1006.mocap.network.MocapPacketC2S;
+import net.mt1006.mocap.network.MocapPacketS2C;
 
 import java.util.Optional;
 

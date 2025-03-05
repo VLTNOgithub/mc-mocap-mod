@@ -1,8 +1,8 @@
 package net.mt1006.mocap;
 
+import net.minecraft.server.level.ServerPlayer;
 import net.mt1006.mocap.network.MocapPacketC2S;
 import net.mt1006.mocap.network.MocapPacketS2C;
-import net.minecraft.server.level.ServerPlayer;
 
 public interface MocapModLoaderInterface
 {

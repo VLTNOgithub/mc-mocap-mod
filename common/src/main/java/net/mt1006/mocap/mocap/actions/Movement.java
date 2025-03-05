@@ -1,11 +1,11 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mixin.fields.EntityFields;
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.world.phys.Vec3;
+import net.mt1006.mocap.mixin.fields.EntityFields;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import org.jetbrains.annotations.Nullable;
 
 public class Movement implements Action

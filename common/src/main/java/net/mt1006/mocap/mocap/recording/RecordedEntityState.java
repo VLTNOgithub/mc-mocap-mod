@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mocap.recording;
 
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.actions.ComparableAction;
 import net.mt1006.mocap.mocap.actions.EntityAction;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

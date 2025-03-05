@@ -1,13 +1,13 @@
 package net.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.mt1006.mocap.command.CommandSuggestions;
 import net.mt1006.mocap.command.CommandUtils;
 import net.mt1006.mocap.command.io.CommandOutput;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.utils.Utils;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 
 import java.util.List;
 

@@ -2,12 +2,12 @@ package net.mt1006.mocap.command.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.command.CommandUtils;
-import net.mt1006.mocap.command.io.CommandInfo;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.command.CommandUtils;
+import net.mt1006.mocap.command.io.CommandInfo;
 
 public class MocapCommand
 {

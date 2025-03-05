@@ -1,14 +1,14 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.mt1006.mocap.utils.EntityData;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.utils.EntityData;
 
 import java.util.List;
 

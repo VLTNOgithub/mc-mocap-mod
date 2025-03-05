@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mixin;
 
-import net.mt1006.mocap.mocap.playing.Playing;
-import net.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.mt1006.mocap.mocap.playing.Playing;
+import net.mt1006.mocap.mocap.settings.Settings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;

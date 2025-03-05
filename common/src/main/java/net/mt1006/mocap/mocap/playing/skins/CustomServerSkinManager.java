@@ -1,10 +1,10 @@
 package net.mt1006.mocap.mocap.playing.skins;
 
+import net.minecraft.Util;
+import net.minecraft.server.level.ServerPlayer;
 import net.mt1006.mocap.command.io.CommandOutput;
 import net.mt1006.mocap.mocap.files.Files;
 import net.mt1006.mocap.network.MocapPacketS2C;
-import net.minecraft.Util;
-import net.minecraft.server.level.ServerPlayer;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

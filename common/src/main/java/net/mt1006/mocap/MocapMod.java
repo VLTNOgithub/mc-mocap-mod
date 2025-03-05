@@ -1,8 +1,8 @@
 package net.mt1006.mocap;
 
+import net.minecraft.server.MinecraftServer;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.utils.Fields;
-import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;

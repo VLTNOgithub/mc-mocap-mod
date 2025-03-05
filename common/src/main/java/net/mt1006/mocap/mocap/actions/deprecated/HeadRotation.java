@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mocap.actions.deprecated;
 
+import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 
 public class HeadRotation implements Action
 {

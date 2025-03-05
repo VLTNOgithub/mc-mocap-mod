@@ -1,9 +1,9 @@
 package net.mt1006.mocap.neoforge.events;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.events.BlockInteractionEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.events.BlockInteractionEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;

@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mixin.forge;
 
-import net.mt1006.mocap.events.EntityEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
+import net.mt1006.mocap.events.EntityEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -1,13 +1,13 @@
 package net.mt1006.mocap.network;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.events.PlayerConnectionEvent;
-import net.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.events.PlayerConnectionEvent;
+import net.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

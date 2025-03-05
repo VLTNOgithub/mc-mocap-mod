@@ -1,6 +1,5 @@
 package net.mt1006.mocap.mocap.playing.modifiers;
 
-import net.mt1006.mocap.mocap.files.SceneFiles;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -8,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.mt1006.mocap.mocap.files.SceneFiles;
 import org.jetbrains.annotations.Nullable;
 
 public class Scale

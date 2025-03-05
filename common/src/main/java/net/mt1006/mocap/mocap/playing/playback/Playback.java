@@ -1,5 +1,7 @@
 package net.mt1006.mocap.mocap.playing.playback;
 
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.mt1006.mocap.command.CommandsContext;
 import net.mt1006.mocap.command.io.CommandInfo;
 import net.mt1006.mocap.mocap.files.RecordingData;
@@ -8,8 +10,6 @@ import net.mt1006.mocap.mocap.playing.DataManager;
 import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.recording.Recording;
 import net.mt1006.mocap.mocap.recording.RecordingContext;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Playback

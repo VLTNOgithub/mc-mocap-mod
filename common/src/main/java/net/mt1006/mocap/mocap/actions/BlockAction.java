@@ -1,9 +1,5 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mocap.files.RecordingData;
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import net.mt1006.mocap.mocap.settings.Settings;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -13,6 +9,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.mt1006.mocap.mocap.files.RecordingData;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
+import net.mt1006.mocap.mocap.settings.Settings;
 
 import java.util.function.BiConsumer;
 

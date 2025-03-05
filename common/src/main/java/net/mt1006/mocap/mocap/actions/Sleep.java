@@ -1,10 +1,10 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import org.jetbrains.annotations.Nullable;
 
 public class Sleep implements ComparableAction

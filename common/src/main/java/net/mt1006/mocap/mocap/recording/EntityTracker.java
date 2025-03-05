@@ -1,12 +1,12 @@
 package net.mt1006.mocap.mocap.recording;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.mt1006.mocap.mixin.fields.LevelFields;
 import net.mt1006.mocap.mocap.actions.EntityUpdate;
 import net.mt1006.mocap.mocap.playing.Playing;
 import net.mt1006.mocap.mocap.settings.Settings;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

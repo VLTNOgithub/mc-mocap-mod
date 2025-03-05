@@ -1,10 +1,10 @@
 package net.mt1006.mocap.mixin.fabric;
 
-import net.mt1006.mocap.events.WorldLoadEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.mt1006.mocap.events.WorldLoadEvent;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

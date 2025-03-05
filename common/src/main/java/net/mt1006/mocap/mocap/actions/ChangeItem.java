@@ -1,12 +1,6 @@
 package net.mt1006.mocap.mocap.actions;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.mixin.fields.LivingEntityFields;
-import net.mt1006.mocap.mocap.files.RecordingData;
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.mt1006.mocap.utils.Utils;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +14,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.mixin.fields.LivingEntityFields;
+import net.mt1006.mocap.mocap.files.RecordingData;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

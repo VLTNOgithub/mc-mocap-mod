@@ -1,14 +1,5 @@
 package net.mt1006.mocap.mocap.playing.playback;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.events.PlayerConnectionEvent;
-import net.mt1006.mocap.mocap.playing.Playing;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import net.mt1006.mocap.mocap.settings.Settings;
-import net.mt1006.mocap.mocap.settings.enums.EntitiesAfterPlayback;
-import net.mt1006.mocap.network.MocapPacketS2C;
-import net.mt1006.mocap.utils.FakePlayer;
-import net.mt1006.mocap.utils.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.Packet;
@@ -23,6 +14,15 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.events.PlayerConnectionEvent;
+import net.mt1006.mocap.mocap.playing.Playing;
+import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
+import net.mt1006.mocap.mocap.settings.Settings;
+import net.mt1006.mocap.mocap.settings.enums.EntitiesAfterPlayback;
+import net.mt1006.mocap.network.MocapPacketS2C;
+import net.mt1006.mocap.utils.FakePlayer;
+import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

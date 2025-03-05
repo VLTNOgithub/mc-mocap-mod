@@ -1,14 +1,14 @@
 package net.mt1006.mocap;
 
-import net.mt1006.mocap.forge.PacketHandler;
-import net.mt1006.mocap.network.MocapPacketC2S;
-import net.mt1006.mocap.network.MocapPacketS2C;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.javafmlmod.FMLModContainer;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
+import net.mt1006.mocap.forge.PacketHandler;
+import net.mt1006.mocap.network.MocapPacketC2S;
+import net.mt1006.mocap.network.MocapPacketS2C;
 
 @Mod(MocapMod.MOD_ID)
 public class MocapModForge implements MocapModLoaderInterface

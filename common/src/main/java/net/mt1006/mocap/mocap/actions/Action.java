@@ -1,11 +1,11 @@
 package net.mt1006.mocap.mocap.actions;
 
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.mocap.actions.deprecated.HeadRotation;
 import net.mt1006.mocap.mocap.actions.deprecated.MovementLegacy;
 import net.mt1006.mocap.mocap.files.RecordingData;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.minecraft.world.entity.Entity;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,13 +1,13 @@
 package net.mt1006.mocap.utils;
 
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.mixin.fields.AbstractHorseFields;
 import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mixin.fields.LivingEntityFields;
 import net.mt1006.mocap.mixin.fields.PlayerFields;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

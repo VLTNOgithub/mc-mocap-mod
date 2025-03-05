@@ -1,13 +1,13 @@
 package net.mt1006.mocap.fabric;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.network.MocapPacketC2S;
-import net.mt1006.mocap.network.MocapPacketS2C;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.network.MocapPacketC2S;
+import net.mt1006.mocap.network.MocapPacketS2C;
 
 public class PacketHandler
 {

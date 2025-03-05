@@ -1,12 +1,5 @@
 package net.mt1006.mocap.mocap.actions;
 
-import net.mt1006.mocap.mixin.fields.AbstractHorseFields;
-import net.mt1006.mocap.mixin.fields.BoatFields;
-import net.mt1006.mocap.mixin.fields.HorseFields;
-import net.mt1006.mocap.mixin.fields.PigFields;
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.mt1006.mocap.utils.EntityData;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pig;
@@ -20,6 +13,13 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.mt1006.mocap.mixin.fields.AbstractHorseFields;
+import net.mt1006.mocap.mixin.fields.BoatFields;
+import net.mt1006.mocap.mixin.fields.HorseFields;
+import net.mt1006.mocap.mixin.fields.PigFields;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.utils.EntityData;
 
 public class VehicleData implements ComparableAction
 {

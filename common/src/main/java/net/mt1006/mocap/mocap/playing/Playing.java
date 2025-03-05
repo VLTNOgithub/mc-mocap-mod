@@ -2,6 +2,7 @@ package net.mt1006.mocap.mocap.playing;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.server.level.ServerPlayer;
 import net.mt1006.mocap.command.CommandsContext;
 import net.mt1006.mocap.command.io.CommandInfo;
 import net.mt1006.mocap.command.io.CommandOutput;
@@ -12,7 +13,6 @@ import net.mt1006.mocap.mocap.playing.playback.Playback;
 import net.mt1006.mocap.mocap.recording.Recording;
 import net.mt1006.mocap.mocap.recording.RecordingContext;
 import net.mt1006.mocap.mocap.settings.Settings;
-import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

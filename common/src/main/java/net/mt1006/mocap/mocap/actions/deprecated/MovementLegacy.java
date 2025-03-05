@@ -1,11 +1,11 @@
 package net.mt1006.mocap.mocap.actions.deprecated;
 
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 
 public class MovementLegacy implements Action
 {

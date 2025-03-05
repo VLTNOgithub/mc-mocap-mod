@@ -1,14 +1,14 @@
 package net.mt1006.mocap.network;
 
 import com.mojang.datafixers.util.Pair;
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.events.PlayerConnectionEvent;
-import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.events.PlayerConnectionEvent;
+import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;

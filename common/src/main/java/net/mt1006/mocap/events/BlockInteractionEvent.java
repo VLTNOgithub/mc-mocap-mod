@@ -1,15 +1,15 @@
 package net.mt1006.mocap.events;
 
-import net.mt1006.mocap.mocap.actions.BreakBlock;
-import net.mt1006.mocap.mocap.actions.PlaceBlock;
-import net.mt1006.mocap.mocap.actions.PlaceBlockSilently;
-import net.mt1006.mocap.mocap.actions.RightClickBlock;
-import net.mt1006.mocap.mocap.recording.Recording;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.mt1006.mocap.mocap.actions.BreakBlock;
+import net.mt1006.mocap.mocap.actions.PlaceBlock;
+import net.mt1006.mocap.mocap.actions.PlaceBlockSilently;
+import net.mt1006.mocap.mocap.actions.RightClickBlock;
+import net.mt1006.mocap.mocap.recording.Recording;
 
 public class BlockInteractionEvent
 {

@@ -1,14 +1,14 @@
 package net.mt1006.mocap.mocap.playing.modifiers;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mt1006.mocap.mocap.files.SceneFiles;
-import net.mt1006.mocap.utils.Utils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.mt1006.mocap.mocap.files.SceneFiles;
+import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 public class PlayerAsEntity

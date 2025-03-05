@@ -1,5 +1,6 @@
 package net.mt1006.mocap.events;
 
+import net.minecraft.server.MinecraftServer;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.command.CommandSuggestions;
 import net.mt1006.mocap.command.io.CommandOutput;
@@ -8,7 +9,6 @@ import net.mt1006.mocap.mocap.playing.Playing;
 import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
 import net.mt1006.mocap.mocap.recording.Recording;
 import net.mt1006.mocap.mocap.settings.Settings;
-import net.minecraft.server.MinecraftServer;
 
 public class WorldLoadEvent
 {

@@ -2,10 +2,10 @@ package net.mt1006.mocap.mocap.actions;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
+import net.mt1006.mocap.mocap.files.RecordingFiles;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 
 import java.util.EnumMap;
 

@@ -1,9 +1,9 @@
 package net.mt1006.mocap.mocap.actions;
 
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.mt1006.mocap.utils.EntityData;
-import net.minecraft.world.entity.Entity;
 
 public class SetEntityFlags implements ComparableAction
 {

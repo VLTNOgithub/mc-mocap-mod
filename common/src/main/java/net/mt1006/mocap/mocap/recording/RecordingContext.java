@@ -1,5 +1,7 @@
 package net.mt1006.mocap.mocap.recording;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.command.io.CommandOutput;
 import net.mt1006.mocap.mocap.actions.*;
 import net.mt1006.mocap.mocap.files.RecordingData;
@@ -8,8 +10,6 @@ import net.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.mocap.settings.enums.OnDeath;
 import net.mt1006.mocap.utils.Utils;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;

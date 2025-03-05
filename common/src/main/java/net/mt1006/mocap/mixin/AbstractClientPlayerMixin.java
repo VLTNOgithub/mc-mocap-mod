@@ -1,12 +1,12 @@
 package net.mt1006.mocap.mixin;
 
 import com.mojang.authlib.properties.Property;
-import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
-import net.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.resources.ResourceLocation;
+import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
+import net.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

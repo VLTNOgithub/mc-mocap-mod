@@ -1,7 +1,7 @@
 package net.mt1006.mocap.command;
 
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.minecraft.server.level.ServerPlayer;
+import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;

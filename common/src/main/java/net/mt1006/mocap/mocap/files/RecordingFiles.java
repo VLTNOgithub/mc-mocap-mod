@@ -1,14 +1,14 @@
 package net.mt1006.mocap.mocap.files;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.command.CommandSuggestions;
-import net.mt1006.mocap.command.io.CommandOutput;
-import net.mt1006.mocap.utils.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.phys.Vec3;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.command.CommandSuggestions;
+import net.mt1006.mocap.command.io.CommandOutput;
+import net.mt1006.mocap.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 

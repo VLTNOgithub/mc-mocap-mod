@@ -1,11 +1,11 @@
 package net.mt1006.mocap.mocap.recording;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.actions.EntityAction;
 import net.mt1006.mocap.mocap.actions.Movement;
 import net.mt1006.mocap.mocap.files.RecordingData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

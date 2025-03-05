@@ -1,14 +1,14 @@
 package net.mt1006.mocap.events;
 
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.command.CommandsContext;
 import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.network.MocapPacketC2S;
 import net.mt1006.mocap.network.MocapPacketS2C;
 import net.mt1006.mocap.utils.Utils;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;

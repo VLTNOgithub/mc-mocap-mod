@@ -1,8 +1,8 @@
 package net.mt1006.mocap.command.io;
 
+import net.minecraft.network.chat.Component;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.utils.Utils;
-import net.minecraft.network.chat.Component;
 
 class LogsCommandOutput implements CommandOutput
 {

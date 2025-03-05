@@ -1,8 +1,5 @@
 package net.mt1006.mocap.forge;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.network.MocapPacketC2S;
-import net.mt1006.mocap.network.MocapPacketS2C;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.network.CustomPayloadEvent;
@@ -10,6 +7,9 @@ import net.minecraftforge.network.ChannelBuilder;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.SimpleChannel;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.network.MocapPacketC2S;
+import net.mt1006.mocap.network.MocapPacketS2C;
 import org.jetbrains.annotations.Nullable;
 
 public class PacketHandler

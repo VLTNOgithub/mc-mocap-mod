@@ -2,8 +2,6 @@ package net.mt1006.mocap.utils;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.events.PlayerConnectionEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.ClickEvent;
@@ -13,6 +11,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.events.PlayerConnectionEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class Utils

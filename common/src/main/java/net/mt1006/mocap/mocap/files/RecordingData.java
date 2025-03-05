@@ -1,16 +1,5 @@
 package net.mt1006.mocap.mocap.files;
 
-import net.mt1006.mocap.MocapMod;
-import net.mt1006.mocap.command.io.CommandOutput;
-import net.mt1006.mocap.mocap.actions.Action;
-import net.mt1006.mocap.mocap.actions.BlockAction;
-import net.mt1006.mocap.mocap.actions.NextTick;
-import net.mt1006.mocap.mocap.actions.SkipTicks;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import net.mt1006.mocap.mocap.playing.playback.ActionContext;
-import net.mt1006.mocap.mocap.settings.Settings;
-import net.mt1006.mocap.utils.EntityData;
-import net.mt1006.mocap.utils.Utils;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,6 +14,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
+import net.mt1006.mocap.MocapMod;
+import net.mt1006.mocap.command.io.CommandOutput;
+import net.mt1006.mocap.mocap.actions.Action;
+import net.mt1006.mocap.mocap.actions.BlockAction;
+import net.mt1006.mocap.mocap.actions.NextTick;
+import net.mt1006.mocap.mocap.actions.SkipTicks;
+import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
+import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.settings.Settings;
+import net.mt1006.mocap.utils.EntityData;
+import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedOutputStream;

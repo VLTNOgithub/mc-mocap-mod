@@ -1,16 +1,16 @@
 package net.mt1006.mocap.mocap.playing.modifiers;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.mt1006.mocap.command.io.CommandInfo;
-import net.mt1006.mocap.command.io.CommandOutput;
-import net.mt1006.mocap.mocap.files.SceneFiles;
-import net.mt1006.mocap.utils.Utils;
 import net.minecraft.commands.arguments.NbtTagArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.mt1006.mocap.command.io.CommandInfo;
+import net.mt1006.mocap.command.io.CommandOutput;
+import net.mt1006.mocap.mocap.files.SceneFiles;
+import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
 public class PlaybackModifiers

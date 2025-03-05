@@ -3,15 +3,15 @@ package net.mt1006.mocap.command.commands;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.mt1006.mocap.command.CommandSuggestions;
-import net.mt1006.mocap.command.CommandUtils;
-import net.mt1006.mocap.command.io.CommandInfo;
-import net.mt1006.mocap.mocap.recording.Recording;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.GameProfileArgument;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.mt1006.mocap.command.CommandSuggestions;
+import net.mt1006.mocap.command.CommandUtils;
+import net.mt1006.mocap.command.io.CommandInfo;
+import net.mt1006.mocap.mocap.recording.Recording;
 
 import java.util.Collection;
 
