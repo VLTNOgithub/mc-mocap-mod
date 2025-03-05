@@ -186,7 +186,6 @@
   "mocap.settings.info.about.track_other_entities": "啟用載具和物品以外實體的追蹤 (錄製)",
   "mocap.settings.info.about.prevent_tracking_played_entities": "防止追蹤 (錄製) 目前正在播放的實體",
   "mocap.settings.info.about.entity_tracking_distance": "限制實體追蹤距離 (>0 - 追蹤半徑 (格)；0 - 停用追蹤；-1 - 距離無限制)",
-  "mocap.settings.info.about.record_player_death": "啟用玩家死亡錄製，並在該時刻停止錄製",
   
   "mocap.settings.info.about.playback_speed": "允許你變更播放錄製或場景的速度",
   "mocap.settings.info.about.play_vehicle_entities": "啟用載具實體 (如船或馬) 的播放",

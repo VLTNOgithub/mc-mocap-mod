@@ -195,7 +195,7 @@
   "mocap.settings.info.about.track_other_entities": "Enables tracking (recording) of entities other than vehicles and items",
   "mocap.settings.info.about.prevent_tracking_played_entities": "Prevents tracking (recording) entities that are currently played",
   "mocap.settings.info.about.entity_tracking_distance": "Limits the entity tracking distance (>0 - tracking radius in blocks; 0 - disable tracking; -1 - distance not limited)",
-  "mocap.settings.info.about.record_player_death": "Enables recording player death and stops recording at that moment",
+  "mocap.settings.info.about.on_death": "Determines what will happen when recorded player dies (end_recording - ends recording; split_recording - splits recording; continue_synced - continues recording and records all ticks on death screen (when game is waiting for player to respawn); continue_skip_ticks - continues recording but skips ticks on death screen (player is recorded as if it respawned immediately))",
   "mocap.settings.info.about.start_instantly": "Makes recording start instantly instead of waiting for movement or second command",
 
   "mocap.settings.info.about.playback_speed": "Allows you to change speed of played recording or scene",

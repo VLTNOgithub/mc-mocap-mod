@@ -195,7 +195,8 @@
   "mocap.settings.info.about.track_other_entities": "Włącza śledzenie (nagrywanie) bytów innych niż pojazdy i przedmioty",
   "mocap.settings.info.about.prevent_tracking_played_entities": "Zapobiega śledzeniu (nagrywaniu) bytów które są obecnie odtwarzane",
   "mocap.settings.info.about.entity_tracking_distance": "Ogranicza zasięg śledzenia bytów (>0 - promień śledzenia w blokach; 0 - śledzenie wyłączone; -1 - zasięg śledzenia nieograniczony)",
-  "mocap.settings.info.about.record_player_death": "Włącza nagrywanie śmierci gracza i zatrzymuje nagranie w tym momencie",
+  "mocap.settings.info.about.on_death": "Określa co się stanie gdy nagrywany gracz zginie (end_recording - kończy nagranywanie; split_recording - dzieli nagranie; continue_synced - kontynuuje nagrywanie i nagrywa wszystkie ticki na ekranie śmierci (gdy gra czeka na gracza aby się odrodził); continue_skip_ticks - kontynuuje nagrywanie ale pomija ticki na ekranie śmierci (gracz jest nagrany jak gdyby odrodził się natychmiast))",
+  "mocap.settings.info.about.start_instantly": "Sprawia, że nagrywanie rozpoczyna się od razu, a nie czeka na ruch gracza lub drugie wywołanie polecenia",
 
   "mocap.settings.info.about.playback_speed": "Pozwala na zmianę prędkości odtwarzania nagrania lub sceny",
   "mocap.settings.info.about.play_vehicle_entities": "Włącza odtwarzanie pojazdów (np. łódek, koni)",
@@ -208,7 +209,7 @@
   "mocap.settings.info.about.block_initialization": "Na początku odtwarzania ustawia stany bloków na te przed rozpoczęciem nagrywania",
   "mocap.settings.info.about.block_allow_scaled": "Pozwala na odtwarzanie akcji związanych z blokami, gdy scena przeskalowana jest przez liczbę naturalną. Miej na uwadze fakt, że może to spowodować znacznie zniszczenia terenu, zaleca się więc utworzenie kopii zapasowej świata przed użyciem tej funkcji.",
   "mocap.settings.info.about.drop_from_blocks": "Włącza łup z niszczonych bloków (zalecane przy wyłączonym \"playItemEntities\" w celu zapobiegnięcia duplikatom)",
-  "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie obecnie nagrywanego gracza rozpoczyna się jako ten gracz, zamiast jako gracz który rozpoczął odtwarzanie.",
+  "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie obecnie nagrywanego gracza rozpoczyna się jako ten gracz, zamiast jako gracz który rozpoczął odtwarzanie",
 
   "mocap.settings.info.about.fluent_movements": "Określa dystans od odtwarzanego bytu do gracza, aby ten otrzymywał dodatkowe pakiety w celu uzyskania płynniejszych ruchów (>0 - dystans w blokach; 0 - wyłącz płynne ruchy; -1 - bez limitu)",
   "mocap.settings.info.about.movement_precision": "Ustawia precyzję nagrywania ruchów gracza - wartość bezwzględna z różnicy między pożądanym przesunięciem pozycji, a obliczonym przesunięciem nie będzie wyższa niż 1/wartość",
@@ -218,8 +219,8 @@
   "mocap.settings.info.about.prevent_saving_entities": "Zapobiega zapisaniu odtwarzanych bytów np. w przypadku wyjścia z gry",
   "mocap.settings.info.about.use_creative_game_mode": "Ustawia tryb gry odtwarzaynych graczy na kreatywny (potwory będą ich ignorować)",
   "mocap.settings.info.about.allow_ghosts": "Zezwala na użycie duchów (niewidzialny graczy, istniejących tylko po stronie serwer) gdy został użyty modyfikator \"player_as_entity\". Są one tworzone w celu wykonywania akcji niemożliwych do wykonania przez byty nie będące graczami.",
-  "mocap.settings.info.about.experimental_release_warning": "Ostrzega graczy, gdy serwer używa eksperymentalnego (alfa lub beta) wydania Motion Capture.",
-  "mocap.settings.info.about.pretty_scene_files": "Sprawia, że pliki JSON scen wyglądają ładnie, kosztem lekko większych plików (pliki scen są i tak bardzo małe, więc nie powinno to stanowić problemu, chyba że używasz kart perforowanych do ich przechowywania).",
+  "mocap.settings.info.about.experimental_release_warning": "Ostrzega graczy, gdy serwer używa eksperymentalnego (alfa lub beta) wydania Motion Capture",
+  "mocap.settings.info.about.pretty_scene_files": "Sprawia, że pliki JSON scen wyglądają ładnie, kosztem lekko większych plików (pliki scen są i tak bardzo małe, więc nie powinno to stanowić problemu, chyba że używasz kart perforowanych do ich przechowywania)",
 
   "mocap.settings.info.current_value": "§lObecna wartość:§r %s",
   "mocap.settings.info.default_value": "§lDomyślna wartość:§r %s",
