@@ -22,6 +22,7 @@
 -Replaced "record_player_death" setting with "on_death" which defines recording behavior on player death and unlike old setting actually works (0 by default).
 -Replaced "recording_sync" setting with "/mocap misc sync" command.
 -Renamed settings: "playing_speed" to "playback_speed", "play_block_actions" to "block_actions_playback", "set_block_states" to "block_initialization".
+-Changed "entities_after_playback" setting type from integer to enum.
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
 -Added "for_all_players" optional argument to "/mocap playback stop_all".
 -Renamed "from_..." to "skin_from_..." simple modifiers in "playback start" and "scene add_to" commands.
