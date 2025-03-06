@@ -132,6 +132,9 @@ public class RecordingFiles
 		tpSuggestionComponent.withStyle(Style.EMPTY.withUnderlined(true));
 		commandOutput.sendSuccess("recordings.info.start_pos", tpSuggestionComponent);
 
+		if (recording.playerName != null) { commandOutput.sendSuccess("recordings.info.player_name_assigned.yes", recording.playerName); }
+		else { commandOutput.sendSuccess("recordings.info.player_name_assigned.no"); }
+
 		commandOutput.sendSuccess(recording.endsWithDeath ? "recordings.info.dies.yes" : "recordings.info.dies.no");
 		return true;
 	}
