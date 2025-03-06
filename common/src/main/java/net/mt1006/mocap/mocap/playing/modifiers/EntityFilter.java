@@ -11,24 +11,14 @@ public class EntityFilter
 	private static @Nullable EntityFilterInstance recordingSettingInstance, playbackSettingInstance;
 	private final @Nullable EntityFilterInstance constantInstance;
 
-	private EntityFilter(@Nullable String str)
+	public EntityFilter(@Nullable EntityFilterInstance instance)
 	{
-		if (str == null)
-		{
-			constantInstance = null;
-			return;
-		}
-
-		constantInstance = EntityFilterInstance.create(str);
-		if (constantInstance == null)
-		{
-			//TODO: error message
-		}
+		constantInstance = instance;
 	}
 
-	public static EntityFilter forSubscene(@Nullable String str)
+	public static EntityFilter fromString(@Nullable String str)
 	{
-		return str != null ? new EntityFilter(str) : FOR_PLAYBACK;
+		return str != null ? new EntityFilter(EntityFilterInstance.create(str)) : FOR_PLAYBACK;
 	}
 
 	public @Nullable String save()

@@ -20,7 +20,7 @@ public class PlaybackModifiers
 	public PlayerAsEntity playerAsEntity;
 	public Offset offset;
 	public StartDelay startDelay;
-	public EntityFilter entityFilter; //TODO: implement
+	public EntityFilter entityFilter;
 	public Scale scale;
 
 	private PlaybackModifiers(@Nullable String playerName, PlayerSkin playerSkin, PlayerAsEntity playerAsEntity,
@@ -42,8 +42,7 @@ public class PlaybackModifiers
 		playerName = reader.readString("player_name");
 		playerSkin = new PlayerSkin(reader.readObject("player_skin"));
 		playerAsEntity = new PlayerAsEntity(reader.readObject("player_as_entity"));
-		//entityFilter = EntityFilter.forSubscene(reader.readString("entity_filter"));
-		entityFilter = EntityFilter.FOR_PLAYBACK;
+		entityFilter = EntityFilter.fromString(reader.readString("entity_filter"));
 		scale = new Scale(reader.readObject("scale"));
 	}
 
@@ -62,7 +61,7 @@ public class PlaybackModifiers
 				offset.shift(parent.offset),
 				//startDelay.add(parent.startDelay), //TODO: fix how delaying start works?
 				startDelay,
-				entityFilter,
+				!entityFilter.isDefaultForPlayback() ? entityFilter : parent.entityFilter,
 				scale.mergeWithParent(parent.scale));
 	}
 
@@ -73,7 +72,6 @@ public class PlaybackModifiers
 
 	public boolean areDefault()
 	{
-		//TODO: include entityFilter
 		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
 				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO
 				&& entityFilter.isDefaultForPlayback() && scale.isNormal();
@@ -86,7 +84,7 @@ public class PlaybackModifiers
 		writer.addString("player_name", playerName);
 		writer.addObject("player_skin", playerSkin.save());
 		writer.addObject("player_as_entity", playerAsEntity.save());
-		//TODO: add "entity_filter"
+		writer.addString("entity_filter", entityFilter.save());
 		writer.addObject("scale", scale.save());
 	}
 
@@ -123,6 +121,9 @@ public class PlaybackModifiers
 		if (!playerAsEntity.isEnabled()) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
 		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", playerAsEntity.entityId); }
 
+		if (entityFilter.isDefaultForPlayback()) { commandOutput.sendSuccess("scenes.element_info.entity_filter.disabled"); }
+		else { commandOutput.sendSuccess("scenes.element_info.entity_filter.enabled", entityFilter.save()); }
+
 		if (scale.playerScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.normal"); }
 		else { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.custom", scale.playerScale); }
 
@@ -143,7 +144,7 @@ public class PlaybackModifiers
 				return true;
 
 			case "player_name":
-				playerName = commandInfo.getNullableString("player_name");
+				playerName = commandInfo.getString("player_name");
 				return true;
 
 			case "player_skin":
@@ -151,10 +152,10 @@ public class PlaybackModifiers
 				return true;
 
 			case "player_as_entity":
-				String playerAsEntityStr = commandInfo.getNode(propertyNodePosition + 1);
-				if (playerAsEntityStr == null) { break; }
+				String playerAsEntityMode = commandInfo.getNode(propertyNodePosition + 1);
+				if (playerAsEntityMode == null) { break; }
 
-				if (playerAsEntityStr.equals("enabled"))
+				if (playerAsEntityMode.equals("enabled"))
 				{
 					String playerAsEntityId = ResourceArgument.getEntityType(commandInfo.ctx, "entity").key().location().toString();
 
@@ -166,9 +167,33 @@ public class PlaybackModifiers
 					playerAsEntity = new PlayerAsEntity(playerAsEntityId, nbt != null ? nbt.toString() : null);
 					return true;
 				}
-				else if (playerAsEntityStr.equals("disabled"))
+				else if (playerAsEntityMode.equals("disabled"))
 				{
 					playerAsEntity = PlayerAsEntity.DISABLED;
+					return true;
+				}
+				break;
+
+			case "entity_filter":
+				String filterMode = commandInfo.getNode(propertyNodePosition + 1);
+				if (filterMode == null) { break; }
+
+				if (filterMode.equals("enabled"))
+				{
+					String filterStr = commandInfo.getString("entity_filter");
+					EntityFilterInstance filterInstance = EntityFilterInstance.create(filterStr);
+					if (filterInstance == null)
+					{
+						commandInfo.sendFailure("failure.entity_filter.failed_to_parse");
+						return false;
+					}
+
+					entityFilter = new EntityFilter(filterInstance);
+					return true;
+				}
+				else if (filterMode.equals("disabled"))
+				{
+					entityFilter = EntityFilter.FOR_PLAYBACK;
 					return true;
 				}
 				break;

@@ -125,6 +125,8 @@
   "mocap.scenes.element_info.offset": "§lPosition offset:§r [%f; %f; %f]",
   "mocap.scenes.element_info.player_as_entity.disabled": "§lPlayer as entity:§r §7§o[disabled]§r",
   "mocap.scenes.element_info.player_as_entity.enabled": "§lPlayer as entity:§r %s",
+  "mocap.scenes.element_info.entity_filter.disabled": "§lEntity filter:§r §7§o[disabled]§r",
+  "mocap.scenes.element_info.entity_filter.enabled": "§lEntity filter:§r %s",
   "mocap.scenes.element_info.scale.player_scale.normal": "§lPlayer scale:§r 1.0 §7§o[normal]§r",
   "mocap.scenes.element_info.scale.player_scale.custom": "§lPlayer scale:§r %f",
   "mocap.scenes.element_info.scale.scene_scale.normal": "§lScene scale:§r 1.0 §7§o[normal]§r",
@@ -267,6 +269,7 @@
   "mocap.failure.improper_player_name.too_long": "Maximum length of a player name is 16",
   "mocap.failure.improper_player_name.contains_spaces": "Player name cannot contain spaces",
   "mocap.failure.resolve_player": "Failed to resolve player - this command needs to be invoked by player!",
+  "mocap.failure.entity_filter.failed_to_parse": "Failed to parse entity filter - make sure it has correct syntax!",
 
   "mocap.warning.custom_skin_cache_limit": "§lWarning:§r custom skin cache size reached limit!",
   "mocap.warning.custom_skin_cache_limit.tip": "Rejoin the world to clear it",

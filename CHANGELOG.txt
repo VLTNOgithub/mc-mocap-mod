@@ -7,6 +7,7 @@
 -Added command to clear server and clients mocap cache - "/mocap misc clear_cache".
 -Added support for custom NBT data with "player_as_entity" modifier.
 -Added "scale" playback modifier (thanks to netcore10 for suggestion).
+-Added "entity_filter" playback modifier.
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
 -Added setting "start_as_recorded" which makes playback of currently recorded player start as this player (false by default) (thanks to damiendier for suggestions).

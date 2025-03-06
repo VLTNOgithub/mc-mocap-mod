@@ -19,13 +19,14 @@ import java.util.*;
 
 public class EntityFilterInstance
 {
-	public static final String EMPTY_GROUP = "none";
+	private static final String EMPTY_GROUP = "none";
 	private final List<Element> elements = new ArrayList<>();
 	public final String filterStr;
 
 	private EntityFilterInstance(String str) throws FilterParserException
 	{
 		filterStr = str;
+		if (str.isEmpty()) { return; }
 		String[] parts = str.split(";");
 
 		for (String part : parts)
