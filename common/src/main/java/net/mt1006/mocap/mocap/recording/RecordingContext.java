@@ -25,16 +25,18 @@ public class RecordingContext
 	private final PositionTracker positionTracker;
 	private final EntityTracker entityTracker = new EntityTracker(this);
 	public final EntityFilter entityFilter;
+	public final @Nullable String instantSave;
 	private int tick = 0, diedOnTick = 0;
 	private boolean died = false;
 
-	public RecordingContext(RecordingId id, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer)
+	public RecordingContext(RecordingId id, ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer, @Nullable String instantSave)
 	{
 		this.id = id;
 		this.recordedPlayer = recordedPlayer;
 		this.sourcePlayer = sourcePlayer;
 		this.positionTracker = new PositionTracker(recordedPlayer, false);
 		this.entityFilter = EntityFilter.FOR_RECORDING;
+		this.instantSave = instantSave;
 
 		this.positionTracker.writeToRecordingData(data);
 
@@ -49,7 +51,7 @@ public class RecordingContext
 		if (sendMessage) { Utils.sendMessage(sourcePlayer, "recording.start.recording_started"); }
 	}
 
-	public void stop()
+	public void stop(CommandOutput commandOutput)
 	{
 		state = switch (state)
 		{
@@ -58,6 +60,11 @@ public class RecordingContext
 			//case WAITING_FOR_DECISION -> State.DISCARDED; //TODO: ?
 			default -> State.UNDEFINED;
 		};
+
+		if (state == State.WAITING_FOR_DECISION && instantSave != null)
+		{
+			Recording.saveSingle(commandOutput, this, instantSave, false);
+		}
 
 		if (state.removed) { Recording.removeContext(this); }
 	}
@@ -173,7 +180,7 @@ public class RecordingContext
 	public void splitRecording(ServerPlayer newPlayer)
 	{
 		stopRecording("recording.stop.split");
-		boolean success = Recording.start(newPlayer, sourcePlayer, true, false);
+		boolean success = Recording.start(newPlayer, sourcePlayer, null, true, false);
 		if (!success) { Utils.sendMessage(sourcePlayer, "recording.stop.split.error"); }
 	}
 

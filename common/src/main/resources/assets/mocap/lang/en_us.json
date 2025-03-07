@@ -18,6 +18,7 @@
   "mocap.recording.stop.quick_discard.disabled.tip": "Use \"/mocap recording discard\" to discard it\nor change quick discard mode in the settings.",
   "mocap.recording.stop.split": "Recording split - previous recording is waiting for decision",
   "mocap.recording.stop.split.error": "§lError:§r something went wrong when trying to split recording!",
+  "mocap.recording.stop.instant_save": "Recording stopped and saved as %s",
 
   "mocap.recording.discard.discarded": "Recording discarded",
   "mocap.recording.discard.not_stopped": "Recording wasn't stopped, but you're trying to discard it!",
@@ -61,6 +62,7 @@
   "mocap.recording.multiple.results.none": "Results: §7§o[none]§r",
   "mocap.recording.multiple.results.stopped": " -stopped: %d",
   "mocap.recording.multiple.results.canceled": " -canceled: %d",
+  "mocap.recording.multiple.results.saved": " -saved: %d",
   "mocap.recording.multiple.results.discarded": " -discarded: %d",
   "mocap.recording.multiple.results.still_waiting": " -still waiting: %d",
   "mocap.recording.multiple.results.still_recording": " -still recording: %d",

@@ -18,6 +18,7 @@
   "mocap.recording.stop.quick_discard.disabled.tip": "Użyj \"/mocap recording discard\" aby je odrzucić\nlub zmień tryb szybkiego odrzucania w ustawieniach.",
   "mocap.recording.stop.split": "Nagranie podzielone - poprzednie nagranie czeka na decyzję",
   "mocap.recording.stop.split.error": "§lBłąd:§r coś poszło nie tak przy próbie podzielenia nagrania!",
+  "mocap.recording.stop.instant_save": "Nagranie zatrzymane i zapisane jako %s",
 
   "mocap.recording.discard.discarded": "Nagranie odrzucone",
   "mocap.recording.discard.not_stopped": "Nagrywanie nie zostało zatrzymane, ale próbujesz je odrzucić!",
@@ -61,6 +62,7 @@
   "mocap.recording.multiple.results.none": "Wynik: §7§o[brak]§r",
   "mocap.recording.multiple.results.stopped": " -zatrzymano: %d",
   "mocap.recording.multiple.results.canceled": " -anulowano: %d",
+  "mocap.recording.multiple.results.saved": " -zapisano: %d",
   "mocap.recording.multiple.results.discarded": " -odrzucono: %d",
   "mocap.recording.multiple.results.still_waiting": " -wciąż czekają: %d",
   "mocap.recording.multiple.results.still_recording": " -wciąż są nagrywane: %d",
@@ -84,6 +86,8 @@
   "mocap.recordings.info.length": "§lDługość:§r %s s (%d ticków)",
   "mocap.recordings.info.size": "§lRozmiar:§r %s KB (%d operacji)",
   "mocap.recordings.info.start_pos": "§lPozycja początkowa:§r %s",
+  "mocap.recordings.info.player_name_assigned.yes": "§lPrzypisano nazwę gracza:§r Tak - %s",
+  "mocap.recordings.info.player_name_assigned.no": "§lPrzypisano nazwę gracza:§r Nie",
   "mocap.recordings.info.dies.yes": "§lKończy się śmiercią:§r Tak",
   "mocap.recordings.info.dies.no": "§lKończy się śmiercią:§r Nie",
 

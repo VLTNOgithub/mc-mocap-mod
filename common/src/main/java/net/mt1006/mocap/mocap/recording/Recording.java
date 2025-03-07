@@ -48,12 +48,12 @@ public class Recording
 	private static final Collection<RecordingContext> contexts = contextsBySource.values();
 	public static final BiMultimap<ServerPlayer, RecordingContext> waitingForRespawn = new BiMultimap<>();
 
-	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer)
+	public static boolean start(CommandInfo commandInfo, ServerPlayer recordedPlayer, @Nullable String instantSave)
 	{
 		if (!checkDoubleStart(commandInfo, recordedPlayer)) { return false; }
 		boolean startInstantly = Settings.START_INSTANTLY.val;
 
-		boolean success = start(recordedPlayer, commandInfo.sourcePlayer, startInstantly, true);
+		boolean success = start(recordedPlayer, commandInfo.sourcePlayer, instantSave, startInstantly, true);
 		if (success && !startInstantly)
 		{
 			commandInfo.sendSuccess(recordedPlayer.equals(commandInfo.sourcePlayer)
@@ -68,12 +68,13 @@ public class Recording
 		return success;
 	}
 
-	public static boolean start(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer, boolean startNow, boolean sendMessage)
+	public static boolean start(ServerPlayer recordedPlayer, @Nullable ServerPlayer sourcePlayer,
+								@Nullable String instantSave, boolean startNow, boolean sendMessage)
 	{
 		RecordingId id = new RecordingId(contexts, recordedPlayer, sourcePlayer);
 		if (!id.isProper()) { return false; }
 
-		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer);
+		RecordingContext ctx = new RecordingContext(id, recordedPlayer, sourcePlayer, instantSave);
 		contextsBySource.put(sourcePlayer != null ? sourcePlayer.getName().getString() : "", ctx);
 		CommandSuggestions.inputSet.add(id.str);
 
@@ -168,7 +169,7 @@ public class Recording
 			return discardSingle(commandInfo, ctx);
 		}
 
-		ctx.stop();
+		ctx.stop(commandInfo);
 
 		switch (ctx.state)
 		{
@@ -183,6 +184,10 @@ public class Recording
 				commandInfo.sendSuccess("recording.stop.canceled");
 				return true;
 
+			case SAVED:
+				commandInfo.sendSuccess("recording.stop.instant_save", ctx.instantSave != null ? ctx.instantSave : "[error]");
+				return true;
+
 			default:
 				commandInfo.sendFailure("recording.undefined_state", ctx.state.name());
 				return false;
@@ -191,7 +196,7 @@ public class Recording
 
 	private static boolean stopMultiple(CommandOutput commandOutput, Collection<RecordingContext> contexts)
 	{
-		int stopped = 0, cancelled = 0, stillWaiting = 0, unknownState = 0;
+		int stopped = 0, cancelled = 0, saved = 0, stillWaiting = 0, unknownState = 0;
 
 		for (RecordingContext ctx : contexts)
 		{
@@ -201,17 +206,18 @@ public class Recording
 				continue;
 			}
 
-			ctx.stop();
+			ctx.stop(commandOutput);
 
 			switch (ctx.state)
 			{
 				case WAITING_FOR_DECISION: stopped++; break;
 				case CANCELED: cancelled++; break;
+				case SAVED: saved++; break;
 				default: unknownState++;
 			}
 		}
 
-		if (stopped == 0 && cancelled == 0 && stillWaiting == 0 && unknownState == 0)
+		if (stopped == 0 && cancelled == 0 && saved == 0 && stillWaiting == 0 && unknownState == 0)
 		{
 			commandOutput.sendSuccess("recording.multiple.results.none");
 			return true;
@@ -220,6 +226,7 @@ public class Recording
 		commandOutput.sendSuccess("recording.multiple.results");
 		if (stopped != 0) { commandOutput.sendSuccess("recording.multiple.results.stopped", stopped); }
 		if (cancelled != 0) { commandOutput.sendSuccess("recording.multiple.results.cancelled", cancelled); }
+		if (saved != 0) { commandOutput.sendSuccess("recording.multiple.results.saved", saved); }
 		if (stillWaiting != 0) { commandOutput.sendSuccess("recording.multiple.results.still_waiting", stillWaiting); }
 
 		if (unknownState != 0)
@@ -352,11 +359,11 @@ public class Recording
 		if (resolvedContexts == null) { return false; }
 
 		return resolvedContexts.isSingle
-				? saveSingle(commandInfo, resolvedContexts.list.iterator().next(), name)
+				? saveSingle(commandInfo, resolvedContexts.list.iterator().next(), name, true)
 				: saveMultiple(commandInfo, resolvedContexts.list, name);
 	}
 
-	private static boolean saveSingle(CommandOutput commandOutput, RecordingContext ctx, String name)
+	public static boolean saveSingle(CommandOutput commandOutput, RecordingContext ctx, String name, boolean sendSavedMessage)
 	{
 		if (ctx.state == RecordingContext.State.RECORDING)
 		{
@@ -384,7 +391,7 @@ public class Recording
 		switch (ctx.state)
 		{
 			case SAVED:
-				commandOutput.sendSuccess("recording.save.saved");
+				if (sendSavedMessage) { commandOutput.sendSuccess("recording.save.saved"); }
 				return true;
 
 			case WAITING_FOR_DECISION:

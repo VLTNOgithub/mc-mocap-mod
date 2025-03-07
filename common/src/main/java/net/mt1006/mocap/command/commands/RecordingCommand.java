@@ -1,6 +1,7 @@
 package net.mt1006.mocap.command.commands;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,13 +18,16 @@ import java.util.Collection;
 
 public class RecordingCommand
 {
+	private static final Command<CommandSourceStack> COMMAND_START = CommandUtils.command(RecordingCommand::start);
+
 	public static LiteralArgumentBuilder<CommandSourceStack> getArgumentBuilder()
 	{
 		LiteralArgumentBuilder<CommandSourceStack> commandBuilder = Commands.literal("recording");
 
-		commandBuilder.then(Commands.literal("start").executes(CommandUtils.command(RecordingCommand::start)).
-			then(Commands.argument("player", GameProfileArgument.gameProfile()).executes(CommandUtils.command(RecordingCommand::start))));
-		//commandBuilder.then(Commands.literal("start_multiple").then(CommandUtils.withStringArgument(Recording::startMultiple, "players")));
+		commandBuilder.then(Commands.literal("start").executes(COMMAND_START).
+			then(Commands.argument("player", GameProfileArgument.gameProfile()).executes(COMMAND_START).
+			then(Commands.argument("instant_save", StringArgumentType.string()).executes(COMMAND_START))));
+		//commandBuilder.then(Commands.literal("start_multiple").then(CommandUtils.withStringArgument(Recording::startMultiple, "players"))); //TODO: todo?
 		commandBuilder.then(Commands.literal("stop").executes(CommandUtils.command(RecordingCommand::stop)).
 			then(Commands.argument("id", StringArgumentType.string()).suggests(CommandSuggestions::currentlyRecorded).executes(CommandUtils.command(RecordingCommand::stop))));
 		commandBuilder.then(Commands.literal("discard").executes(CommandUtils.command(RecordingCommand::discard)).
@@ -39,6 +43,7 @@ public class RecordingCommand
 	private static boolean start(CommandInfo commandInfo)
 	{
 		ServerPlayer player = null;
+		String instantSave = null;
 
 		try
 		{
@@ -49,17 +54,17 @@ public class RecordingCommand
 				String nickname = gameProfiles.iterator().next().getName();
 				player = commandInfo.server.getPlayerList().getPlayerByName(nickname);
 			}
-
 			if (player == null)
 			{
 				commandInfo.sendFailure("recording.start.player_not_found");
 				return false;
 			}
+
+			instantSave = commandInfo.getNullableString("instant_save");
 		}
 		catch (Exception e)
 		{
 			Entity entity = commandInfo.sourceEntity;
-
 			if (!(entity instanceof ServerPlayer))
 			{
 				// It contains tip but uses single message to fit in command blocks "previous output" box
@@ -70,7 +75,7 @@ public class RecordingCommand
 			player = (ServerPlayer)entity;
 		}
 
-		return Recording.start(commandInfo, player);
+		return Recording.start(commandInfo, player, instantSave);
 	}
 
 	private static boolean stop(CommandInfo commandInfo)

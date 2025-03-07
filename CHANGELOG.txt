@@ -28,6 +28,7 @@
 -Changed "entities_after_playback" setting type from integer to enum.
 -Changed settings, command names and command arguments naming convention from lower camel case to snake case.
 -Added "for_all_players" optional argument to "/mocap playback stop_all".
+-Added "instant_save" optional argument to "/mocap recording start" to instantly save recording after stopping it (thanks to Antimality for suggesiton).
 -Renamed "from_..." to "skin_from_..." simple modifiers in "playback start" and "scene add_to" commands.
 -It's now possible to add player_as_entity modifier using simple modifiers (thanks to Narfu for suggestion).
 -Item types and block states are now stored using string IDs (instead of numeric IDs), providing better compatibility between different Minecraft versions and modpacks.
