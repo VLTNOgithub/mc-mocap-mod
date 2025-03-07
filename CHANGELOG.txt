@@ -58,7 +58,7 @@
 -Fixed server crashing when trying to start playback with player name longer than 16 characters (thanks to SPY for reporting).
 -Fixed fake players with empty name having tiny gray bar above their head.
 -Fixed blocks not initializing for playback of currently recorded recording (thanks to Robobuilder for reporting).
--Fixed "record_player_death" setting not working (by removing it) (thanks to damiendier).
+-Fixed "recordPlayerDeath" setting not working (by removing it) (thanks to damiendier).
 -Fixed recording not stopping after recorded player leaves the server (thanks to damiendier).
 -Minor spelling improvements.
 -Minor improvements to error detection.
