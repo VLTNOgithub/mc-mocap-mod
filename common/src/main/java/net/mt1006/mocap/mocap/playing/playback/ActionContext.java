@@ -151,6 +151,7 @@ public class ActionContext
 		}
 		if (playerToRemove != ghostPlayer) { broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid))); }
 		playerToRemove.remove(Entity.RemovalReason.KILLED);
+		playerToRemove.getAdvancements().stopListening();
 	}
 
 	public void changePosition(Vec3 pos, float rotY, float rotX, boolean shiftXZ, boolean shiftY)
