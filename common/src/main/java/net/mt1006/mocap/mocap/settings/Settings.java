@@ -20,7 +20,7 @@ public class Settings
 	public static final SettingFields.StringField TRACK_ENTITIES = RECORDING.add(fields.add("track_entities", "@vehicles;@projectiles;@items", EntityFilter::onTrackEntitiesSet, EntityFilterInstance::test));
 	public static final SettingFields.BooleanField PREVENT_TRACKING_PLAYED_ENTITIES = RECORDING.add(fields.add("prevent_tracking_played_entities", true));
 	public static final SettingFields.DoubleField ENTITY_TRACKING_DISTANCE = RECORDING.add(fields.add("entity_tracking_distance", 128.0));
-	public static final SettingFields.BooleanField ASSIGN_DIMENSIONS = RECORDING.add(fields.add("assign_dimensions", true));
+	//public static final SettingFields.BooleanField ASSIGN_DIMENSIONS = RECORDING.add(fields.add("assign_dimensions", true));
 	public static final SettingFields.EnumField<OnDeath> ON_DEATH = RECORDING.add(fields.add("on_death", OnDeath.END_RECORDING));
 	//public static final SettingFields.IntegerField ON_CHANGE_DIMENSION = RECORDING.add(fields.add("on_change_dimension", 2)); //TODO: implement
 	public static final SettingFields.BooleanField START_INSTANTLY = RECORDING.add(fields.add("start_instantly", false));
