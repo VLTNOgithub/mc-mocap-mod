@@ -63,7 +63,8 @@ public interface Action
 		MOVEMENT(21, Movement::new),
 		SKIP_TICKS(22, SkipTicks::new),
 		DIE(23, Die::new),
-		RESPAWN(24, Respawn::new);
+		RESPAWN(24, Respawn::new),
+		CHAT_MESSAGE(25, ChatMessage::new);
 
 		public final byte id;
 		public final FromReader fromReader;

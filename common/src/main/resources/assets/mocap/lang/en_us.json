@@ -204,6 +204,7 @@
   "mocap.settings.info.about.on_death": "Determines what will happen when recorded player dies (end_recording - ends recording; split_recording - splits recording; continue_synced - continues recording and records all ticks on death screen (when game is waiting for player to respawn); continue_skip_ticks - continues recording but skips ticks on death screen (player is recorded as if it respawned immediately))",
   "mocap.settings.info.about.start_instantly": "Makes recording start instantly instead of waiting for movement or second command",
   "mocap.settings.info.about.assign_player_name": "Assigns recorded player name to the recording. You also need to enable \"start_as_recorded\" for a recording playback to start as recorded player by default.",
+  "mocap.settings.info.about.chat_recording": "Enables player chat messages recording",
 
   "mocap.settings.info.about.playback_speed": "Allows you to change speed of played recording or scene",
   "mocap.settings.info.about.play_vehicle_entities": "Enables playback of vehicle entities (like boats or horses)",
@@ -217,6 +218,7 @@
   "mocap.settings.info.about.block_allow_scaled": "Allows playback of block actions with scene scaled by natural number. Note that it may cause major destruction of the terrain, so it's recommended to backup your world before using it.",
   "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
   "mocap.settings.info.about.start_as_recorded": "Makes playback start as recorded player, rather than player starting playback. In case of saved recordings you need to start them with \"assign_player_name\" enabled.",
+  "mocap.settings.info.about.chat_playback": "Enables player chat messages playback. Note that recording needs to be recorded with \"chat_recording\" enabled.",
 
   "mocap.settings.info.about.fluent_movements": "Sets distance to played entity for player to receive additional packets for more fluent movements (>0 - distance in blocks; 0 - disable fluent movements; -1 - no limit)",
   "mocap.settings.info.about.movement_precision": "Sets precision of recording player movement - absolute value of difference between desired position offset and calculated offset won't be higher than 1/val",

@@ -112,11 +112,9 @@ public class FakePlayer extends ServerPlayer
 
 	private static class DummyConnection extends Connection
 	{
-		//TODO: test
 		public DummyConnection(PacketFlow packetFlow)
 		{
 			super(packetFlow);
 		}
-		//@Override public void setListener(PacketListener packetListener) {}
 	}
 }
