@@ -10,9 +10,9 @@ import net.mt1006.mocap.mocap.playing.skins.CustomClientSkinManager;
 import net.mt1006.mocap.mocap.recording.Recording;
 import net.mt1006.mocap.mocap.settings.Settings;
 
-public class WorldLoadEvent
+public class LifecycleEvent
 {
-	public static void onServerWorldLoad(MinecraftServer server)
+	public static void onServerStart(MinecraftServer server)
 	{
 		MocapMod.server = server;
 		Files.init();
@@ -20,7 +20,7 @@ public class WorldLoadEvent
 		CommandSuggestions.initInputSet();
 	}
 
-	public static void onServerWorldUnload()
+	public static void onServerStop()
 	{
 		Playing.stopAll(CommandOutput.DUMMY, null);
 		Settings.unload();
@@ -29,10 +29,12 @@ public class WorldLoadEvent
 		MocapMod.server = null;
 	}
 
-	public static void onClientWorldUnload()
+	public static void onClientDisconnect()
 	{
+		// clearing integrated server cache on render (client) thread (it's never called on a dedicated server)
 		PlayerConnectionEvent.players.clear();
 		PlayerConnectionEvent.nocolPlayers.clear();
+
 		CustomClientSkinManager.clearCache();
 	}
 }
