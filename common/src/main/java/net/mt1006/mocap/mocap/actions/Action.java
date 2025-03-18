@@ -64,7 +64,8 @@ public interface Action
 		SKIP_TICKS(22, SkipTicks::new),
 		DIE(23, Die::new),
 		RESPAWN(24, Respawn::new),
-		CHAT_MESSAGE(25, ChatMessage::new);
+		CHAT_MESSAGE(25, ChatMessage::new),
+		SET_SPECTATOR(26, SetSpectator::new, SetSpectator::new);
 
 		public final byte id;
 		public final FromReader fromReader;
