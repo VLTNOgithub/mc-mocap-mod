@@ -148,7 +148,10 @@ public class PlaybackModifiers
 				return true;
 
 			case "player_skin":
-				playerSkin = commandInfo.getPlayerSkin();
+				PlayerSkin newPlayerSkin = commandInfo.getPlayerSkin();
+				if (newPlayerSkin == null) { return false; }
+
+				playerSkin = newPlayerSkin;
 				return true;
 
 			case "player_as_entity":

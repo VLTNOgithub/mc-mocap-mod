@@ -204,6 +204,7 @@
   "mocap.settings.info.about.on_death": "Określa co się stanie gdy nagrywany gracz zginie (end_recording - kończy nagranywanie; split_recording - dzieli nagranie; continue_synced - kontynuuje nagrywanie i nagrywa wszystkie ticki na ekranie śmierci (gdy gra czeka na gracza aby się odrodził); continue_skip_ticks - kontynuuje nagrywanie ale pomija ticki na ekranie śmierci (gracz jest nagrany jak gdyby odrodził się natychmiast))",
   "mocap.settings.info.about.start_instantly": "Sprawia, że nagrywanie rozpoczyna się od razu, a nie czeka na ruch gracza lub drugie wywołanie polecenia",
   "mocap.settings.info.about.assign_player_name": "Przypisuje nazwę nagranego gracza nagraniu. Musisz także włączyć \"start_as_recorded\", aby odtwarzanie nagrania domyślnie rozpoczęło się jako nagrany gracz.",
+  "mocap.settings.info.about.chat_recording": "Włącza nagrywanie wiadomości graczy na czacie",
 
   "mocap.settings.info.about.playback_speed": "Pozwala na zmianę prędkości odtwarzania nagrania lub sceny",
   "mocap.settings.info.about.play_vehicle_entities": "Włącza odtwarzanie pojazdów (np. łódek, koni)",
@@ -217,6 +218,7 @@
   "mocap.settings.info.about.block_allow_scaled": "Pozwala na odtwarzanie akcji związanych z blokami, gdy scena przeskalowana jest przez liczbę naturalną. Miej na uwadze fakt, że może to spowodować znacznie zniszczenia terenu, zaleca się więc utworzenie kopii zapasowej świata przed użyciem tej funkcji.",
   "mocap.settings.info.about.drop_from_blocks": "Włącza łup z niszczonych bloków (zalecane przy wyłączonym \"playItemEntities\" w celu zapobiegnięcia duplikatom)",
   "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie rozpoczyna się jako nagrany gracz, zamiast jako gracz który rozpoczął odtwarzanie. W przypadku zapisanych nagrań musisz rozpocząć je z włączonym \"assign_player_name\".",
+  "mocap.settings.info.about.chat_playback": "Włącza odtwarzanie wiadomości graczy na czacie. Miej na uwadze fakt, że nagrania muszą być nagrane z włączonym \"chat_recording\".",
 
   "mocap.settings.info.about.fluent_movements": "Określa dystans od odtwarzanego bytu do gracza, aby ten otrzymywał dodatkowe pakiety w celu uzyskania płynniejszych ruchów (>0 - dystans w blokach; 0 - wyłącz płynne ruchy; -1 - bez limitu)",
   "mocap.settings.info.about.movement_precision": "Ustawia precyzję nagrywania ruchów gracza - wartość bezwzględna z różnicy między pożądanym przesunięciem pozycji, a obliczonym przesunięciem nie będzie wyższa niż 1/wartość",
@@ -275,6 +277,7 @@
   "mocap.failure.improper_player_name.contains_spaces": "Nazwa gracza nie może zawierać spacji",
   "mocap.failure.resolve_player": "Nie udało się określić gracza - te polecenie musi zostać wywołane przez gracza!",
   "mocap.failure.entity_filter.failed_to_parse": "Nie udało się wczytać filtra bytów - upewnij się, że ma poprawną składnię!",
+  "mocap.failure.improper_mineskin_link": "Niepoprawny adres skórki z mineskin.org!",
 
   "mocap.warning.custom_skin_cache_limit": "§lUwaga:§r osiągnięto limit rozmiaru pamięci podręcznej własnych skórek!",
   "mocap.warning.custom_skin_cache_limit.tip": "Dołącz ponownie do świata, aby ją wyczyścić",

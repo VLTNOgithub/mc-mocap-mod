@@ -133,16 +133,16 @@ public class CommandInfo implements CommandOutput
 		catch (Exception e) { return null; }
 	}
 
-	public PlayerSkin getPlayerSkin()
+	public @Nullable PlayerSkin getPlayerSkin()
 	{
 		String fromPlayer = getNullableString("skin_player_name");
-		if (fromPlayer != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_PLAYER, fromPlayer); }
+		if (fromPlayer != null) { return PlayerSkin.createVerified(this, PlayerSkin.SkinSource.FROM_PLAYER, fromPlayer); }
 
 		String fromFile = getNullableString("skin_filename");
-		if (fromFile != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_FILE, fromFile); }
+		if (fromFile != null) { return PlayerSkin.createVerified(this, PlayerSkin.SkinSource.FROM_FILE, fromFile); }
 
 		String fromMineskin = getNullableString("mineskin_url");
-		if (fromMineskin != null) { return new PlayerSkin(PlayerSkin.SkinSource.FROM_MINESKIN, fromMineskin); }
+		if (fromMineskin != null) { return PlayerSkin.createVerified(this, PlayerSkin.SkinSource.FROM_MINESKIN, fromMineskin); }
 
 		return PlayerSkin.DEFAULT;
 	}
@@ -153,6 +153,8 @@ public class CommandInfo implements CommandOutput
 		if (!PlaybackModifiers.checkIfProperName(commandOutput, playerName)) { return null; }
 
 		PlayerSkin playerSkin = getPlayerSkin();
+		if (playerSkin == null) { return null; }
+
 		PlayerAsEntity playerAsEntity = PlayerAsEntity.DISABLED;
 
 		try

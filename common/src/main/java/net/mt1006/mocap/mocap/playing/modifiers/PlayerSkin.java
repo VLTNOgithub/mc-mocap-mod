@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import net.mt1006.mocap.command.io.CommandInfo;
+import net.mt1006.mocap.command.io.CommandOutput;
 import net.mt1006.mocap.mocap.files.SceneFiles;
 import net.mt1006.mocap.mocap.playing.skins.CustomServerSkinManager;
 import net.mt1006.mocap.mocap.settings.Settings;
@@ -20,6 +21,8 @@ import java.util.Scanner;
 public class PlayerSkin
 {
 	public static final PlayerSkin DEFAULT = new PlayerSkin();
+	private static final String MINESKIN_URL_PREFIX1 = "minesk.in/";
+	private static final String MINESKIN_URL_PREFIX2 = "mineskin.org/skins/";
 	private static final String MINESKIN_API_URL = "https://api.mineskin.org/get/uuid/";
 	public final SkinSource skinSource;
 	public final @Nullable String skinPath;
@@ -47,6 +50,24 @@ public class PlayerSkin
 
 		skinSource = SkinSource.fromName(reader.readString("skin_source"));
 		skinPath = reader.readString("skin_path");
+	}
+
+	public static @Nullable PlayerSkin createVerified(CommandOutput commandOutput, SkinSource skinSource, @Nullable String skinPath)
+	{
+		if (skinSource == SkinSource.FROM_MINESKIN && skinPath != null && !verifyMineskinUrl(skinPath))
+		{
+			commandOutput.sendFailure("failure.improper_mineskin_link");
+			return null;
+		}
+		return new PlayerSkin(skinSource, skinPath);
+	}
+
+	private static boolean verifyMineskinUrl(String url)
+	{
+		if (url.startsWith("https://")) { url = url.substring(8); }
+		else if (url.startsWith("http://")) { url = url.substring(7); }
+
+		return url.startsWith(MINESKIN_URL_PREFIX1) || url.startsWith(MINESKIN_URL_PREFIX2);
 	}
 
 	public @Nullable SceneFiles.Writer save()

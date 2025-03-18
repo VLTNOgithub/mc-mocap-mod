@@ -277,6 +277,7 @@
   "mocap.failure.improper_player_name.contains_spaces": "Player name cannot contain spaces",
   "mocap.failure.resolve_player": "Failed to resolve player - this command needs to be invoked by player!",
   "mocap.failure.entity_filter.failed_to_parse": "Failed to parse entity filter - make sure it has correct syntax!",
+  "mocap.failure.improper_mineskin_link": "Improper mineskin.org skin URL!",
 
   "mocap.warning.custom_skin_cache_limit": "§lWarning:§r custom skin cache size reached limit!",
   "mocap.warning.custom_skin_cache_limit.tip": "Rejoin the world to clear it",
