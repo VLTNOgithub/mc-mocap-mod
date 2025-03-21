@@ -15,6 +15,7 @@
 -Added setting "block_allow_scaled" which allows playback of scaled block actions (false by default).
 -Added setting "start_instantly" to start recording instantly instead of waiting for movement or second command (false by default) (thanks to Antimality for suggestion).
 -Added setting "assign_player_name" to assign recorded player names to a recording (false by default).
+-Added setting "show_tips" to enable/disable command tips (true by default).
 -Settings are now divided into 3 categories - recording, playback and advanced.
 -Merged "/mocap scenes list_elements" into "/mocap scenes list" and "/mocap scenes element_info" into "/mocap scenes info".
 -Split "player_info" modifier into "player_name" and "player_skin".

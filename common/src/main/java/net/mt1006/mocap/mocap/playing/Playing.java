@@ -126,7 +126,10 @@ public class Playing
 						: "playback.stop_all.own.not_all");
 			}
 
-			if (playerPlaybacks.size() != playbacks.size()) { commandOutput.sendSuccess("playback.stop_all.own.tip"); }
+			if (playerPlaybacks.size() != playbacks.size() && Settings.SHOW_TIPS.val)
+			{
+				commandOutput.sendSuccess("playback.stop_all.own.tip");
+			}
 		}
 	}
 

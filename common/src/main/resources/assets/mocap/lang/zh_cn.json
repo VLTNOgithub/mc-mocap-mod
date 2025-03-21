@@ -1,12 +1,13 @@
 {
   "mocap.recording.start.player_not_found": "未找到玩家！",
-  "mocap.recording.start.player_not_specified": "未指定玩家！为命令添加玩家名或作为玩家执行",
+  "mocap.recording.start.player_not_specified.with_tip": "未指定玩家！为命令添加玩家名或作为玩家执行",
+  "mocap.recording.start.player_not_specified.no_tip": "未指定玩家！",
   "mocap.recording.start.waiting_for_action.self": "执行任何操作或再次使用\"/mocap recording start\"以开始录制……",
   "mocap.recording.start.recording_started": "录制开始……",
 
   "mocap.recording.stop.stopped": "录制停止——等待选择中……",
-  "mocap.recording.stop.stopped.tip_stop": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording stop\"来舍弃此段录像。",
-  "mocap.recording.stop.stopped.tip_discard": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording discard\"来舍弃此段录像。",
+  "mocap.recording.stop.stopped.stop_tip": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording stop\"来舍弃此段录像。",
+  "mocap.recording.stop.stopped.discard_tip": "使用\"/mocap recording save <recording_name>\"来保存此段录像\n或者使用\"/mocap recording discard\"来舍弃此段录像。",
 
   "mocap.recording.discard.discarded": "此段录像已被舍弃",
 

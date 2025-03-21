@@ -49,6 +49,7 @@ public class Settings
 	public static final SettingFields.BooleanField EXPERIMENTAL_RELEASE_WARNING = ADVANCED.add(fields.add("experimental_release_warning", true));
 	//public static final SettingFields.IntegerField SERVER_PERFORMANCE_WARNING = ADVANCED.add(fields.add("server_performance_warning", 45)); //TODO: implement
 	public static final SettingFields.BooleanField PRETTY_SCENE_FILES = ADVANCED.add(fields.add("pretty_scene_files", true));
+	public static final SettingFields.BooleanField SHOW_TIPS = ADVANCED.add(fields.add("show_tips", true));
 
 	public static void save()
 	{

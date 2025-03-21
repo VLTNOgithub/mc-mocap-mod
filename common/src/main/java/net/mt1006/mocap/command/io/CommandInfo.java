@@ -23,6 +23,7 @@ import net.mt1006.mocap.command.CommandUtils;
 import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.playing.modifiers.PlayerAsEntity;
 import net.mt1006.mocap.mocap.playing.modifiers.PlayerSkin;
+import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +71,7 @@ public class CommandInfo implements CommandOutput
 	@Override public void sendFailureWithTip(String component, Object... args)
 	{
 		source.sendFailure(getTranslatableComponent(component, args));
-		source.sendFailure(getTranslatableComponent(component + ".tip"));
+		if (Settings.SHOW_TIPS.val) { source.sendFailure(getTranslatableComponent(component + ".tip")); }
 	}
 
 	@Override public void sendException(Exception exception, String component, Object... args)

@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.mocap.files.Files;
+import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.network.MocapPacketC2S;
 import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +50,7 @@ public class CustomClientSkinManager
 			if (player == null) { return; }
 
 			Utils.sendMessage(player, "warning.custom_skin_cache_limit");
-			Utils.sendMessage(player, "warning.custom_skin_cache_limit.tip");
+			if (Settings.SHOW_TIPS.val) { Utils.sendMessage(player, "warning.custom_skin_cache_limit.tip"); }
 			clientWarned = true;
 			return;
 		}

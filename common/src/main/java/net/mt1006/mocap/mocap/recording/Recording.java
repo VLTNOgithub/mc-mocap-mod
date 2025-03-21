@@ -175,9 +175,12 @@ public class Recording
 		{
 			case WAITING_FOR_DECISION:
 				commandInfo.sendSuccess("recording.stop.stopped");
-				commandInfo.sendSuccess(quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer)
-						? "recording.stop.stopped.tip_stop"
-						: "recording.stop.stopped.tip_discard");
+				if (Settings.SHOW_TIPS.val)
+				{
+					commandInfo.sendSuccess(quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer)
+							? "recording.stop.stopped.stop_tip"
+							: "recording.stop.stopped.discard_tip");
+				}
 				return true;
 
 			case CANCELED:
@@ -270,7 +273,7 @@ public class Recording
 		if (resolvedContexts.isSingle)
 		{
 			RecordingContext ctx = resolvedContexts.list.iterator().next();
-			boolean showQuickDiscardTip = quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer);
+			boolean showQuickDiscardTip = quickDiscard.canBeUsed(ctx, commandInfo.sourcePlayer) && Settings.SHOW_TIPS.val;
 			boolean success = discardSingle(commandInfo, ctx);
 
 			if (success && ctx.state == RecordingContext.State.DISCARDED && showQuickDiscardTip)
@@ -643,7 +646,7 @@ public class Recording
 				else
 				{
 					commandInfo.sendFailure("recording.resolve.improper_structure");
-					if (!listMode) { commandInfo.sendFailure("recording.resolve.list_tip"); }
+					if (!listMode && Settings.SHOW_TIPS.val) { commandInfo.sendFailure("recording.resolve.list_tip"); }
 				}
 				return null;
 			}
@@ -662,7 +665,7 @@ public class Recording
 				if (matchingContexts.isEmpty())
 				{
 					commandInfo.sendFailure("recording.resolve.not_found");
-					if (!listMode) { commandInfo.sendFailure("recording.resolve.list_tip"); }
+					if (!listMode && Settings.SHOW_TIPS.val) { commandInfo.sendFailure("recording.resolve.list_tip"); }
 					return null;
 				}
 			}

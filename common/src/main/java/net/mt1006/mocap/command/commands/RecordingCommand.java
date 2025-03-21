@@ -13,6 +13,7 @@ import net.mt1006.mocap.command.CommandSuggestions;
 import net.mt1006.mocap.command.CommandUtils;
 import net.mt1006.mocap.command.io.CommandInfo;
 import net.mt1006.mocap.mocap.recording.Recording;
+import net.mt1006.mocap.mocap.settings.Settings;
 
 import java.util.Collection;
 
@@ -67,8 +68,10 @@ public class RecordingCommand
 			Entity entity = commandInfo.sourceEntity;
 			if (!(entity instanceof ServerPlayer))
 			{
-				// It contains tip but uses single message to fit in command blocks "previous output" box
-				commandInfo.sendFailure("recording.start.player_not_specified");
+				// "with_tip" variant contains tip but uses single message to fit in command blocks "previous output" box
+				commandInfo.sendFailure(Settings.SHOW_TIPS.val
+						? "recording.start.player_not_specified.with_tip"
+						: "recording.start.player_not_specified.no_tip");
 				return false;
 			}
 
