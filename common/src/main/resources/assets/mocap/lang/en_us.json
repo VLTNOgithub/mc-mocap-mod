@@ -231,6 +231,7 @@
   "mocap.settings.info.about.drop_from_blocks": "Enables drop from destroyed blocks (recommended with \"playItemEntities\" disabled to prevent duplicates)",
   "mocap.settings.info.about.start_as_recorded": "Makes playback start as recorded player, rather than player starting playback. In case of saved recordings you need to start them with \"assign_player_name\" enabled.",
   "mocap.settings.info.about.chat_playback": "Enables player chat messages playback. Note that recording needs to be recorded with \"chat_recording\" enabled.",
+  "mocap.settings.info.about.invulnerable_playback": "Makes player and other entities in the playback invulnerable to damage",
 
   "mocap.settings.info.about.fluent_movements": "Sets distance to played entity for player to receive additional packets for more fluent movements (>0 - distance in blocks; 0 - disable fluent movements; -1 - no limit)",
   "mocap.settings.info.about.movement_precision": "Sets precision of recording player movement - absolute value of difference between desired position offset and calculated offset won't be higher than 1/val",

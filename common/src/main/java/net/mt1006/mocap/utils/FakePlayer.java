@@ -20,6 +20,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.RelativeMovement;
 import net.minecraft.world.level.portal.DimensionTransition;
+import net.mt1006.mocap.mixin.fields.ServerPlayerFields;
+import net.mt1006.mocap.mocap.playing.playback.RecordingPlayback;
+import net.mt1006.mocap.mocap.settings.Settings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,20 +32,40 @@ import java.util.Set;
 public class FakePlayer extends ServerPlayer
 {
 	private static final ClientInformation DEFAULT_CLIENT_INFO = ClientInformation.createDefault();
+	private final RecordingPlayback playback;
+	private final boolean isInvulnerable;
+	private int dyingTicks = -1;
 
-	public FakePlayer(ServerLevel level, GameProfile profile)
+	public FakePlayer(ServerLevel level, GameProfile profile, RecordingPlayback playback)
 	{
 		super(level.getServer(), level, profile, DEFAULT_CLIENT_INFO);
 		this.connection = new FakePlayerNetHandler(level.getServer(), this, profile);
-		setInvulnerable(true);
+		this.playback = playback;
+		this.isInvulnerable = Settings.INVULNERABLE_PLAYBACK.val;
+
+		if (isInvulnerable) { setInvulnerable(true); }
+		else { ((ServerPlayerFields)this).setSpawnInvulnerableTime(0); }
+	}
+
+	@Override public void tick()
+	{
+		if (!isInvulnerable && invulnerableTime > 0) { invulnerableTime--; }
+
+		if (dyingTicks >= 0)
+		{
+			dyingTicks--;
+			if (dyingTicks == 0) { playback.stop(); }
+		}
 	}
 
 	@Override public Entity changeDimension(@NotNull DimensionTransition dimensionTransition) { return null; }
 
 	@Override public void displayClientMessage(@NotNull Component chatComponent, boolean actionBar) { }
 	@Override public void awardStat(@NotNull Stat stat, int amount) { }
-	@Override public void die(@NotNull DamageSource source) { }
-	@Override public void tick() { }
+	@Override public void die(@NotNull DamageSource source)
+	{
+		dyingTicks = 20;
+	}
 
 	private static class FakePlayerNetHandler extends ServerGamePacketListenerImpl
 	{

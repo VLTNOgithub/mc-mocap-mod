@@ -231,6 +231,7 @@
   "mocap.settings.info.about.drop_from_blocks": "Włącza łup z niszczonych bloków (zalecane przy wyłączonym \"playItemEntities\" w celu zapobiegnięcia duplikatom)",
   "mocap.settings.info.about.start_as_recorded": "Sprawia, że odtwarzanie rozpoczyna się jako nagrany gracz, zamiast jako gracz który rozpoczął odtwarzanie. W przypadku zapisanych nagrań musisz rozpocząć je z włączonym \"assign_player_name\".",
   "mocap.settings.info.about.chat_playback": "Włącza odtwarzanie wiadomości graczy na czacie. Miej na uwadze fakt, że nagrania muszą być nagrane z włączonym \"chat_recording\".",
+  "mocap.settings.info.about.invulnerable_playback": "Sprawia, że gracze i inne byty na nagraniu są odporne na obrażenia",
 
   "mocap.settings.info.about.fluent_movements": "Określa dystans od odtwarzanego bytu do gracza, aby ten otrzymywał dodatkowe pakiety w celu uzyskania płynniejszych ruchów (>0 - dystans w blokach; 0 - wyłącz płynne ruchy; -1 - bez limitu)",
   "mocap.settings.info.about.movement_precision": "Ustawia precyzję nagrywania ruchów gracza - wartość bezwzględna z różnicy między pożądanym przesunięciem pozycji, a obliczonym przesunięciem nie będzie wyższa niż 1/wartość",

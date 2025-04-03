@@ -16,7 +16,8 @@
 		"fields.LevelFields",
 		"fields.LivingEntityFields",
 		"fields.PigFields",
-		"fields.PlayerFields"
+		"fields.PlayerFields",
+		"fields.ServerPlayerFields"
 	],
 	"client":
 	[

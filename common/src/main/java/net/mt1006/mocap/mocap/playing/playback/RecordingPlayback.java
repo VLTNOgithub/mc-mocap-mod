@@ -69,7 +69,7 @@ public class RecordingPlayback extends Playback
 
 		if (!modifiers.playerAsEntity.isEnabled())
 		{
-			FakePlayer fakePlayer = new FakePlayer(level, newProfile);
+			FakePlayer fakePlayer = new FakePlayer(level, newProfile, this);
 			entity = fakePlayer;
 
 			EntityData.PLAYER_SKIN_PARTS.set(fakePlayer, (byte)0b01111111);
@@ -104,7 +104,7 @@ public class RecordingPlayback extends Playback
 
 			recording.initEntityPosition(entity, transformer);
 			entity.setDeltaMovement(0.0, 0.0, 0.0);
-			entity.setInvulnerable(true);
+			entity.setInvulnerable(Settings.INVULNERABLE_PLAYBACK.val);
 			entity.setNoGravity(true);
 			if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
 			modifiers.transformations.scale.applyToPlayer(entity);
@@ -114,7 +114,7 @@ public class RecordingPlayback extends Playback
 
 			if (Settings.ALLOW_GHOSTS.val)
 			{
-				ghost = new FakePlayer(level, newProfile);
+				ghost = new FakePlayer(level, newProfile, this);
 				ghost.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
 				recording.initEntityPosition(ghost, transformer);
 				level.addNewPlayer(ghost);

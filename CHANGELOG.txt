@@ -12,6 +12,7 @@
 -Added "transformations/mirror" playback modifier (thanks to Sky for suggestion).
 -Added "transformations/rotation" playback modifier.
 -Added "entity_filter" playback modifier.
+-Added ability to hurt player and other entities in the playback and setting which controls it - "invulnerable_playback" (true by default).
 -Added setting "allow_ghosts" which enables usage of ghost players when using a "player_as_entity" modifier (true by default).
 -Added setting "pretty_scene_files" which makes scene JSON files look pretty (true by default).
 -Added setting "start_as_recorded" which makes playback of currently recorded player start as this player (false by default) (thanks to damiendier for suggestions).

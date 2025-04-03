@@ -10,6 +10,7 @@ import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.Playing;
 import net.mt1006.mocap.mocap.playing.modifiers.EntityFilter;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
 
@@ -170,7 +171,7 @@ public class EntityUpdate implements Action
 		entity.setPos(ctx.transformer.transformPos(position));
 		entity.setDeltaMovement(0.0, 0.0, 0.0);
 		entity.setNoGravity(true);
-		entity.setInvulnerable(true);
+		entity.setInvulnerable(Settings.INVULNERABLE_PLAYBACK.val);
 		entity.addTag(Playing.MOCAP_ENTITY_TAG);
 		if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
 		ctx.modifiers.transformations.scale.applyToEntity(entity);

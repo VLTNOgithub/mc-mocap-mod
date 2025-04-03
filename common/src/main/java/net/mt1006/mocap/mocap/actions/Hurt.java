@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.settings.Settings;
 
 public class Hurt implements Action
 {
@@ -27,7 +28,7 @@ public class Hurt implements Action
 		entity.hurt(new DamageSource(entity.level().damageSources().fellOutOfWorld().typeHolder()), 1.0f);
 
 		if (livingEntity != null) { livingEntity.setHealth(livingEntity.getMaxHealth()); }
-		entity.setInvulnerable(true);
+		entity.setInvulnerable(Settings.INVULNERABLE_PLAYBACK.val);
 	}
 
 	@Override public void write(RecordingFiles.Writer writer)
