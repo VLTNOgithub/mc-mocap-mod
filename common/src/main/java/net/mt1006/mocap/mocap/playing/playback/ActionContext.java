@@ -165,7 +165,7 @@ public class ActionContext
 		float finRotY = transformRot ? transformer.transformRotation(rotY) : rotY;
 
 		entity.moveTo(finPos, finRotY, rotX);
-		if (ghostPlayer != null) { ghostPlayer.moveTo(finPos, finRotY, rotX); } //TODO: fix
+		if (ghostPlayer != null && entity == mainEntityData.entity) { ghostPlayer.moveTo(finPos, finRotY, rotX); }
 	}
 
 	//TODO: restore?
