@@ -33,20 +33,8 @@ public class RecordingPlayback extends Playback
 	private int pos = 0;
 	private int dyingTicks = 0;
 
-	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording, PlaybackModifiers modifiers)
-	{
-		try { return new RecordingPlayback(commandInfo, recording, modifiers, null); }
-		catch (StartException e) { return null; }
-	}
-
-	protected static @Nullable RecordingPlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
-	{
-		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), parent.modifiers, info); }
-		catch (StartException e) { return null; }
-	}
-
-	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording,
-							  PlaybackModifiers parentModifiers, @Nullable SceneData.Subscene subscene) throws StartException
+	private RecordingPlayback(CommandInfo commandInfo, @Nullable RecordingData recording, PlaybackModifiers parentModifiers,
+							  @Nullable SceneData.Subscene subscene, @Nullable PositionTransformer parentTransformer) throws StartException
 	{
 		super(subscene == null, commandInfo.level, commandInfo.sourcePlayer, parentModifiers, subscene);
 
@@ -76,6 +64,9 @@ public class RecordingPlayback extends Playback
 		Entity entity;
 		FakePlayer ghost = null;
 
+		Vec3 center = modifiers.transformations.calculateCenter(recording.startPos);
+		PositionTransformer transformer = new PositionTransformer(modifiers.transformations, parentTransformer, center);
+
 		if (!modifiers.playerAsEntity.isEnabled())
 		{
 			FakePlayer fakePlayer = new FakePlayer(level, newProfile);
@@ -83,9 +74,9 @@ public class RecordingPlayback extends Playback
 
 			EntityData.PLAYER_SKIN_PARTS.set(fakePlayer, (byte)0b01111111);
 			fakePlayer.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
-			Vec3 startPos = recording.initEntityPosition(fakePlayer, modifiers.offset);
-			recording.preExecute(fakePlayer, modifiers, startPos);
-			modifiers.scale.applyToPlayer(fakePlayer);
+			recording.initEntityPosition(fakePlayer, transformer);
+			recording.preExecute(fakePlayer, transformer);
+			modifiers.transformations.scale.applyToPlayer(fakePlayer);
 
 			packetTargets.broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, fakePlayer));
 			level.addNewPlayer(fakePlayer);
@@ -111,26 +102,38 @@ public class RecordingPlayback extends Playback
 				throw new StartException();
 			}
 
-			Vec3 startPos = recording.initEntityPosition(entity, modifiers.offset);
+			recording.initEntityPosition(entity, transformer);
 			entity.setDeltaMovement(0.0, 0.0, 0.0);
 			entity.setInvulnerable(true);
 			entity.setNoGravity(true);
 			if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
-			modifiers.scale.applyToPlayer(entity);
+			modifiers.transformations.scale.applyToPlayer(entity);
 
 			level.addFreshEntity(entity);
-			recording.preExecute(entity, modifiers, startPos);
+			recording.preExecute(entity, transformer);
 
 			if (Settings.ALLOW_GHOSTS.val)
 			{
 				ghost = new FakePlayer(level, newProfile);
 				ghost.gameMode.changeGameModeForPlayer(Settings.USE_CREATIVE_GAME_MODE.val ? GameType.CREATIVE : GameType.SURVIVAL);
-				recording.initEntityPosition(ghost, modifiers.offset);
+				recording.initEntityPosition(ghost, transformer);
 				level.addNewPlayer(ghost);
 			}
 		}
 
-		this.ctx = new ActionContext(owner, packetTargets, entity, modifiers, ghost, recording.startPos);
+		this.ctx = new ActionContext(owner, packetTargets, entity, recording.startPos, modifiers, ghost, transformer);
+	}
+
+	protected static @Nullable RecordingPlayback startRoot(CommandInfo commandInfo, @Nullable RecordingData recording, PlaybackModifiers modifiers)
+	{
+		try { return new RecordingPlayback(commandInfo, recording, modifiers, null, null); }
+		catch (StartException e) { return null; }
+	}
+
+	protected static @Nullable RecordingPlayback startSubscene(CommandInfo commandInfo, DataManager dataManager, Playback parent, SceneData.Subscene info)
+	{
+		try { return new RecordingPlayback(commandInfo, dataManager.getRecording(info.name), parent.modifiers, info, parent.getPosTransformer()); }
+		catch (StartException e) { return null; }
 	}
 
 	@Override public boolean tick()
@@ -189,6 +192,11 @@ public class RecordingPlayback extends Playback
 	@Override public boolean isFinished()
 	{
 		return finished && dyingTicks == 0;
+	}
+
+	@Override protected PositionTransformer getPosTransformer()
+	{
+		return ctx.transformer;
 	}
 
 	private @Nullable GameProfile getGameProfile(CommandInfo commandInfo)

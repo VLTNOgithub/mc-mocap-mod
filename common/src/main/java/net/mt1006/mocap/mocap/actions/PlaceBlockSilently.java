@@ -3,11 +3,10 @@ package net.mt1006.mocap.mocap.actions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.files.RecordingData;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.playing.playback.PositionTransformer;
 
 public class PlaceBlockSilently implements BlockAction
 {
@@ -45,16 +44,14 @@ public class PlaceBlockSilently implements BlockAction
 		writer.addBlockPos(blockPos);
 	}
 
-	@Override public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos)
+	@Override public void preExecute(Entity entity, PositionTransformer transformer)
 	{
-		previousBlockState.placeSilently(entity, blockPos.offset(modifiers.offset.blockOffset),
-				startPos, modifiers.scale.sceneScale);
+		previousBlockState.placeSilently(entity, transformer, blockPos);
 	}
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		newBlockState.placeSilently(ctx.entity, ctx.shiftBlockPos(blockPos),
-				ctx.startPos, ctx.modifiers.scale.sceneScale);
+		newBlockState.placeSilently(ctx.entity, ctx.transformer, blockPos);
 		return Result.OK;
 	}
 }

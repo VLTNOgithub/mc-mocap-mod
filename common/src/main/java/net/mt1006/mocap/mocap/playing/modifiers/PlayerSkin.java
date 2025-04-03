@@ -20,18 +20,12 @@ import java.util.Scanner;
 
 public class PlayerSkin
 {
-	public static final PlayerSkin DEFAULT = new PlayerSkin();
+	public static final PlayerSkin DEFAULT = new PlayerSkin(SkinSource.DEFAULT, null);
 	private static final String MINESKIN_URL_PREFIX1 = "minesk.in/";
 	private static final String MINESKIN_URL_PREFIX2 = "mineskin.org/skins/";
 	private static final String MINESKIN_API_URL = "https://api.mineskin.org/get/uuid/";
 	public final SkinSource skinSource;
 	public final @Nullable String skinPath;
-
-	private PlayerSkin()
-	{
-		this.skinSource = SkinSource.DEFAULT;
-		this.skinPath = null;
-	}
 
 	public PlayerSkin(SkinSource skinSource, @Nullable String skinPath)
 	{

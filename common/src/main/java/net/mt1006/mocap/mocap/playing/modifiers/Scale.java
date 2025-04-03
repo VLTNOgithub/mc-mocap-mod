@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.files.SceneFiles;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,26 +15,26 @@ public class Scale
 {
 	public static final Scale NORMAL = new Scale(1.0, 1.0);
 	private static final @Nullable ResourceLocation SCALE_ID = BuiltInRegistries.ATTRIBUTE.getKey(Attributes.SCALE.value());
-	public final double playerScale;
-	public final double sceneScale;
+	private static final @Nullable ResourceLocation SPEED_ID = BuiltInRegistries.ATTRIBUTE.getKey(Attributes.MOVEMENT_SPEED.value());
+	public final double playerScale, sceneScale, totalSceneScale;
 
-	public Scale(@Nullable SceneFiles.Reader reader)
+	private Scale(double playerScale, double sceneScale, double totalSceneScale)
 	{
-		if (reader == null)
-		{
-			playerScale = 1.0;
-			sceneScale = 1.0;
-			return;
-		}
-
-		playerScale = reader.readDouble("player_scale", 1.0);
-		sceneScale = reader.readDouble("scene_scale", 1.0);
+		this.playerScale = playerScale;
+		this.sceneScale = sceneScale;
+		this.totalSceneScale = totalSceneScale;
 	}
 
 	private Scale(double playerScale, double sceneScale)
 	{
-		this.playerScale = playerScale;
-		this.sceneScale = sceneScale;
+		this(playerScale, sceneScale, sceneScale);
+	}
+
+	public static Scale fromObject(@Nullable SceneFiles.Reader reader)
+	{
+		return reader != null
+				? new Scale(reader.readDouble("player_scale", 1.0), reader.readDouble("scene_scale", 1.0))
+				: NORMAL;
 	}
 
 	public Scale ofPlayer(double scale)
@@ -64,25 +65,47 @@ public class Scale
 
 	public Scale mergeWithParent(Scale parent)
 	{
-		return new Scale(playerScale * parent.playerScale, sceneScale * parent.sceneScale);
+		return new Scale(playerScale * parent.playerScale, sceneScale, totalSceneScale * parent.totalSceneScale);
+	}
+
+	public boolean canScaleInt(Vec3 startPos)
+	{
+		if (sceneScale == 1.0) { return true; }
+		if (sceneScale != (int)sceneScale) { return false; }
+
+		Vec3 vec = ((int)sceneScale % 2 == 0) ? startPos : startPos.add(0.5, 0.0, 0.5);
+		return vec.x == (int)vec.x && vec.y == (int)vec.y && vec.z == (int)vec.z;
 	}
 
 	public void applyToPlayer(Entity player)
 	{
-		applyToEntity(player, playerScale * sceneScale);
+		applyToEntity(player, playerScale * totalSceneScale);
 	}
 
 	public void applyToEntity(Entity entity)
 	{
-		applyToEntity(entity, sceneScale);
+		applyToEntity(entity, totalSceneScale);
 	}
 
 	private void applyToEntity(Entity entity, double scale)
 	{
 		if (scale == 1.0 || !(entity instanceof LivingEntity) || SCALE_ID == null) { return; }
 
-		AttributeModifier modifier = new AttributeModifier(SCALE_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-		AttributeInstance instance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.SCALE);
-		if (instance != null) { instance.addPermanentModifier(modifier); }
+		AttributeModifier scaleModifier = new AttributeModifier(SCALE_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		AttributeInstance scaleInstance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.SCALE);
+		if (scaleInstance != null) { scaleInstance.addPermanentModifier(scaleModifier); }
+
+		AttributeModifier speedModifier = new AttributeModifier(SPEED_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		AttributeInstance speedInstance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
+		if (speedInstance != null) { speedInstance.addPermanentModifier(speedModifier); }
+	}
+
+	public Vec3 applyToPoint(Vec3 point, Vec3 center)
+	{
+		if (sceneScale == 1.0) { return point; }
+
+		return new Vec3(((point.x - center.x) * sceneScale) + center.x,
+				((point.y - center.y) * sceneScale) + center.y,
+				((point.z - center.z) * sceneScale) + center.z);
 	}
 }

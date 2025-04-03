@@ -1,6 +1,7 @@
 package net.mt1006.mocap.mocap.files;
 
 import com.google.gson.*;
+import com.mojang.datafixers.util.Pair;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.command.CommandSuggestions;
 import net.mt1006.mocap.command.io.CommandOutput;
@@ -129,6 +130,32 @@ public class SceneData
 
 		CommandSuggestions.sceneElementCache.put(sceneName, elements);
 		return elements;
+	}
+
+	public static @Nullable SceneData.Subscene loadSubscene(CommandOutput commandOutput, @Nullable SceneData sceneData,
+															Pair<Integer, @Nullable String> pair)
+	{
+		return loadSubscene(commandOutput, sceneData, pair.getFirst(), pair.getSecond());
+	}
+
+	public static @Nullable SceneData.Subscene loadSubscene(CommandOutput commandOutput, @Nullable SceneData sceneData,
+															int pos, @Nullable String expectedName)
+	{
+		if (sceneData == null) { return null; }
+
+		if (sceneData.subscenes.size() < pos || pos < 1)
+		{
+			commandOutput.sendFailureWithTip("scenes.failure.wrong_element_pos");
+			return null;
+		}
+
+		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
+		if (expectedName != null && !expectedName.equals(subscene.name))
+		{
+			commandOutput.sendFailure("scenes.failure.wrong_subscene_name");
+			return null;
+		}
+		return subscene;
 	}
 
 	public static class Subscene

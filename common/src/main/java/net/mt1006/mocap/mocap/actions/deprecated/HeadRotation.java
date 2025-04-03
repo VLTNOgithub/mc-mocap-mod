@@ -21,8 +21,9 @@ public class HeadRotation implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.entity.setYHeadRot(headRotY);
-		ctx.fluentMovement(() -> new ClientboundRotateHeadPacket(ctx.entity, (byte)Math.floor(headRotY * 256.0f / 360.0f)));
+		float finHeadRot = ctx.transformer.transformRotation(headRotY);
+		ctx.entity.setYHeadRot(finHeadRot);
+		ctx.fluentMovement(() -> new ClientboundRotateHeadPacket(ctx.entity, (byte)Math.floor(finHeadRot * 256.0f / 360.0f)));
 		return Result.OK;
 	}
 }

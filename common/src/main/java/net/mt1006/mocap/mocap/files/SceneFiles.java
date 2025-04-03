@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.command.CommandSuggestions;
 import net.mt1006.mocap.command.CommandUtils;
@@ -127,7 +128,7 @@ public class SceneFiles
 
 		File file = Files.getSceneFile(commandOutput, name);
 		SceneData sceneData = loadSceneData(commandOutput, file);
-		SceneData.Subscene subscene = loadSubscene(commandOutput, sceneData, pos, expectedName);
+		SceneData.Subscene subscene = SceneData.loadSubscene(commandOutput, sceneData, pos, expectedName);
 		if (subscene == null) { return false; }
 
 		sceneData.subscenes.remove(pos - 1);
@@ -138,7 +139,7 @@ public class SceneFiles
 	{
 		File file = Files.getSceneFile(commandInfo, name);
 		SceneData sceneData = loadSceneData(commandInfo, file);
-		SceneData.Subscene subscene = loadSubscene(commandInfo, sceneData, pos, expectedName);
+		SceneData.Subscene subscene = SceneData.loadSubscene(commandInfo, sceneData, pos, expectedName);
 		if (subscene == null) { return false; }
 
 		SceneData.Subscene newSubscene = modifySubscene(commandInfo, subscene);
@@ -200,7 +201,7 @@ public class SceneFiles
 
 		File file = Files.getSceneFile(commandOutput, name);
 		SceneData sceneData = loadSceneData(commandOutput, file);
-		SceneData.Subscene subscene = loadSubscene(commandOutput, sceneData, pos, expectedName);
+		SceneData.Subscene subscene = SceneData.loadSubscene(commandOutput, sceneData, pos, expectedName);
 		if (subscene == null) { return false; }
 
 		commandOutput.sendSuccess("scenes.element_info.info");
@@ -221,8 +222,8 @@ public class SceneFiles
 		int i = 1;
 		for (SceneData.Subscene element : sceneData.subscenes)
 		{
-			commandOutput.sendSuccessLiteral("[%d] %s <%.3f> [%.3f; %.3f; %.3f] (%s)", i++, element.name, element.modifiers.startDelay.seconds,
-					element.modifiers.offset.x, element.modifiers.offset.y, element.modifiers.offset.z, element.modifiers.playerName);
+			commandOutput.sendSuccessLiteral("[%d] %s <%.3f> (%s)", i++, element.name,
+					element.modifiers.startDelay.seconds, element.modifiers.playerName);
 		}
 
 		commandOutput.sendSuccessLiteral("[id] name <start_delay> [x; y; z] (player_name)");
@@ -281,25 +282,6 @@ public class SceneFiles
 		return sceneData.load(commandOutput, file) ? sceneData : null;
 	}
 
-	private static @Nullable SceneData.Subscene loadSubscene(CommandOutput commandOutput, @Nullable SceneData sceneData, int pos, @Nullable String expectedName)
-	{
-		if (sceneData == null) { return null; }
-
-		if (sceneData.subscenes.size() < pos || pos < 1)
-		{
-			commandOutput.sendFailureWithTip("scenes.failure.wrong_element_pos");
-			return null;
-		}
-
-		SceneData.Subscene subscene = sceneData.subscenes.get(pos - 1);
-		if (expectedName != null && !expectedName.equals(subscene.name))
-		{
-			commandOutput.sendFailure("scenes.failure.wrong_subscene_name");
-			return null;
-		}
-		return subscene;
-	}
-
 	public record Writer(JsonObject json)
 	{
 		public Writer()
@@ -308,6 +290,11 @@ public class SceneFiles
 		}
 
 		public void addDouble(String name, double val, double def)
+		{
+			if (val != def) { json.add(name, new JsonPrimitive(val)); }
+		}
+
+		public void addBoolean(String name, boolean val, boolean def)
 		{
 			if (val != def) { json.add(name, new JsonPrimitive(val)); }
 		}
@@ -322,9 +309,21 @@ public class SceneFiles
 			if (object != null) { json.add(name, object.json); }
 		}
 
-		public void addArray(String name, @Nullable JsonArray array)
+		public void addVec3(String name, @Nullable Vec3 vec)
 		{
-			if (array != null) { json.add(name, array); }
+			if (vec != null)
+			{
+				JsonArray array = new JsonArray();
+				array.add(new JsonPrimitive(vec.x));
+				array.add(new JsonPrimitive(vec.y));
+				array.add(new JsonPrimitive(vec.z));
+				json.add(name, array);
+			}
+		}
+
+		public <T extends Enum<T>> void addEnum(String name, T val, T def)
+		{
+			if (val != def) { json.add(name, new JsonPrimitive(val.name().toLowerCase())); }
 		}
 	}
 
@@ -334,6 +333,12 @@ public class SceneFiles
 		{
 			JsonElement element = json.get(name);
 			return element != null ? element.getAsDouble() : def;
+		}
+
+		public boolean readBoolean(String name, boolean def)
+		{
+			JsonElement element = json.get(name);
+			return element != null ? element.getAsBoolean() : def;
 		}
 
 		public @Nullable String readString(String name)
@@ -348,10 +353,20 @@ public class SceneFiles
 			return element != null ? new Reader(element.getAsJsonObject()) : null;
 		}
 
-		public @Nullable JsonArray readArray(String name)
+		public @Nullable Vec3 readVec3(String name)
 		{
 			JsonElement element = json.get(name);
-			return element != null ? element.getAsJsonArray() : null;
+			if (element == null) { return null; }
+
+			JsonArray array = element.getAsJsonArray();
+			return new Vec3(array.get(0).getAsDouble(), array.get(1).getAsDouble(), array.get(2).getAsDouble());
+		}
+
+		public <T extends Enum<T>> T readEnum(String name, T def)
+		{
+			//TODO: test exception
+			JsonElement element = json.get(name);
+			return element != null ? Enum.valueOf(def.getDeclaringClass(), element.getAsString().toUpperCase()) : def;
 		}
 	}
 }

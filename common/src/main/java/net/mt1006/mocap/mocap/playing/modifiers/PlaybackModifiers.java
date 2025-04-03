@@ -17,39 +17,36 @@ public class PlaybackModifiers
 {
 	public @Nullable String playerName;
 	public PlayerSkin playerSkin;
+	public Transformations transformations;
 	public PlayerAsEntity playerAsEntity;
-	public Offset offset;
 	public StartDelay startDelay;
 	public EntityFilter entityFilter;
-	public Scale scale;
 
-	private PlaybackModifiers(@Nullable String playerName, PlayerSkin playerSkin, PlayerAsEntity playerAsEntity,
-							  Offset offset, StartDelay startDelay, EntityFilter entityFilter, Scale scale)
+	private PlaybackModifiers(@Nullable String playerName, PlayerSkin playerSkin, Transformations transformations,
+							  PlayerAsEntity playerAsEntity, StartDelay startDelay, EntityFilter entityFilter)
 	{
 		this.playerName = playerName;
 		this.playerSkin = playerSkin;
+		this.transformations = transformations;
 		this.playerAsEntity = playerAsEntity;
-		this.offset = offset;
 		this.startDelay = startDelay;
 		this.entityFilter = entityFilter;
-		this.scale = scale;
 	}
 
 	public PlaybackModifiers(SceneFiles.Reader reader)
 	{
-		startDelay = StartDelay.fromSeconds(reader.readDouble("start_delay", 0.0));
-		offset = Offset.fromArray(reader.readArray("offset"));
 		playerName = reader.readString("player_name");
 		playerSkin = new PlayerSkin(reader.readObject("player_skin"));
+		transformations = Transformations.fromObject(reader.readObject("transformations"));
 		playerAsEntity = new PlayerAsEntity(reader.readObject("player_as_entity"));
+		startDelay = StartDelay.fromSeconds(reader.readDouble("start_delay", 0.0));
 		entityFilter = EntityFilter.fromString(reader.readString("entity_filter"));
-		scale = new Scale(reader.readObject("scale"));
 	}
 
 	public static PlaybackModifiers empty()
 	{
-		return new PlaybackModifiers(null, PlayerSkin.DEFAULT, PlayerAsEntity.DISABLED,
-				Offset.ZERO, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK, Scale.NORMAL);
+		return new PlaybackModifiers(null, PlayerSkin.DEFAULT, Transformations.empty(),
+				PlayerAsEntity.DISABLED, StartDelay.ZERO, EntityFilter.FOR_PLAYBACK);
 	}
 
 	public PlaybackModifiers mergeWithParent(PlaybackModifiers parent)
@@ -57,35 +54,33 @@ public class PlaybackModifiers
 		return new PlaybackModifiers(
 				playerName != null ? playerName : parent.playerName,
 				playerSkin.mergeWithParent(parent.playerSkin),
+				transformations.mergeWithParent(parent.transformations),
 				playerAsEntity.isEnabled() ? playerAsEntity : parent.playerAsEntity,
-				offset.shift(parent.offset),
 				//startDelay.add(parent.startDelay), //TODO: fix how delaying start works?
 				startDelay,
-				!entityFilter.isDefaultForPlayback() ? entityFilter : parent.entityFilter,
-				scale.mergeWithParent(parent.scale));
+				!entityFilter.isDefaultForPlayback() ? entityFilter : parent.entityFilter);
 	}
 
 	public PlaybackModifiers copy()
 	{
-		return new PlaybackModifiers(playerName, playerSkin, playerAsEntity, offset, startDelay, entityFilter, scale);
+		return new PlaybackModifiers(playerName, playerSkin, transformations.copy(), playerAsEntity, startDelay, entityFilter);
 	}
 
 	public boolean areDefault()
 	{
 		return playerName == null && playerSkin.skinSource == PlayerSkin.SkinSource.DEFAULT
-				&& !playerAsEntity.isEnabled() && offset.isExactlyZero() && startDelay == StartDelay.ZERO
-				&& entityFilter.isDefaultForPlayback() && scale.isNormal();
+				&& transformations.areDefault() && !playerAsEntity.isEnabled() && startDelay == StartDelay.ZERO
+				&& entityFilter.isDefaultForPlayback();
 	}
 
 	public void save(SceneFiles.Writer writer)
 	{
-		writer.addDouble("start_delay", startDelay.seconds, 0.0);
-		writer.addArray("offset", offset.toArray());
 		writer.addString("player_name", playerName);
 		writer.addObject("player_skin", playerSkin.save());
+		writer.addObject("transformations", transformations.save());
 		writer.addObject("player_as_entity", playerAsEntity.save());
+		writer.addDouble("start_delay", startDelay.seconds, 0.0);
 		writer.addString("entity_filter", entityFilter.save());
-		writer.addObject("scale", scale.save());
 	}
 
 	public void list(CommandOutput commandOutput)
@@ -115,20 +110,14 @@ public class PlaybackModifiers
 				break;
 		}
 
+		transformations.list(commandOutput);
 		commandOutput.sendSuccess("scenes.element_info.start_delay", startDelay.seconds, startDelay.ticks);
-		commandOutput.sendSuccess("scenes.element_info.offset", offset.x, offset.y, offset.z);
 
 		if (!playerAsEntity.isEnabled()) { commandOutput.sendSuccess("scenes.element_info.player_as_entity.disabled"); }
 		else { commandOutput.sendSuccess("scenes.element_info.player_as_entity.enabled", playerAsEntity.entityId); }
 
 		if (entityFilter.isDefaultForPlayback()) { commandOutput.sendSuccess("scenes.element_info.entity_filter.disabled"); }
 		else { commandOutput.sendSuccess("scenes.element_info.entity_filter.enabled", entityFilter.save()); }
-
-		if (scale.playerScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.normal"); }
-		else { commandOutput.sendSuccess("scenes.element_info.scale.player_scale.custom", scale.playerScale); }
-
-		if (scale.sceneScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.scale.scene_scale.normal"); }
-		else { commandOutput.sendSuccess("scenes.element_info.scale.scene_scale.custom", scale.sceneScale); }
 	}
 
 	public boolean modify(CommandInfo commandInfo, String propertyName, int propertyNodePosition) throws CommandSyntaxException
@@ -139,9 +128,10 @@ public class PlaybackModifiers
 				startDelay = StartDelay.fromSeconds(commandInfo.getDouble("delay"));
 				return true;
 
-			case "position_offset":
-				offset = new Offset(commandInfo.getDouble("offset_x"), commandInfo.getDouble("offset_y"), commandInfo.getDouble("offset_z"));
-				return true;
+			case "transformations":
+				String transformationType = commandInfo.getNode(propertyNodePosition + 1);
+				if (transformationType == null) { break; }
+				return transformations.modify(commandInfo, transformationType, propertyNodePosition + 1);
 
 			case "player_name":
 				playerName = commandInfo.getString("player_name");
@@ -200,16 +190,6 @@ public class PlaybackModifiers
 					return true;
 				}
 				break;
-
-			case "scale":
-				String scaleType = commandInfo.getNode(propertyNodePosition + 1);
-				if (scaleType == null) { break; }
-
-				double scaleVal = commandInfo.getDouble("scale");
-				if (scaleType.equals("of_player")) { scale = scale.ofPlayer(scaleVal); }
-				else if (scaleType.equals("of_scene")) { scale = scale.ofScene(scaleVal); }
-				else { break; }
-				return true;
 		}
 		return false;
 	}

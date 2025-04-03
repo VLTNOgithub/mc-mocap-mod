@@ -55,8 +55,8 @@ public class LegacySceneDataParser
 		try
 		{
 			subscene.modifiers.startDelay = StartDelay.fromSeconds(Double.parseDouble(scanner.next()));
-			subscene.modifiers.offset = new Offset(Double.parseDouble(scanner.next()),
-					Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()));
+			subscene.modifiers.transformations = Transformations.fromLegacyScene(
+					Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()));
 			subscene.modifiers.playerName = parsePlayerName(scanner);
 			subscene.modifiers.playerSkin = parsePlayerSkin(scanner);
 

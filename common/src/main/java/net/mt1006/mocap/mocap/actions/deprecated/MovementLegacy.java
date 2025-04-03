@@ -31,7 +31,7 @@ public class MovementLegacy implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.changePosition(position, rotation[1], rotation[0], true, true);
+		ctx.changePosition(position, rotation[1], rotation[0], true, true, true);
 
 		ctx.entity.setOnGround(isOnGround);
 		((EntityFields)ctx.entity).callCheckInsideBlocks();

@@ -2,23 +2,18 @@ package net.mt1006.mocap.mocap.actions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.files.RecordingData;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
-import net.mt1006.mocap.mocap.settings.Settings;
-
-import java.util.function.BiConsumer;
+import net.mt1006.mocap.mocap.playing.playback.PositionTransformer;
 
 public interface BlockAction extends Action
 {
-	void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos);
+	void preExecute(Entity entity, PositionTransformer transformer);
 
 	class BlockStateData
 	{
@@ -53,19 +48,19 @@ public interface BlockAction extends Action
 			writer.addInt(idToWrite);
 		}
 
-		public void place(Entity entity, BlockPos blockPos, Vec3 startPos, double scale)
+		public void place(Entity entity, PositionTransformer transformer, BlockPos blockPos)
 		{
-			if (scale == 1.0) { placeReal(entity, blockPos); }
-			else if (allowScaled(scale)) { scaledOperation(entity, blockPos, startPos, scale, this::placeReal); }
+			BlockState finBlockState = transformer.transformBlockState(blockState);
+			transformer.transformBlockPos(blockPos).forEach((b) -> placeSingle(entity, b, finBlockState));
 		}
 
-		public void placeSilently(Entity entity, BlockPos blockPos, Vec3 startPos, double scale)
+		public void placeSilently(Entity entity, PositionTransformer transformer, BlockPos blockPos)
 		{
-			if (scale == 1.0) { placeRealSilently(entity, blockPos); }
-			else if (allowScaled(scale)) { scaledOperation(entity, blockPos, startPos, scale, this::placeRealSilently); }
+			BlockState finBlockState = transformer.transformBlockState(blockState);
+			transformer.transformBlockPos(blockPos).forEach((b) -> placeSingleSilently(entity, b, finBlockState));
 		}
 
-		private void placeReal(Entity entity, BlockPos blockPos)
+		private static void placeSingle(Entity entity, BlockPos blockPos, BlockState blockState)
 		{
 			Level level = entity.level();
 
@@ -83,36 +78,9 @@ public interface BlockAction extends Action
 			}
 		}
 
-		private void placeRealSilently(Entity entity, BlockPos blockPos)
+		private static void placeSingleSilently(Entity entity, BlockPos blockPos, BlockState blockState)
 		{
 			entity.level().setBlock(blockPos, blockState, 3);
-		}
-
-		public static void scaledOperation(Entity entity, BlockPos blockPos, Vec3 startPos,
-										   double scale, BiConsumer<Entity, BlockPos> func)
-		{
-			int n = (int)scale;
-			BlockPos startBlockPos = new BlockPos(Mth.floor(startPos.x), Mth.floor(startPos.y), Mth.floor(startPos.z));
-			BlockPos finalBlockPos = blockPos.subtract(startBlockPos).multiply(n).offset(startBlockPos);
-
-			int bx = finalBlockPos.getX(), by = finalBlockPos.getY(), bz = finalBlockPos.getZ();
-			for (int y = by; y < by + n; y++)
-			{
-				int cornerX = bx - (n / 2);
-				for (int x = cornerX; x < cornerX + n; x++)
-				{
-					int cornerZ = bz - (n / 2);
-					for (int z = cornerZ; z < cornerZ + n; z++)
-					{
-						func.accept(entity, new BlockPos(x, y, z));
-					}
-				}
-			}
-		}
-
-		public static boolean allowScaled(double scale)
-		{
-			return (scale == (int)scale && Settings.BLOCK_ALLOW_SCALED.val);
 		}
 	}
 }

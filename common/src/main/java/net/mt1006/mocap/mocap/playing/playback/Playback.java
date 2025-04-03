@@ -83,6 +83,8 @@ public abstract class Playback
 
 	public abstract boolean isFinished();
 
+	protected abstract PositionTransformer getPosTransformer();
+
 	protected boolean shouldExecuteTick()
 	{
 		if (tickCounter == 0) { return true; }

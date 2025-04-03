@@ -1,6 +1,7 @@
 package net.mt1006.mocap.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -54,10 +55,43 @@ public class CommandUtils
 																	   Command<CommandSourceStack> command, boolean isScene)
 	{
 		builder.then(Commands.literal("start_delay").then(Commands.argument("delay", DoubleArgumentType.doubleArg(0.0)).executes(command)));
-		builder.then(Commands.literal("position_offset").
-			then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).
-			then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
-			then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(command)))));
+		builder.then(Commands.literal("transformations").
+			then(Commands.literal("rotation").
+				then(Commands.argument("deg", DoubleArgumentType.doubleArg()).executes(command).
+				then(Commands.argument("center_offset_x", DoubleArgumentType.doubleArg()).
+				then(Commands.argument("center_offset_z", DoubleArgumentType.doubleArg()).executes(command))))).
+			then(Commands.literal("mirror").
+				then(Commands.literal("none").executes(command)).
+				then(Commands.literal("x").executes(command)).
+				then(Commands.literal("z").executes(command)).
+				then(Commands.literal("xz").executes(command))).
+			then(Commands.literal("scale").
+				then(Commands.literal("of_player").
+					then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command))).
+				then(Commands.literal("of_scene").
+					then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command)))).
+			then(Commands.literal("offset").
+				then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).
+				then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
+				then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(command))))).
+			then(Commands.literal("config").
+				then(Commands.literal("round_block_pos").
+					then(Commands.argument("round", BoolArgumentType.bool()).executes(command))).
+				then(Commands.literal("recording_center").
+					then(Commands.literal("auto").executes(command)).
+					then(Commands.literal("block_center").executes(command)).
+					then(Commands.literal("block_corner").executes(command)).
+					then(Commands.literal("actual").executes(command))).
+				then(Commands.literal("scene_center").
+					then(Commands.literal("common_first").executes(command)).
+					then(Commands.literal("common_last").executes(command)).
+					then(Commands.literal("common_specific").
+						then(Commands.argument("specific_scene_element", StringArgumentType.string()).executes(command))). //TODO: add suggestions
+					then(Commands.literal("individual").executes(command))).
+				then(Commands.literal("center_offset").
+					then(Commands.argument("offset_x", DoubleArgumentType.doubleArg()).
+					then(Commands.argument("offset_y", DoubleArgumentType.doubleArg()).
+					then(Commands.argument("offset_z", DoubleArgumentType.doubleArg()).executes(command)))))));
 		builder.then(Commands.literal("player_name").then(playerNameArgument(command)));
 		builder.then(withModelArguments(buildContext, Commands.literal("player_skin"), command, false));
 		builder.then(Commands.literal("player_as_entity").
@@ -69,11 +103,6 @@ public class CommandUtils
 			then(Commands.literal("disabled").executes(command)).
 			then(Commands.literal("enabled").
 				then(Commands.argument("entity_filter", StringArgumentType.greedyString()).executes(command))));
-		builder.then(Commands.literal("scale").
-			then(Commands.literal("of_player").
-				then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command))).
-			then(Commands.literal("of_scene").
-				then(Commands.argument("scale", DoubleArgumentType.doubleArg(0.0)).executes(command))));
 
 		if (isScene)
 		{

@@ -20,8 +20,8 @@ import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.actions.BlockAction;
 import net.mt1006.mocap.mocap.actions.NextTick;
 import net.mt1006.mocap.mocap.actions.SkipTicks;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.playing.playback.PositionTransformer;
 import net.mt1006.mocap.mocap.settings.Settings;
 import net.mt1006.mocap.utils.EntityData;
 import net.mt1006.mocap.utils.Utils;
@@ -165,20 +165,20 @@ public class RecordingData
 		if (playerNameSpecified) { playerName = reader.readString(); }
 	}
 
-	public Vec3 initEntityPosition(Entity entity, Vec3 posOffset)
+	public void initEntityPosition(Entity entity, PositionTransformer transformer)
 	{
-		entity.moveTo(startPos.add(posOffset), startRot[0], startRot[1]);
-		entity.setYHeadRot(startRot[0]);
-		return posOffset.add(startPos);
+		float rotY = transformer.transformRotation(startRot[0]);
+		entity.moveTo(transformer.transformPos(startPos), rotY, startRot[1]);
+		entity.setYHeadRot(rotY);
 	}
 
-	public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos)
+	public void preExecute(Entity entity, PositionTransformer transformer)
 	{
 		if (Settings.BLOCK_INITIALIZATION.val)
 		{
 			for (int i = blockActions.size() - 1; i >= 0; i--)
 			{
-				blockActions.get(i).preExecute(entity, modifiers, startPos);
+				blockActions.get(i).preExecute(entity, transformer);
 			}
 		}
 	}

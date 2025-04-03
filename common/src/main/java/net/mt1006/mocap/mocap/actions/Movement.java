@@ -314,15 +314,17 @@ public class Movement implements Action
 		float rotX = updateRot ? rotation[0] : ctx.entity.getXRot();
 		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
 
-		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative());
-		if (updateRot) { ctx.entity.setYHeadRot(headRot); }
+		float finHeadRot = ctx.transformer.transformRotation(headRot);
+
+		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative(), updateRot);
+		if (updateRot) { ctx.entity.setYHeadRot(finHeadRot); }
 		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
 		((EntityFields)ctx.entity).callCheckInsideBlocks();
 
 		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity)); //TODO: try packet with higher precision
 		if (updateRot)
 		{
-			byte headRotData = (byte)Math.floor(headRot * 256.0f / 360.0f);
+			byte headRotData = (byte)Math.floor(finHeadRot * 256.0f / 360.0f);
 			ctx.fluentMovement(() -> new ClientboundRotateHeadPacket(ctx.entity, headRotData));
 		}
 		return Result.OK;

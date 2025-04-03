@@ -46,7 +46,14 @@ public class CommandsContext
 				? CommandsContext.get(source).modifiers.copy()
 				: PlaybackModifiers.empty();
 
-		return simpleModifiers.mergeWithParent(modifiers);
+		PlaybackModifiers mergedModifiers = simpleModifiers.mergeWithParent(modifiers);
+
+		// This is done to make PositionTransformer center calculating work properly for starting recording (outside of scene)
+		// when playback modifiers are enabled. This can be done because simpleModifiers transformations are default transformations.
+		mergedModifiers.transformations = modifiers.transformations;
+		//TODO: make it in a better way
+
+		return mergedModifiers;
 	}
 
 	public boolean setSync(boolean sync)

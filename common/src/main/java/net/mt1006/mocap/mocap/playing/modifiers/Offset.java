@@ -1,45 +1,32 @@
 package net.mt1006.mocap.mocap.playing.modifiers;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class Offset extends Vec3
 {
 	public static final Offset ZERO = new Offset(0.0, 0.0, 0.0);
-	public final Vec3i blockOffset;
+	public final boolean isZero, isInt;
 
 	public Offset(double x, double y, double z)
 	{
 		super(x, y, z);
-		blockOffset = new Vec3i((int)Math.round(x), (int)Math.round(y), (int)Math.round(z));
+		isZero = (x == 0.0 && y == 0.0 && z == 0.0);
+		isInt = (isZero || (x == (int)x && y == (int)y && z == (int)z));
 	}
 
-	public static Offset fromArray(@Nullable JsonArray array)
+	public static Offset fromVec3(@Nullable Vec3 vec)
 	{
-		return array != null
-				? new Offset(array.get(0).getAsDouble(), array.get(1).getAsDouble(), array.get(2).getAsDouble())
-				: ZERO;
+		return vec != null ? new Offset(vec.x, vec.y, vec.z) : ZERO;
 	}
 
-	public JsonArray toArray()
+	public @Nullable Vec3 save()
 	{
-		JsonArray array = new JsonArray();
-		array.add(new JsonPrimitive(x));
-		array.add(new JsonPrimitive(y));
-		array.add(new JsonPrimitive(z));
-		return array;
+		return isZero ? null : this;
 	}
 
-	public Offset shift(Offset val)
+	public Vec3 apply(Vec3 point)
 	{
-		return new Offset(x + val.x, y + val.y, z + val.z);
-	}
-
-	public boolean isExactlyZero()
-	{
-		return x == 0.0 && y == 0.0 && z == 0.0;
+		return new Vec3(x + point.x, y + point.y, z + point.z);
 	}
 }

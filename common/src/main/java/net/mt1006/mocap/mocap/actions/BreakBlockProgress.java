@@ -2,10 +2,11 @@ package net.mt1006.mocap.mocap.actions;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.playing.playback.PositionTransformer;
+
+import java.util.List;
 
 public class BreakBlockProgress implements BlockAction
 {
@@ -32,22 +33,12 @@ public class BreakBlockProgress implements BlockAction
 		writer.addInt(progress);
 	}
 
-	@Override public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos) {}
+	@Override public void preExecute(Entity entity, PositionTransformer transformer) {}
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		double scale = ctx.modifiers.scale.sceneScale;
-		BlockPos shiftedBlockPos = ctx.shiftBlockPos(blockPos);
-
-		if (scale == 1.0)
-		{
-			ctx.level.destroyBlockProgress(ctx.entity.getId(), shiftedBlockPos, progress);
-		}
-		else if (BlockStateData.allowScaled(scale))
-		{
-			BlockStateData.scaledOperation(ctx.entity, shiftedBlockPos, ctx.startPos, scale,
-					(entity, pos) -> ctx.level.destroyBlockProgress(entity.getId(), pos, progress));
-		}
+		List<BlockPos> blocks = ctx.transformer.transformBlockPos(blockPos);
+		if (!blocks.isEmpty()) { ctx.level.destroyBlockProgress(ctx.entity.getId(), blocks.get(0), progress); }
 		return Result.OK;
 	}
 }

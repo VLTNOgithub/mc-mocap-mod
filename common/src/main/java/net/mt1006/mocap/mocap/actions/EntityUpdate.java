@@ -167,16 +167,16 @@ public class EntityUpdate implements Action
 		Entity entity = EntityType.create(nbt, ctx.level).orElse(null);
 		if (entity == null || !filter.isAllowed(entity)) { return Result.IGNORED; }
 
-		entity.setPos(position.add(ctx.modifiers.offset));
+		entity.setPos(ctx.transformer.transformPos(position));
 		entity.setDeltaMovement(0.0, 0.0, 0.0);
 		entity.setNoGravity(true);
 		entity.setInvulnerable(true);
 		entity.addTag(Playing.MOCAP_ENTITY_TAG);
 		if (entity instanceof Mob) { ((Mob)entity).setNoAi(true); }
-		ctx.modifiers.scale.applyToEntity(entity);
+		ctx.modifiers.transformations.scale.applyToEntity(entity);
 
 		ctx.level.addFreshEntity(entity);
-		ctx.entityDataMap.put(id, new ActionContext.EntityData(entity));
+		ctx.entityDataMap.put(id, new ActionContext.EntityData(entity, position));
 		return Result.OK;
 	}
 

@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
-import net.mt1006.mocap.mocap.playing.modifiers.PlaybackModifiers;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.mocap.playing.playback.PositionTransformer;
 
 public class RightClickBlock implements BlockAction
 {
@@ -76,7 +76,7 @@ public class RightClickBlock implements BlockAction
 		writer.addBoolean(offHand);
 	}
 
-	@Override public void preExecute(Entity entity, PlaybackModifiers modifiers, Vec3 startPos) {}
+	@Override public void preExecute(Entity entity, PositionTransformer transformer) {}
 
 	@Override public Result execute(ActionContext ctx)
 	{
@@ -84,16 +84,19 @@ public class RightClickBlock implements BlockAction
 		Player player = (ctx.entity instanceof Player) ? (Player)ctx.entity : ctx.ghostPlayer;
 		if (player == null) { return Result.IGNORED; }
 
-		BlockState blockState = ctx.level.getBlockState(ctx.shiftBlockPos(blockHitResult.getBlockPos()));
-		if (blockState.getBlock() instanceof BedBlock) { return Result.OK; }
-
 		InteractionHand interactionHand = offHand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
 		ItemStack itemStack = player.getItemInHand(interactionHand);
 
-		ItemInteractionResult result = blockState.useItemOn(itemStack, ctx.level, player, interactionHand, blockHitResult);
-		if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION)
+		for (BlockPos blockPos : ctx.transformer.transformBlockPos(blockHitResult.getBlockPos()))
 		{
-			blockState.useWithoutItem(ctx.level, player, blockHitResult);
+			BlockState blockState = ctx.level.getBlockState(blockPos);
+			if (blockState.getBlock() instanceof BedBlock) { continue; }
+
+			ItemInteractionResult result = blockState.useItemOn(itemStack, ctx.level, player, interactionHand, blockHitResult);
+			if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION)
+			{
+				blockState.useWithoutItem(ctx.level, player, blockHitResult);
+			}
 		}
 		return Result.OK;
 	}

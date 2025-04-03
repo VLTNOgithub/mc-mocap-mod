@@ -1,18 +1,13 @@
 package net.mt1006.mocap.mocap.playing.playback;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.Vec3;
 import net.mt1006.mocap.MocapMod;
 import net.mt1006.mocap.events.PlayerConnectionEvent;
@@ -40,24 +35,26 @@ public class ActionContext
 	public final ServerLevel level;
 	public final PlaybackModifiers modifiers;
 	public final @Nullable FakePlayer ghostPlayer;
-	public final Vec3 startPos;
+	public final PositionTransformer transformer;
 	private boolean mainEntityRemoved = false;
+	private @Nullable EntityData currentEntityData = null;
 	public Entity entity;
-	private double[] position;
+	private Vec3 position;
+	private double rotY, rotX;
 	public int skippingTicks = 0;
 
-	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity,
-						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, Vec3 startPos)
+	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity, Vec3 startPos,
+						 PlaybackModifiers modifiers, @Nullable FakePlayer ghostPlayer, PositionTransformer transformer)
 	{
 		if (!(entity.level() instanceof ServerLevel)) { throw new RuntimeException("Failed to get ServerLevel for ActionContext!"); }
 
 		this.owner = owner;
 		this.packetTargets = packetTargets;
-		this.mainEntityData = new EntityData(entity);
+		this.mainEntityData = new EntityData(entity, startPos);
 		this.level = (ServerLevel)entity.level();
 		this.modifiers = modifiers;
 		this.ghostPlayer = ghostPlayer;
-		this.startPos = modifiers.offset.add(startPos);
+		this.transformer = transformer;
 
 		setMainContextEntity();
 	}
@@ -78,8 +75,11 @@ public class ActionContext
 
 	private void setContextEntity(EntityData data)
 	{
+		if (currentEntityData != null) { currentEntityData.lastPosition = position; }
+		currentEntityData = data;
+
 		entity = data.entity;
-		position = data.position;
+		position = data.lastPosition;
 	}
 
 	public void broadcast(Packet<?> packet)
@@ -154,32 +154,22 @@ public class ActionContext
 		playerToRemove.getAdvancements().stopListening();
 	}
 
-	public void changePosition(Vec3 pos, float rotY, float rotX, boolean shiftXZ, boolean shiftY)
+	public void changePosition(Vec3 newPos, float rotY, float rotX, boolean shiftXZ, boolean shiftY, boolean transformRot)
 	{
-		changePosition(pos.x, pos.y, pos.z, rotY, rotX, shiftXZ, shiftY);
+		double x = shiftXZ ? (position.x + newPos.x) : newPos.x;
+		double y = shiftY ? (position.y + newPos.y) : newPos.y;
+		double z = shiftXZ ? (position.z + newPos.z) : newPos.z;
+		position = new Vec3(x, y, z);
+
+		Vec3 finPos = transformer.transformPos(position);
+		float finRotY = transformRot ? transformer.transformRotation(rotY) : rotY;
+
+		entity.moveTo(finPos, finRotY, rotX);
+		if (ghostPlayer != null) { ghostPlayer.moveTo(finPos, finRotY, rotX); } //TODO: fix
 	}
 
-	public void changePosition(double x, double y, double z, float rotY, float rotX, boolean shiftXZ, boolean shiftY)
-	{
-		position[0] = shiftXZ ? (position[0] + x) : (modifiers.offset.x + x);
-		position[1] = shiftY ? (position[1] + y) : (modifiers.offset.y + y);
-		position[2] = shiftXZ ? (position[2] + z) : (modifiers.offset.z + z);
-
-		double scale = modifiers.scale.sceneScale;
-		double[] moveToPos = position;
-		if (scale != 1.0)
-		{
-			moveToPos = new double[3];
-			moveToPos[0] = ((position[0] - startPos.x) * scale) + startPos.x;
-			moveToPos[1] = ((position[1] - startPos.y) * scale) + startPos.y;
-			moveToPos[2] = ((position[2] - startPos.z) * scale) + startPos.z;
-		}
-
-		entity.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX);
-		if (ghostPlayer != null) { ghostPlayer.moveTo(moveToPos[0], moveToPos[1], moveToPos[2], rotY, rotX); }
-	}
-
-	public void changePosition(double x, double y, double z, float rotY, float rotX, @Nullable ResourceLocation dimensionId)
+	//TODO: restore?
+	/*public void changePosition(double x, double y, double z, float rotY, float rotX, @Nullable ResourceLocation dimensionId)
 	{
 		ServerLevel newLevel = dimensionId != null
 				? level.getServer().getLevel(ResourceKey.create(Registries.DIMENSION, dimensionId))
@@ -200,7 +190,7 @@ public class ActionContext
 
 		entity.changeDimension(dimensionTransition);
 		if (ghostPlayer != null) { ghostPlayer.changeDimension(dimensionTransition); }
-	}
+	}*/
 
 	private static void removeEntity(Entity entity)
 	{
@@ -229,24 +219,15 @@ public class ActionContext
 		}
 	}
 
-	public BlockPos shiftBlockPos(BlockPos blockPos)
-	{
-		return blockPos.offset(modifiers.offset.blockOffset);
-	}
-
 	public static class EntityData
 	{
 		public final Entity entity;
-		public final double[] position = new double[3];
+		public Vec3 lastPosition;
 
-		public EntityData(Entity entity)
+		public EntityData(Entity entity, Vec3 startPos)
 		{
 			this.entity = entity;
-
-			Vec3 posVec = entity.position();
-			this.position[0] = posVec.x;
-			this.position[1] = posVec.y;
-			this.position[2] = posVec.z;
+			this.lastPosition = startPos;
 		}
 	}
 }
