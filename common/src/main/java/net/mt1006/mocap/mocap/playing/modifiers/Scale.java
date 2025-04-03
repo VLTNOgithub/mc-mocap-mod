@@ -15,7 +15,6 @@ public class Scale
 {
 	public static final Scale NORMAL = new Scale(1.0, 1.0);
 	private static final @Nullable ResourceLocation SCALE_ID = BuiltInRegistries.ATTRIBUTE.getKey(Attributes.SCALE.value());
-	private static final @Nullable ResourceLocation SPEED_ID = BuiltInRegistries.ATTRIBUTE.getKey(Attributes.MOVEMENT_SPEED.value());
 	public final double playerScale, sceneScale, totalSceneScale;
 
 	private Scale(double playerScale, double sceneScale, double totalSceneScale)
@@ -91,13 +90,9 @@ public class Scale
 	{
 		if (scale == 1.0 || !(entity instanceof LivingEntity) || SCALE_ID == null) { return; }
 
-		AttributeModifier scaleModifier = new AttributeModifier(SCALE_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-		AttributeInstance scaleInstance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.SCALE);
-		if (scaleInstance != null) { scaleInstance.addPermanentModifier(scaleModifier); }
-
-		AttributeModifier speedModifier = new AttributeModifier(SPEED_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-		AttributeInstance speedInstance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.MOVEMENT_SPEED);
-		if (speedInstance != null) { speedInstance.addPermanentModifier(speedModifier); }
+		AttributeModifier modifier = new AttributeModifier(SCALE_ID, scale - 1.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+		AttributeInstance instance = ((LivingEntity)entity).getAttributes().getInstance(Attributes.SCALE);
+		if (instance != null) { instance.addPermanentModifier(modifier); }
 	}
 
 	public Vec3 applyToPoint(Vec3 point, Vec3 center)

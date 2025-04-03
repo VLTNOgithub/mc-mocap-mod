@@ -226,7 +226,7 @@ public class SceneFiles
 					element.modifiers.startDelay.seconds, element.modifiers.playerName);
 		}
 
-		commandOutput.sendSuccessLiteral("[id] name <start_delay> [x; y; z] (player_name)");
+		commandOutput.sendSuccessLiteral("[id] name <start_delay> (player_name)");
 		return true;
 	}
 
@@ -364,7 +364,6 @@ public class SceneFiles
 
 		public <T extends Enum<T>> T readEnum(String name, T def)
 		{
-			//TODO: test exception
 			JsonElement element = json.get(name);
 			return element != null ? Enum.valueOf(def.getDeclaringClass(), element.getAsString().toUpperCase()) : def;
 		}

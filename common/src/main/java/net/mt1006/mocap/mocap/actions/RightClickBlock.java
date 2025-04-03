@@ -80,7 +80,6 @@ public class RightClickBlock implements BlockAction
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		//TODO: test!
 		Player player = (ctx.entity instanceof Player) ? (Player)ctx.entity : ctx.ghostPlayer;
 		if (player == null) { return Result.IGNORED; }
 

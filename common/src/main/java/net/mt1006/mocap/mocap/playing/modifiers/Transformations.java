@@ -310,7 +310,6 @@ public class Transformations
 				}
 
 				if (nodesX.isEmpty()) { continue; }
-				if (nodesX.size() != 2) { MocapMod.LOGGER.warn("Voxelization error?"); } //TODO: remove
 
 				int startX = Collections.min(nodesX);
 				int stopX = Collections.max(nodesX);
