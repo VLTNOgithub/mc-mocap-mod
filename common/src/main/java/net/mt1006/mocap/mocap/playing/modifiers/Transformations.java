@@ -38,7 +38,7 @@ public class Transformations
 	private Transformations(SceneFiles.Reader reader)
 	{
 		parent = null;
-		rotation = Rotation.fromObject(reader.readObject("rotation"));
+		rotation = Rotation.fromDouble(reader.readDouble("rotation", 0.0));
 		mirror = Mirror.fromString(reader.readString("mirror"));
 		scale = Scale.fromObject(reader.readObject("scale"));
 		offset = Offset.fromVec3(reader.readVec3("offset"));
@@ -138,7 +138,7 @@ public class Transformations
 		if (areDefault()) { return null; }
 
 		SceneFiles.Writer writer = new SceneFiles.Writer();
-		writer.addObject("rotation", rotation.save());
+		writer.addDouble("rotation", rotation.deg, 0.0);
 		writer.addString("mirror", mirror.save());
 		writer.addVec3("offset", offset.save());
 		writer.addObject("scale", scale.save());
@@ -149,7 +149,7 @@ public class Transformations
 
 	public void list(CommandOutput commandOutput)
 	{
-		commandOutput.sendSuccess("scenes.element_info.transformations.rotation", rotation.deg, rotation.shiftX, rotation.shiftZ);
+		commandOutput.sendSuccess("scenes.element_info.transformations.rotation", rotation.deg);
 		commandOutput.sendSuccess("scenes.element_info.transformations.mirror." + mirror.name().toLowerCase());
 
 		if (scale.playerScale == 1.0) { commandOutput.sendSuccess("scenes.element_info.transformations.player_scale.normal"); }
@@ -167,8 +167,7 @@ public class Transformations
 		switch (propertyName)
 		{
 			case "rotation":
-				rotation = new Rotation(commandInfo.getDouble("deg"),
-						commandInfo.getDoubleOrZero("center_offset_x"), commandInfo.getDoubleOrZero("center_offset_z"));
+				rotation = new Rotation(commandInfo.getDouble("deg"));
 				break;
 
 			case "mirror":
@@ -216,7 +215,6 @@ public class Transformations
 		if (ignorable) { return point; }
 
 		point = rotation.apply(point, center);
-		center = rotation.apply(center, center);
 		point = mirror.apply(point, center);
 		point = scale.applyToPoint(point, center);
 		point = offset.apply(point);
@@ -252,7 +250,7 @@ public class Transformations
 
 	private List<BlockPos> voxelizeCube(Vec3 pos1, Vec3 pos2)
 	{
-		if (isIntVec(pos1) && pos1.add(1.0, 1.0, 1.0).equals(pos2))
+		if (isIntVec(pos1) && (pos1.x + 1.0 == pos2.x) && (pos1.y + 1.0 == pos2.y) && (pos1.z + 1.0 == pos2.z))
 		{
 			return List.of(new BlockPos((int)pos1.x, (int)pos1.y, (int)pos1.z));
 		}

@@ -113,12 +113,6 @@ public class CommandInfo implements CommandOutput
 		return DoubleArgumentType.getDouble(ctx, name);
 	}
 
-	public double getDoubleOrZero(String name)
-	{
-		try { return DoubleArgumentType.getDouble(ctx, name); }
-		catch (Exception e) { return 0.0; }
-	}
-
 	public boolean getBool(String name)
 	{
 		return BoolArgumentType.getBool(ctx, name);

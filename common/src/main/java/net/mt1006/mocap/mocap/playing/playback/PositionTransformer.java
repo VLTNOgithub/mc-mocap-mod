@@ -13,14 +13,13 @@ public class PositionTransformer
 {
 	private final Transformations transformations;
 	private final @Nullable PositionTransformer parent;
-	private final @Nullable Vec3 center, shiftedCenter;
+	private final @Nullable Vec3 center;
 
 	public PositionTransformer(Transformations transformations, @Nullable PositionTransformer parent, @Nullable Vec3 center)
 	{
 		this.parent = getProperParent(parent, transformations);
 		this.transformations = transformations;
 		this.center = center;
-		this.shiftedCenter = center != null ? transformations.apply(center, center) : null;
 	}
 
 	private static @Nullable PositionTransformer getProperParent(@Nullable PositionTransformer parent, Transformations transformations)
@@ -38,10 +37,10 @@ public class PositionTransformer
 	{
 		if (childCenter == null && center == null) { throw new RuntimeException("Both childCenter and center are null!"); }
 
-		point = transformations.apply(point, center != null ? center : childCenter);
-		Vec3 nextCenter = shiftedCenter != null ? shiftedCenter : transformations.apply(childCenter, childCenter);
+		Vec3 centerToUse = center != null ? center : childCenter;
+		point = transformations.apply(point, centerToUse);
 
-		return parent != null ? parent.transformPos(point, nextCenter) : point;
+		return parent != null ? parent.transformPos(point, centerToUse) : point;
 	}
 
 	public List<BlockPos> transformBlockPos(BlockPos blockPos)
@@ -53,11 +52,11 @@ public class PositionTransformer
 	{
 		if (childCenter == null && center == null) { throw new RuntimeException("Both childCenter and center are null!"); }
 
-		List<BlockPos> list = transformations.applyToBlockPos(blockPos, center != null ? center : childCenter);
+		Vec3 centerToUse = center != null ? center : childCenter;
+		List<BlockPos> list = transformations.applyToBlockPos(blockPos, centerToUse);
 		if (list.size() > 1 && !Settings.BLOCK_ALLOW_SCALED.val) { return List.of(); }
-		Vec3 nextCenter = shiftedCenter != null ? shiftedCenter : transformations.apply(childCenter, childCenter);
 
-		return parent != null ? parent.transformBlockPos(list, nextCenter) : list;
+		return parent != null ? parent.transformBlockPos(list, centerToUse) : list;
 	}
 
 	public BlockState transformBlockState(BlockState blockState)

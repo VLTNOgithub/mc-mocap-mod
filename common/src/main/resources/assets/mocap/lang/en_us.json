@@ -127,7 +127,7 @@
   "mocap.scenes.element_info.skin.file": "§lSkin:§r from file - %s",
   "mocap.scenes.element_info.skin.mineskin": "§lSkin:§r from mineskin.org:",
   "mocap.scenes.element_info.start_delay": "§lStart delay:§r %s s (%d ticks)",
-  "mocap.scenes.element_info.transformations.rotation": "§lTransformations > Rotation:§r %f deg [%f; %f]",
+  "mocap.scenes.element_info.transformations.rotation": "§lTransformations > Rotation:§r %f deg",
   "mocap.scenes.element_info.transformations.mirror.none": "§lTransformations > Mirror:§r None",
   "mocap.scenes.element_info.transformations.mirror.x": "§lTransformations > Mirror:§r X-axis",
   "mocap.scenes.element_info.transformations.mirror.z": "§lTransformations > Mirror:§r Z-axis",

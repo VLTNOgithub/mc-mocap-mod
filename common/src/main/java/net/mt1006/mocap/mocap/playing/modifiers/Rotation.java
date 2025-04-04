@@ -6,22 +6,19 @@ import org.jetbrains.annotations.Nullable;
 
 public class Rotation
 {
-	public static final Rotation ZERO = new Rotation(0.0, 0.0, 0.0);
-	public final double deg, shiftX, shiftZ;
+	public static final Rotation ZERO = new Rotation(0.0);
+	public final double deg;
 	private final double sinDeg, cosDeg;
 	public final boolean canRotateInt;
 	public final net.minecraft.world.level.block.Rotation blockRotation;
 
-	public Rotation(double deg, double shiftX, double shiftZ)
+	public Rotation(double deg)
 	{
 		deg = clampRot(deg);
 		this.deg = deg;
 		this.sinDeg = calcSin(deg);
 		this.cosDeg = calcCos(deg);
-		this.shiftX = shiftX;
-		this.shiftZ = shiftZ;
-		this.canRotateInt = shiftX == (int)shiftX && shiftZ == (int)shiftZ
-				&& (deg == 0.0 || deg == 90.0 || deg == 180.0 || deg == -90.0);
+		this.canRotateInt = (deg == 0.0 || deg == 90.0 || deg == 180.0 || deg == -90.0);
 
 		this.blockRotation = switch ((int)Math.round(deg / 90.0))
 		{
@@ -32,11 +29,9 @@ public class Rotation
 		};
 	}
 
-	public static Rotation fromObject(@Nullable SceneFiles.Reader reader)
+	public static Rotation fromDouble(double val)
 	{
-		return reader != null
-				? new Rotation(reader.readDouble("deg", 0.0), reader.readDouble("shift_x", 0.0), reader.readDouble("shift_z", 0.0))
-				: ZERO;
+		return val != 0.0 ? new Rotation(val) : ZERO;
 	}
 
 	public static double clampRot(double deg)
@@ -71,8 +66,6 @@ public class Rotation
 
 		SceneFiles.Writer writer = new SceneFiles.Writer();
 		writer.addDouble("deg", deg, 0.0);
-		writer.addDouble("shift_x", shiftX, 0.0);
-		writer.addDouble("shift_z", shiftZ, 0.0);
 
 		return writer;
 	}
@@ -81,12 +74,10 @@ public class Rotation
 	{
 		if (deg == 0.0) { return point; }
 
-		double centerX = center.x - shiftX;
-		double centerZ = center.z - shiftZ;
-		double pointX = point.x - centerX;
-		double pointZ = point.z - centerZ;
-		double finX = pointX * cosDeg - pointZ * sinDeg + centerX;
-		double finZ = pointZ * cosDeg + pointX * sinDeg + centerZ;
+		double pointX = point.x - center.x;
+		double pointZ = point.z - center.z;
+		double finX = pointX * cosDeg - pointZ * sinDeg + center.x;
+		double finZ = pointZ * cosDeg + pointX * sinDeg + center.z;
 		return new Vec3(finX, point.y, finZ);
 	}
 }

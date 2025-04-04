@@ -57,9 +57,7 @@ public class CommandUtils
 		builder.then(Commands.literal("start_delay").then(Commands.argument("delay", DoubleArgumentType.doubleArg(0.0)).executes(command)));
 		builder.then(Commands.literal("transformations").
 			then(Commands.literal("rotation").
-				then(Commands.argument("deg", DoubleArgumentType.doubleArg()).executes(command).
-				then(Commands.argument("center_offset_x", DoubleArgumentType.doubleArg()).
-				then(Commands.argument("center_offset_z", DoubleArgumentType.doubleArg()).executes(command))))).
+				then(Commands.argument("deg", DoubleArgumentType.doubleArg()).executes(command))).
 			then(Commands.literal("mirror").
 				then(Commands.literal("none").executes(command)).
 				then(Commands.literal("x").executes(command)).
