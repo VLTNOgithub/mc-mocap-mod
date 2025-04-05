@@ -40,7 +40,6 @@ public class ActionContext
 	private @Nullable EntityData currentEntityData = null;
 	public Entity entity;
 	private Vec3 position;
-	private double rotY, rotX;
 	public int skippingTicks = 0;
 
 	public ActionContext(ServerPlayer owner, PlayerList packetTargets, Entity entity, Vec3 startPos,
@@ -201,7 +200,8 @@ public class ActionContext
 
 			case EntitiesAfterPlayback.KILL:
 				entity.invulnerableTime = 0; // for sound effect
-				entity.kill();
+				if (entity instanceof FakePlayer) { ((FakePlayer)entity).fakeKill(); }
+				else { entity.kill(); }
 				break;
 
 			case EntitiesAfterPlayback.LEFT_UNTOUCHED:

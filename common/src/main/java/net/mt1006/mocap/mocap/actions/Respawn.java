@@ -74,7 +74,7 @@ public class Respawn implements Action
 			ctx.broadcast(new ClientboundPlayerInfoRemovePacket(List.of(uuid)));
 			ctx.level.removePlayerImmediately((FakePlayer)ctx.entity, Entity.RemovalReason.KILLED);
 
-			((EntityFields)ctx.entity).callUnsetRemoved();
+			((FakePlayer)ctx.entity).fakeRespawn();
 			ctx.level.getServer().getPlayerList()
 					.broadcastAll(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, (FakePlayer)ctx.entity));
 			ctx.level.addNewPlayer((FakePlayer)ctx.entity);

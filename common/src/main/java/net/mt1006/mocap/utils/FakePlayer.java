@@ -35,6 +35,7 @@ public class FakePlayer extends ServerPlayer
 	private final RecordingPlayback playback;
 	private final boolean isInvulnerable;
 	private int dyingTicks = -1;
+	private boolean killedByPlayback = false;
 
 	public FakePlayer(ServerLevel level, GameProfile profile, RecordingPlayback playback)
 	{
@@ -64,7 +65,19 @@ public class FakePlayer extends ServerPlayer
 	@Override public void awardStat(@NotNull Stat stat, int amount) { }
 	@Override public void die(@NotNull DamageSource source)
 	{
-		dyingTicks = 20;
+		if (!killedByPlayback) { dyingTicks = 20; }
+	}
+
+	public void fakeKill()
+	{
+		killedByPlayback = true;
+		kill();
+	}
+
+	public void fakeRespawn()
+	{
+		unsetRemoved();
+		killedByPlayback = false;
 	}
 
 	private static class FakePlayerNetHandler extends ServerGamePacketListenerImpl

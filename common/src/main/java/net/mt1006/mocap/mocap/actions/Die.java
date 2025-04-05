@@ -2,6 +2,7 @@ package net.mt1006.mocap.mocap.actions;
 
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+import net.mt1006.mocap.utils.FakePlayer;
 
 public class Die implements Action
 {
@@ -16,7 +17,8 @@ public class Die implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		ctx.entity.kill();
+		if (ctx.entity instanceof FakePlayer) { ((FakePlayer)ctx.entity).fakeKill(); }
+		else { ctx.entity.kill(); }
 		return Result.OK;
 	}
 }
