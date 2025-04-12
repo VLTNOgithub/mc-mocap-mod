@@ -26,13 +26,13 @@ public class Utils
 	public static void sendMessage(@Nullable Player player, String component, Object... args)
 	{
 		if (player == null) { return; }
-		player.sendSystemMessage(getTranslatableComponent(player, component, args));
+		player.displayClientMessage(Component.literal(component), false);
 	}
 
 	public static void sendComponent(@Nullable Player player, Component component)
 	{
 		if (player == null) { return; }
-		player.sendSystemMessage(component);
+		player.displayClientMessage(Component.literal(component.getString()), false);
 	}
 
 	public static String stringFromComponent(String component, Object... args)

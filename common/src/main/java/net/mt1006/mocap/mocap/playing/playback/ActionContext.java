@@ -201,7 +201,7 @@ public class ActionContext
 			case EntitiesAfterPlayback.KILL:
 				entity.invulnerableTime = 0; // for sound effect
 				if (entity instanceof FakePlayer) { ((FakePlayer)entity).fakeKill(); }
-				else { entity.kill(); }
+				else { entity.kill(null); }
 				break;
 
 			case EntitiesAfterPlayback.LEFT_UNTOUCHED:

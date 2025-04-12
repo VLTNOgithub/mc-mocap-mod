@@ -1,7 +1,9 @@
 package net.mt1006.mocap.mocap.actions;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.phys.Vec3;
@@ -135,7 +137,7 @@ public class EntityUpdate implements Action
 
 			case KILL:
 				entity.invulnerableTime = 0; // for sound effect
-				entity.kill();
+				entity.kill(null);
 				return Result.OK;
 
 			case HURT:
@@ -164,8 +166,9 @@ public class EntityUpdate implements Action
 			Utils.exception(e, "Exception occurred when parsing entity NBT data!");
 			return Result.ERROR;
 		}
-
-		Entity entity = EntityType.create(nbt, ctx.level).orElse(null);
+		
+		EntityType<?> entityType = EntityType.by(nbt).orElse(null);
+		Entity entity = entityType.create(ctx.level, EntitySpawnReason.MOB_SUMMONED);
 		if (entity == null || !filter.isAllowed(entity)) { return Result.IGNORED; }
 
 		entity.setPos(ctx.transformer.transformPos(position));

@@ -18,7 +18,7 @@ public class Die implements Action
 	@Override public Result execute(ActionContext ctx)
 	{
 		if (ctx.entity instanceof FakePlayer) { ((FakePlayer)ctx.entity).fakeKill(); }
-		else { ctx.entity.kill(); }
+		else { ctx.entity.kill(null); }
 		return Result.OK;
 	}
 }

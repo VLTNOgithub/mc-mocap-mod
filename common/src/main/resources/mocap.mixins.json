@@ -9,20 +9,17 @@
 		"LivingEntityMethodMixin",
 		"ServerLevelMixin",
 		"fields.AbstractHorseFields",
-		"fields.BoatFields",
 		"fields.EntityFields",
 		"fields.EntityIdFields",
 		"fields.HorseFields",
 		"fields.LevelFields",
 		"fields.LivingEntityFields",
 		"fields.PigFields",
-		"fields.PlayerFields",
-		"fields.ServerPlayerFields"
+		"fields.PlayerFields"
 	],
 	"client":
 	[
-		"AbstractClientPlayerMixin",
-		"LivingEntityRendererMixin"
+		"AbstractClientPlayerMixin"
 	],
 	"injectors": { "defaultRequire": 1 }
 }
