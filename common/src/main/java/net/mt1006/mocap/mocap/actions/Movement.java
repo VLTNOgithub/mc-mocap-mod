@@ -2,11 +2,13 @@ package net.mt1006.mocap.mocap.actions;
 
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.world.entity.PositionMoveRotation;
 import net.minecraft.world.phys.Vec3;
-import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public class Movement implements Action
 {
@@ -310,6 +312,7 @@ public class Movement implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
+		Vec3 oldPos = ctx.entity.position();
 		boolean updateRot = (flags & MASK_ROT) != ROT_0;
 		float rotX = updateRot ? rotation[0] : ctx.entity.getXRot();
 		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
@@ -319,9 +322,10 @@ public class Movement implements Action
 		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative(), updateRot);
 		if (updateRot) { ctx.entity.setYHeadRot(finHeadRot); }
 		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
-		((EntityFields)ctx.entity).callCheckInsideBlocks();
+		ctx.entity.applyEffectsFromBlocks(oldPos, ctx.entity.position());
 
-		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity)); //TODO: try packet with higher precision
+		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(),
+				PositionMoveRotation.of(ctx.entity), Set.of(), ((flags & ON_GROUND) != 0))); //TODO: try packet with higher precision
 		if (updateRot)
 		{
 			byte headRotData = (byte)Math.floor(finHeadRot * 256.0f / 360.0f);

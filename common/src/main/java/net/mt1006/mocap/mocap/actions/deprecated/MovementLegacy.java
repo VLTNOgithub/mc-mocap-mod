@@ -1,11 +1,13 @@
 package net.mt1006.mocap.mocap.actions.deprecated;
 
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.world.entity.PositionMoveRotation;
 import net.minecraft.world.phys.Vec3;
-import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
+
+import java.util.Set;
 
 public class MovementLegacy implements Action
 {
@@ -31,11 +33,13 @@ public class MovementLegacy implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
+		Vec3 oldPos = ctx.entity.position();
+		
 		ctx.changePosition(position, rotation[1], rotation[0], true, true, true);
 
 		ctx.entity.setOnGround(isOnGround);
-		((EntityFields)ctx.entity).callCheckInsideBlocks();
-		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity));
+		ctx.entity.applyEffectsFromBlocks(oldPos, ctx.entity.position());
+		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(), PositionMoveRotation.of(ctx.entity), Set.of(), isOnGround));
 		return Result.OK;
 	}
 }

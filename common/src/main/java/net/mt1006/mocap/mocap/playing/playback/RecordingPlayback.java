@@ -167,7 +167,7 @@ public class RecordingPlayback extends Playback
 					else if (recording.endsWithDeath)
 					{
 						if (ctx.entity instanceof FakePlayer) { ((FakePlayer)ctx.entity).fakeKill(); }
-						else { ctx.entity.kill(); }
+						else { ctx.entity.kill(null); }
 
 						if (ctx.entity instanceof LivingEntity) { dyingTicks = 20; }
 					}

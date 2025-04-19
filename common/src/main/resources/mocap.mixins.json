@@ -16,13 +16,11 @@
 		"fields.LevelFields",
 		"fields.LivingEntityFields",
 		"fields.PigFields",
-		"fields.PlayerFields",
-		"fields.ServerPlayerFields"
+		"fields.PlayerFields"
 	],
 	"client":
 	[
-		"AbstractClientPlayerMixin",
-		"LivingEntityRendererMixin"
+		"AbstractClientPlayerMixin"
 	],
 	"injectors": { "defaultRequire": 1 }
 }

@@ -3,7 +3,7 @@ package net.mt1006.mocap.mocap.actions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -91,8 +91,8 @@ public class RightClickBlock implements BlockAction
 			BlockState blockState = ctx.level.getBlockState(blockPos);
 			if (blockState.getBlock() instanceof BedBlock) { continue; }
 
-			ItemInteractionResult result = blockState.useItemOn(itemStack, ctx.level, player, interactionHand, blockHitResult);
-			if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION)
+			InteractionResult result = blockState.useItemOn(itemStack, ctx.level, player, interactionHand, blockHitResult);
+			if (result == InteractionResult.PASS)
 			{
 				blockState.useWithoutItem(ctx.level, player, blockHitResult);
 			}

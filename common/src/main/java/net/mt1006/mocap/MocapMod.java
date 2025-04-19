@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public class MocapMod
 {
 	public static final String MOD_ID = "mocap";
-	public static final String FOR_VERSION = "1.21.1";
+	public static final String FOR_VERSION = "1.21.4";
 	public static final boolean EXPERIMENTAL = true; //TODO: change it to false
 
 	public static final byte RECORDING_FORMAT_VERSION = 5;

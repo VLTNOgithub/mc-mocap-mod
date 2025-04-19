@@ -17,16 +17,11 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.stats.Stat;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.RelativeMovement;
-import net.minecraft.world.level.portal.DimensionTransition;
-import net.mt1006.mocap.mixin.fields.ServerPlayerFields;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.mt1006.mocap.mocap.playing.playback.RecordingPlayback;
 import net.mt1006.mocap.mocap.settings.Settings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Set;
 
 // FakePlayer class from Forge
 public class FakePlayer extends ServerPlayer
@@ -45,7 +40,7 @@ public class FakePlayer extends ServerPlayer
 		this.isInvulnerable = Settings.INVULNERABLE_PLAYBACK.val;
 
 		if (isInvulnerable) { setInvulnerable(true); }
-		else { ((ServerPlayerFields)this).setSpawnInvulnerableTime(0); }
+		else { this.invulnerableTime = 0; }
 	}
 
 	@Override public void tick()
@@ -59,19 +54,25 @@ public class FakePlayer extends ServerPlayer
 		}
 	}
 
-	@Override public Entity changeDimension(@NotNull DimensionTransition dimensionTransition) { return null; }
-
+	@Override public ServerPlayer teleport(@NotNull TeleportTransition dimensionTransition) { return null; }
 	@Override public void displayClientMessage(@NotNull Component chatComponent, boolean actionBar) { }
 	@Override public void awardStat(@NotNull Stat stat, int amount) { }
+
 	@Override public void die(@NotNull DamageSource source)
 	{
 		if (!killedByPlayback) { dyingTicks = 20; }
 	}
 
+	@Override public boolean hasClientLoaded()
+	{
+		// when killed by playback hasClientLoaded is required for animation to be shown
+		return !isInvulnerable || killedByPlayback;
+	}
+	
 	public void fakeKill()
 	{
 		killedByPlayback = true;
-		kill();
+		kill(null);
 	}
 
 	public void fakeRespawn()
@@ -102,7 +103,6 @@ public class FakePlayer extends ServerPlayer
 		@Override public void handleCustomCommandSuggestions(ServerboundCommandSuggestionPacket packet) { }
 		@Override public void handleSetCommandBlock(ServerboundSetCommandBlockPacket packet) { }
 		@Override public void handleSetCommandMinecart(ServerboundSetCommandMinecartPacket packet) { }
-		@Override public void handlePickItem(ServerboundPickItemPacket packet) { }
 		@Override public void handleRenameItem(ServerboundRenameItemPacket packet) { }
 		@Override public void handleSetBeaconPacket(ServerboundSetBeaconPacket packet) { }
 		@Override public void handleSetStructureBlock(ServerboundSetStructureBlockPacket packet) { }
@@ -136,7 +136,6 @@ public class FakePlayer extends ServerPlayer
 		@Override public void handlePlayerAbilities(ServerboundPlayerAbilitiesPacket packet) { }
 		@Override public void handleChangeDifficulty(ServerboundChangeDifficultyPacket packet) { }
 		@Override public void handleLockDifficulty(ServerboundLockDifficultyPacket packet) { }
-		@Override public void teleport(double x, double y, double z, float yaw, float pitch, Set<RelativeMovement> relativeSet) { }
 		@Override public void ackBlockChangesUpTo(int sequence) { }
 		@Override public void handleChatCommand(ServerboundChatCommandPacket packet) { }
 		@Override public void handleChatAck(ServerboundChatAckPacket packet) { }
