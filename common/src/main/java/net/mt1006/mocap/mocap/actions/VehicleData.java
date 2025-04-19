@@ -14,6 +14,7 @@ import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.mt1006.mocap.mixin.fields.AbstractHorseFields;
+import net.mt1006.mocap.mixin.fields.BoatFields;
 import net.mt1006.mocap.mixin.fields.HorseFields;
 import net.mt1006.mocap.mixin.fields.PigFields;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
@@ -69,6 +70,7 @@ public class VehicleData implements ComparableAction
 			flag2 = ((Boat)entity).getPaddleState(1);
 			int1 = ((Boat)entity).getHurtTime();
 			int2 = ((Boat)entity).getHurtDir();
+			int3 = ((BoatFields)entity).callGetBubbleTime();
 			float1 = ((Boat)entity).getDamage();
 		}
 		else if (entity instanceof AbstractMinecart)
@@ -162,6 +164,7 @@ public class VehicleData implements ComparableAction
 			((Boat)ctx.entity).setPaddleState(flag1, flag2);
 			((Boat)ctx.entity).setHurtTime(int1);
 			((Boat)ctx.entity).setHurtDir(int2);
+			((BoatFields)ctx.entity).callSetBubbleTime(int3);
 			((Boat)ctx.entity).setDamage(float1);
 		}
 		else if (ctx.entity instanceof AbstractMinecart)

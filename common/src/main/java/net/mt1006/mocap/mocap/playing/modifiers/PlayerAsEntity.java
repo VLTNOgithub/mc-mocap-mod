@@ -8,13 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.mt1006.mocap.mocap.files.SceneFiles;
 import net.mt1006.mocap.utils.Utils;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class PlayerAsEntity
 {
@@ -69,7 +66,9 @@ public class PlayerAsEntity
 	public @Nullable Entity createEntity(Level level)
 	{
 		if (entityType == null && compoundTag == null) { return null; }
-		return entityType.create(level, EntitySpawnReason.MOB_SUMMONED);
+		return (compoundTag != null)
+				? EntityType.create(compoundTag, level, EntitySpawnReason.COMMAND).orElse(null)
+				: entityType.create(level, EntitySpawnReason.COMMAND);
 	}
 
 	private static @Nullable EntityType<?> prepareEntityType(@Nullable String entityId, @Nullable String entityNbt)
@@ -77,9 +76,8 @@ public class PlayerAsEntity
 		if (entityId == null || entityNbt != null) { return null; } // if entityNbt is present, it should be null
 
 		ResourceLocation entityRes = ResourceLocation.parse(entityId);
-		Optional<Holder.Reference<EntityType<?>>> entityTypeHolder = BuiltInRegistries.ENTITY_TYPE.get(entityRes);
-		EntityType entityType = entityTypeHolder.get().value();
-		return BuiltInRegistries.ENTITY_TYPE.containsKey(entityRes) ? entityType : null;
+		Holder.Reference<EntityType<?>> entityTypeRef = BuiltInRegistries.ENTITY_TYPE.get(entityRes).orElse(null);
+		return entityTypeRef != null ? entityTypeRef.value() : null;
 	}
 
 	private static @Nullable CompoundTag prepareCompoundTag(@Nullable String entityId, @Nullable String entityNbt)

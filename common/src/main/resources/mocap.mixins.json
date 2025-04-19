@@ -9,6 +9,7 @@
 		"LivingEntityMethodMixin",
 		"ServerLevelMixin",
 		"fields.AbstractHorseFields",
+		"fields.BoatFields",
 		"fields.EntityFields",
 		"fields.EntityIdFields",
 		"fields.HorseFields",

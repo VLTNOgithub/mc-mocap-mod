@@ -112,7 +112,7 @@ public class ActionContext
 	public void removeEntities()
 	{
 		removeMainEntity();
-		entityDataMap.values().forEach((data) -> removeEntity(data.entity));
+		entityDataMap.values().forEach((data) -> removeEntity(data.entity, level));
 		entityDataMap.clear();
 	}
 
@@ -134,7 +134,7 @@ public class ActionContext
 		}
 		else
 		{
-			removeEntity(entity);
+			removeEntity(entity, level);
 			if (ghostPlayer == null) { return; }
 			playerToRemove = ghostPlayer;
 		}
@@ -191,7 +191,7 @@ public class ActionContext
 		if (ghostPlayer != null) { ghostPlayer.changeDimension(dimensionTransition); }
 	}*/
 
-	private static void removeEntity(Entity entity)
+	private static void removeEntity(Entity entity, ServerLevel level)
 	{
 		switch (Settings.ENTITIES_AFTER_PLAYBACK.val)
 		{
@@ -201,7 +201,7 @@ public class ActionContext
 			case EntitiesAfterPlayback.KILL:
 				entity.invulnerableTime = 0; // for sound effect
 				if (entity instanceof FakePlayer) { ((FakePlayer)entity).fakeKill(); }
-				else { entity.kill(null); }
+				else { entity.kill(level); }
 				break;
 
 			case EntitiesAfterPlayback.LEFT_UNTOUCHED:

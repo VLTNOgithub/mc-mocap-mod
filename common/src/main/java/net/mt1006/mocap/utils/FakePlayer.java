@@ -55,15 +55,18 @@ public class FakePlayer extends ServerPlayer
 	}
 
 	@Override public ServerPlayer teleport(@NotNull TeleportTransition dimensionTransition) { return null; }
-
 	@Override public void displayClientMessage(@NotNull Component chatComponent, boolean actionBar) { }
 	@Override public void awardStat(@NotNull Stat stat, int amount) { }
+
 	@Override public void die(@NotNull DamageSource source)
 	{
 		if (!killedByPlayback) { dyingTicks = 20; }
 	}
-	@Override public boolean hasClientLoaded() {
-		return true;
+
+	@Override public boolean hasClientLoaded()
+	{
+		// when killed by playback hasClientLoaded is required for animation to be shown
+		return !isInvulnerable || killedByPlayback;
 	}
 	
 	public void fakeKill()
