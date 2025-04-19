@@ -48,7 +48,7 @@ public class RecordingContext
 	{
 		entityState = null;
 		state = State.RECORDING;
-		if (sendMessage) { Utils.sendMessage(sourcePlayer, "recording.start.recording_started"); }
+		if (sendMessage) { Utils.sendMessage(sourcePlayer, "mocap.recording.start.recording_started"); }
 	}
 
 	public void stop(CommandOutput commandOutput)

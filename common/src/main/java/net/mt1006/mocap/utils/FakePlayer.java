@@ -62,7 +62,10 @@ public class FakePlayer extends ServerPlayer
 	{
 		if (!killedByPlayback) { dyingTicks = 20; }
 	}
-
+	@Override public boolean hasClientLoaded() {
+		return true;
+	}
+	
 	public void fakeKill()
 	{
 		killedByPlayback = true;
