@@ -17,6 +17,5 @@ import java.util.Set;
 public interface EntityFields
 {
 	@Accessor static @Nullable EntityDataAccessor<Byte> getDATA_SHARED_FLAGS_ID() { return null; }
-	@Invoker void callRecordMovementThroughBlocks(Vec3 oldPosition, Vec3 position);
 	@Invoker void callUnsetRemoved();
 }

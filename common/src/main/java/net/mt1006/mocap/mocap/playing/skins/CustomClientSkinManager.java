@@ -87,8 +87,9 @@ public class CustomClientSkinManager
 				MocapMod.LOGGER.error("Skin texture too big!");
 				return;
 			}
-
-			Minecraft.getInstance().getTextureManager().register(resFromName(name), new DynamicTexture(nativeImage));
+			
+			ResourceLocation textureLocation = resFromName(name);
+			Minecraft.getInstance().getTextureManager().register(textureLocation, new DynamicTexture(() -> textureLocation.toString(), nativeImage));
 			skinCache.put(name, true);
 		}
 		catch (Exception e) { Utils.exception(e, "Failed to read skin texture!"); }

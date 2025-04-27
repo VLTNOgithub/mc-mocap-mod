@@ -163,8 +163,8 @@ public class ActionContext
 		Vec3 finPos = transformer.transformPos(position);
 		float finRotY = transformRot ? transformer.transformRotation(rotY) : rotY;
 
-		entity.moveTo(finPos, finRotY, rotX);
-		if (ghostPlayer != null && entity == mainEntityData.entity) { ghostPlayer.moveTo(finPos, finRotY, rotX); }
+		entity.moveOrInterpolateTo(finPos, finRotY, rotX);
+		if (ghostPlayer != null && entity == mainEntityData.entity) { ghostPlayer.moveOrInterpolateTo(finPos, finRotY, rotX); }
 	}
 
 	//TODO: restore?

@@ -213,7 +213,7 @@ public class ChangeItem implements ComparableAction
 			item = itemStack.getItem();
 			Tag tag = itemStack.save(registryAccess);
 
-			if (!(tag instanceof CompoundTag) || !((CompoundTag)tag).contains("components", Tag.TAG_COMPOUND))
+			if (!(tag instanceof CompoundTag compoundTag) || !compoundTag.contains("components") || compoundTag.get("components").getId() != Tag.TAG_COMPOUND)
 			{
 				type = ItemDataType.ID_ONLY;
 				data = "";

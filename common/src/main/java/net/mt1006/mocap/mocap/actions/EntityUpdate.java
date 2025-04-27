@@ -137,7 +137,7 @@ public class EntityUpdate implements Action
 
 			case KILL:
 				entity.invulnerableTime = 0; // for sound effect
-				entity.kill(null);
+				entity.kill(ctx.level);
 				return Result.OK;
 
 			case HURT:

@@ -8,6 +8,8 @@ import net.mt1006.mocap.mocap.actions.Action;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 
+import java.util.Set;
+
 public class MovementLegacy implements Action
 {
 	//TODO: test with legacy recordings
@@ -32,13 +34,13 @@ public class MovementLegacy implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-		Vec3 oldPosition = ctx.entity.position();
+		Vec3 oldPos = ctx.entity.position();
 		
 		ctx.changePosition(position, rotation[1], rotation[0], true, true, true);
 
 		ctx.entity.setOnGround(isOnGround);
-		((EntityFields)ctx.entity).callRecordMovementThroughBlocks(ctx.entity.oldPosition(), ctx.entity.position());
-		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(), PositionMoveRotation.of(ctx.entity), null, ctx.entity.onGround()));
+		ctx.entity.applyEffectsFromBlocks(oldPos, ctx.entity.position());
+		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(), PositionMoveRotation.of(ctx.entity), Set.of(), isOnGround));
 		return Result.OK;
 	}
 }

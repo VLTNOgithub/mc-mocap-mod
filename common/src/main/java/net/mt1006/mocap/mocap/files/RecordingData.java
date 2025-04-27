@@ -169,7 +169,7 @@ public class RecordingData
 	public void initEntityPosition(Entity entity, PositionTransformer transformer)
 	{
 		float rotY = transformer.transformRotation(startRot[0]);
-		entity.moveTo(transformer.transformPos(startPos), rotY, startRot[1]);
+		entity.moveOrInterpolateTo(transformer.transformPos(startPos), rotY, startRot[1]);
 		entity.setYHeadRot(rotY);
 	}
 

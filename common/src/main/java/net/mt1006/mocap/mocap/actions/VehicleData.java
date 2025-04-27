@@ -1,5 +1,6 @@
 package net.mt1006.mocap.mocap.actions;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Pig;
@@ -19,6 +20,9 @@ import net.mt1006.mocap.mixin.fields.PigFields;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import net.mt1006.mocap.utils.EntityData;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class VehicleData implements ComparableAction
 {
@@ -151,11 +155,23 @@ public class VehicleData implements ComparableAction
 			else if (ctx.entity instanceof AbstractChestedHorse) { ((AbstractChestedHorse)ctx.entity).setChest(flag1); }
 			else if (ctx.entity instanceof Camel) { ((Camel)ctx.entity).setDashing(flag1); }
 
-			if (ctx.entity instanceof Llama) { ((Llama)ctx.entity).setVariant(Llama.Variant.byId(int1)); }
+			if (ctx.entity instanceof Llama llama) {
+				Llama.Variant variant = Llama.Variant.byId(int1);
+				
+				try {
+					Method setVariantMethod = Llama.class.getDeclaredMethod("setVariant", Llama.Variant.class);
+
+					setVariantMethod.setAccessible(true);
+
+					setVariantMethod.invoke(llama, variant);
+				} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+				}
+			}
 		}
-		else if (ctx.entity instanceof Pig)
+		else if (ctx.entity instanceof Pig pig)
 		{
-			((PigFields)ctx.entity).getSteering().setSaddle(flag1);
+			ItemStack saddleStack = flag1 ? new ItemStack(net.minecraft.world.item.Items.SADDLE) : ItemStack.EMPTY;
+			pig.setItemSlot(net.minecraft.world.entity.EquipmentSlot.SADDLE, saddleStack);
 		}
 		else if (ctx.entity instanceof Boat)
 		{
