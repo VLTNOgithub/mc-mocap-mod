@@ -4,13 +4,11 @@ import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.world.entity.PositionMoveRotation;
 import net.minecraft.world.phys.Vec3;
-import net.mt1006.mocap.mixin.EntityMixin;
-import net.mt1006.mocap.mixin.fields.EntityFields;
 import net.mt1006.mocap.mocap.files.RecordingFiles;
 import net.mt1006.mocap.mocap.playing.playback.ActionContext;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.Set;
 
 public class Movement implements Action
 {
@@ -314,48 +312,20 @@ public class Movement implements Action
 
 	@Override public Result execute(ActionContext ctx)
 	{
-//		boolean updateRot = (flags & MASK_ROT) != ROT_0;
-//		float rotX = updateRot ? rotation[0] : ctx.entity.getXRot();
-//		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
-//
-//		float finHeadRot = ctx.transformer.transformRotation(headRot);
-//
-//		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative(), updateRot);
-//		if (updateRot) { ctx.entity.setYHeadRot(finHeadRot); }
-//		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
-//		((EntityFields)ctx.entity).callRecordMovementThroughBlocks(position, ctx.entity.position());
-//
-//		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(), PositionMoveRotation.of(ctx.entity), null, ctx.entity.onGround())); //TODO: try packet with higher precision
-//		if (updateRot)
-//		{
-//			byte headRotData = (byte)Math.floor(finHeadRot * 256.0f / 360.0f);
-//			ctx.fluentMovement(() -> new ClientboundRotateHeadPacket(ctx.entity, headRotData));
-//		}
-		//TODO: switch from relative to absolute
-
+		Vec3 oldPos = ctx.entity.position();
 		boolean updateRot = (flags & MASK_ROT) != ROT_0;
 		float rotX = updateRot ? rotation[0] : ctx.entity.getXRot();
 		float rotY = updateRot ? rotation[1] : ctx.entity.getYRot();
 
 		float finHeadRot = ctx.transformer.transformRotation(headRot);
 
+		ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative(), updateRot);
 		if (updateRot) { ctx.entity.setYHeadRot(finHeadRot); }
-		
-		if (ctx.entity != ctx.ghostPlayer)
-		{
-			ctx.changePosition(position, rotY, rotX, isXzRelative(), isYRelative(), updateRot);
-		}
-		else
-		{
-			double x = ctx.entity.getX() + position.x;
-			double y = ctx.entity.getY() + position.y;
-			double z = ctx.entity.getZ() + position.z;
-			ctx.entity.moveTo(x, y, z, rotation[1], rotation[0]);
-		}
+		ctx.entity.setOnGround((flags & ON_GROUND) != 0);
+		ctx.entity.applyEffectsFromBlocks(oldPos, ctx.entity.position());
 
-		ctx.entity.setOnGround(ctx.entity.onGround());	
-		((EntityFields)ctx.entity).callRecordMovementThroughBlocks(position, ctx.entity.position());
-		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(), PositionMoveRotation.of(ctx.entity), Collections.emptySet(), ctx.entity.onGround()));
+		ctx.fluentMovement(() -> new ClientboundTeleportEntityPacket(ctx.entity.getId(),
+				PositionMoveRotation.of(ctx.entity), Set.of(), ((flags & ON_GROUND) != 0))); //TODO: try packet with higher precision
 		if (updateRot)
 		{
 			byte headRotData = (byte)Math.floor(finHeadRot * 256.0f / 360.0f);

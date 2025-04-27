@@ -1,7 +1,6 @@
 package net.mt1006.mocap.mocap.actions;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
@@ -137,7 +136,7 @@ public class EntityUpdate implements Action
 
 			case KILL:
 				entity.invulnerableTime = 0; // for sound effect
-				entity.kill(null);
+				entity.kill(ctx.level);
 				return Result.OK;
 
 			case HURT:
